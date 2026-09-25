@@ -1,0 +1,14 @@
+{
+  "name": "design-team",
+  "description": "Shared Claude Code plugins for the design team.",
+  "owner": {
+    "name": "Asmaa Amin"
+  },
+  "plugins": [
+    {
+      "name": "design-automation",
+      "source": "./",
+      "description": "Brief → Claude Design → Figma design pipeline."
+    }
+  ]
+}
