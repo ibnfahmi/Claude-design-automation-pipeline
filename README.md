@@ -48,7 +48,7 @@ Then:
 /plugin install design-automation@design-team
 ```
 
-To try it locally before pushing, use the folder path instead of the Git URL.
+Or just open the plugin and click install.
 
 ## Use (per client project)
 
