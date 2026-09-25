@@ -3,6 +3,6 @@
   "version": "0.1.0",
   "description": "Brief → Claude Design → Figma pipeline: an Orchestrator skill plus Brief, Design, and Handoff agents, with a preflight check, a Claude Design review loop, and state/interaction export to Figma.",
   "author": {
-    "name": "Asmaa Amin"
+    "name": "Ahmed Fahmi"
   }
 }
