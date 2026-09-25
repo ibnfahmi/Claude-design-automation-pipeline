@@ -37,7 +37,8 @@ agents/
 After this repo is pushed to your Git host:
 
 ```
-/plugin marketplace add <https://github.com/ibnfahmi/Claude-design-automation-pipeline.git>
+/plugin marketplace add https://github.com/ibnfahmi/Claude-design-automation-pipeline.git
+
 /plugin install design-automation@design-team
 ```
 
