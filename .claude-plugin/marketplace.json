@@ -1,8 +1,14 @@
 {
-  "name": "design-automation",
-  "version": "0.1.0",
-  "description": "Brief → Claude Design → Figma pipeline: an Orchestrator skill plus Brief, Design, and Handoff agents, with a preflight check, a Claude Design review loop, and state/interaction export to Figma.",
-  "author": {
+  "name": "design-team",
+  "description": "Shared Claude Code plugins for the design team.",
+  "owner": {
     "name": "Ahmed Fahmi"
-  }
+  },
+  "plugins": [
+    {
+      "name": "design-automation",
+      "source": "./",
+      "description": "Brief → Claude Design → Figma design pipeline."
+    }
+  ]
 }
