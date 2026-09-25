@@ -22,9 +22,11 @@ Look for `design-pipeline-state.json` in the current folder (format in `referenc
 
 ## Stage 1 — Preflight
 
-Run every check in `references/preflight.md`. If any required check fails, stop, report what's missing and how to fix it, and wait. When the user says "retry", run the checks again. Do not ask for the brief until preflight passes (or the user chooses to continue without a design system).
+Run every check in `references/preflight.md`. If any required check fails, stop, report what's missing and how to fix it, and wait. When the user says "retry", run the checks again.
 
-Record the results in the state file.
+As part of preflight, list the Claude Design design systems and ask the user which one this project should use (check 3). Do not ask for the brief until the checks pass and a design system is picked, or the user has explicitly chosen to continue without one.
+
+Record the results, including the chosen design system's title and link, in the state file.
 
 ## Stage 2 — Brief
 
@@ -36,7 +38,7 @@ Record the results in the state file.
 
 ## Stage 3 — Design
 
-Start `design-agent` with: the full confirmed spec, the design system link from preflight (or "none"), and "round 1". Store its agent ID in the state file as `design_agent_id`.
+Start `design-agent` with: the full confirmed spec, the chosen design system's title and link from preflight (or "none"), and "round 1". Store its agent ID in the state file as `design_agent_id`.
 
 When it returns, save `design_url`, `interaction_list`, and increase `review_round`, then go to Stage 4.
 

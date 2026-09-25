@@ -54,7 +54,7 @@ Or just open the plugin and click install.
 
 1. Create a new folder for the client and start a new Claude Code session in it.
 2. Run `/design-pipeline`. (Plugin skills may also show as `/design-automation:design-pipeline`.)
-3. Pass the preflight check, then paste the brief and answer any questions.
+3. Pass the preflight check and pick the design system for this project from the list of your Claude Design design systems. Then paste the brief and answer any questions.
 4. Review the draft in Claude Design: edit the canvas and leave comments.
 5. Run `/design-continue` to send changes back, or say **approved** to build the Figma file.
 

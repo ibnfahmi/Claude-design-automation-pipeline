@@ -11,6 +11,7 @@ Written to the client project folder (the session's working directory) after eve
     "figma": "ok — signed in as name@company.com",
     "claude_design": "ok",
     "design_type_url": "https://claude.ai/artifact/…",
+    "design_system_name": "Acme Brand DS, or null for none",
     "design_system_url": "https://claude.ai/artifact/… or null"
   },
   "spec_file": "design-spec.md",
@@ -38,4 +39,4 @@ Written to the client project folder (the session's working directory) after eve
 | `handoff` | Approved; Figma build started | Stage 5 (re-check), then Stage 6 |
 | `done` | Figma file delivered | Offer to start a new run |
 
-Always re-run preflight when resuming in a new session, because connections may have changed.
+Always re-run preflight when resuming in a new session, because connections may have changed. When resuming a run that is past the brief stage, keep the saved design system instead of asking again, but tell the user which one is in use and let them change it.
