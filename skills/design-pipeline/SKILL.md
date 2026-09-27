@@ -1,15 +1,17 @@
 ---
 name: design-pipeline
-description: Run the design automation pipeline — take a raw design brief through a structured spec, a Claude Design draft reviewed by the user, and a client-ready Figma file with every interaction state exported. Use when the user runs /design-pipeline or asks to start a new design from a brief.
+description: Run the design automation pipeline — take a raw design brief through a structured spec, a Claude Design draft that is audited for usability and reviewed by the user, and a client-ready Figma file with every interaction state exported. Use when the user runs /design-pipeline or asks to start a new design from a brief.
 ---
 
 # Design pipeline — Orchestrator
 
-You are the Orchestrator. You run in the main session, talk to the user between stages, and start the three subagents in order:
+You are the Orchestrator. You run in the main session, talk to the user between stages, and start the subagents:
 
-1. `brief-agent` — rough brief → structured spec with states and interactions
-2. `design-agent` — spec → Claude Design canvas + interaction list
-3. `handoff-agent` — approved design → native Figma file
+- `design-system-agent` — (preflight, only if asked) a reference image, screenshot or Figma file → a reusable Design System artifact
+- `brief-agent` — rough brief → structured spec with states and interactions
+- `design-agent` — spec → Claude Design canvas + interaction list
+- `design-auditor` — after every design round: usability heuristics, accessibility and a click-through of every interaction
+- `handoff-agent` — approved design → native Figma file
 
 Never skip a stage, and never start the handoff without an explicit approval from the user. Before each stage, tell the user in one line which stage is running.
 
@@ -24,9 +26,9 @@ Look for `design-pipeline-state.json` in the current folder (format in `referenc
 
 Run every check in `references/preflight.md`. If any required check fails, stop, report what's missing and how to fix it, and wait. When the user says "retry", run the checks again.
 
-As part of preflight, list the Claude Design design systems and ask the user which one this project should use (check 3). Do not ask for the brief until the checks pass and a design system is picked, or the user has explicitly chosen to continue without one.
+As part of preflight, ask for the design direction (check 3): a saved design system picked from the list, a reference (image, screenshot or Figma file) that can be turned into a new design system, or no design system at all. Do not ask for the brief until the checks pass and a direction is chosen.
 
-Record the results, including the chosen design system's title and link, in the state file.
+Record the results, including the direction and the design system's title and link or the reference, in the state file.
 
 ## Stage 2 — Brief
 
@@ -38,16 +40,23 @@ Record the results, including the chosen design system's title and link, in the 
 
 ## Stage 3 — Design
 
-Start `design-agent` with: the full confirmed spec, the chosen design system's title and link from preflight (or "none"), and "round 1". Store its agent ID in the state file as `design_agent_id`.
+Start `design-agent` with: the full confirmed spec, the design direction from preflight (`system` + the design system's title and link, `reference` + the image paths or Figma link, or `creative`), and "round 1". Store its agent ID in the state file as `design_agent_id`.
 
-When it returns, save `design_url`, `interaction_list`, and increase `review_round`, then go to Stage 4.
+When it returns, save `design_url`, `interaction_list`, and increase `review_round`, then go to Stage 3b.
+
+## Stage 3b — Audit
+
+Set `stage: "audit"` and tell the user the draft is being tested. Start `design-auditor` with: `design_url`, the spec from `design-spec.md`, the interaction list, the design direction and the round number.
+
+When it returns, save the audit summary under `audits` in the state file (round, result, counts, report file), then go to Stage 4. The auditor never changes the design; you decide with the user what to fix.
 
 ## Stage 4 — Review loop
 
 Give the user:
 - the design link (open it with the Artifact tool's `open` action when available)
 - the interaction list
-- this instruction: *"Edit the canvas and leave comments in Claude Design. When you're done, type `/design-continue` — or say 'approved' if it's ready for Figma."*
+- the audit result: pass/fail, interactions passed, counts by severity, and the critical and major issues in one line each (the full report is in `audit-round-<n>.md`)
+- this instruction: *"Edit the canvas and leave comments in Claude Design. When you're done, type `/design-continue` — or say 'approved' if it's ready for Figma. Tell me which audit issues to fix (for example 'fix all critical and major'); otherwise the critical ones go into the next round."*
 
 Set `stage: "review"` in the state file and **end your turn**. Do not poll.
 
@@ -57,8 +66,10 @@ When the user returns (via `/design-continue`, or by replying here):
 2. Read all open comments on it (load `ArtifactComments` via ToolSearch if needed).
 3. Take anything the user typed in this session into account too.
 4. Decide:
-   - **Explicit approval** ("approved", "ship it", "go to Figma", or equivalent) and no unresolved change requests → confirm the interaction list is final, set `approved: true`, go to Stage 5.
-   - **Anything else** — comments, edits, "looks good but…" → it's a change request. Summarise the changes back to the user in a few bullets, then resume the Design Agent (SendMessage to `design_agent_id`) with the feedback, the note "keep the user's direct canvas edits", and the round number. If the agent can't be resumed (for example a new session), start a fresh `design-agent` with the spec, the current `design_url`, and the feedback. Then repeat Stage 4.
+   - **Explicit approval** ("approved", "ship it", "go to Figma", or equivalent) and no unresolved change requests:
+     - If the latest audit has **critical** issues that weren't fixed, list them and ask once: *"Approve anyway, or fix these first?"* Approve only on an explicit "approve anyway".
+     - Then confirm the interaction list is final, set `approved: true`, go to Stage 5.
+   - **Anything else** — comments, edits, "looks good but…" → it's a change request. Summarise the changes back to the user in a few bullets, including the audit issues to fix (the ones the user named; if they named none, the critical ones). Resume the Design Agent (SendMessage to `design_agent_id`) with the feedback, those audit issues, the note "keep the user's direct canvas edits", and the round number. If the agent can't be resumed (for example a new session), start a fresh `design-agent` with the spec, the design direction, the current `design_url`, and the feedback. Then run Stage 3b again and repeat Stage 4.
 
 If comments are ambiguous, ask the user rather than guessing.
 
@@ -76,7 +87,7 @@ When it returns, save `figma_url` and its notes (especially anything it couldn't
 
 Set `stage: "done"`. Give the user:
 - the Figma file link
-- a short summary: screens built, state frames built, prototype links added or skipped
+- a short summary: screens built, state frames built, prototype links added or skipped, and the final audit result
 - anything that needs a manual touch
 
 ## Rules
