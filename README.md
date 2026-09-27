@@ -14,6 +14,7 @@ See *Design Automation Multi-Agent Blueprint v2* for the full design.
 .claude-plugin/
   plugin.json            plugin manifest
   marketplace.json       lets the team install it from this repo
+
 skills/
   design-pipeline/       /design-pipeline — the Orchestrator
     SKILL.md
@@ -21,6 +22,7 @@ skills/
       preflight.md       Figma and Claude Design checks, and the design direction
       state-file.md      design-pipeline-state.json format and resume rules
   design-continue/       /design-continue — resume after a review round
+
 agents/
   design-system-agent.md reference image, screenshot or Figma file → Design System artifact
   brief-agent.md         brief → structured spec, incl. interaction states
