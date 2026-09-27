@@ -73,7 +73,8 @@ Then:
 ```
 Or just open the plugin and click install.
 
-## Update plugin to recieve enhanced pipeline
+## <img width="480" height="480" alt="SwipeUpGIF" src="https://github.com/user-attachments/assets/bb0aeeaf-36fb-4423-856e-6467627dfd1e" />
+Update plugin to recieve enhanced pipeline
 
 ```
 claude plugin marketplace update design-team
