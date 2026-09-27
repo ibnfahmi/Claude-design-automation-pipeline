@@ -71,8 +71,19 @@ Then:
 ```
 /plugin install design-automation@design-team
 ```
-
 Or just open the plugin and click install.
+
+## Update plugin to recieve enhanced pipeline
+
+```
+claude plugin marketplace update design-team
+```
+
+Then
+
+```
+claude plugin update design-automation@design-team
+```
 
 ## Use (per client project)
 
