@@ -56,7 +56,7 @@ claude mcp add --transport http figma https://mcp.figma.com/mcp
 
 ## Install (each team member, once)
 
-After this repo is pushed to your Git host:
+In Claude code chat:
 
 ```
 /plugin marketplace add https://github.com/ibnfahmi/Claude-design-automation-pipeline.git
