@@ -32,29 +32,29 @@ agents/
 ## Requirements
 
 - Claude Code Desktop with paid plan.
+- Git for desktop https://git-scm.com/install/
 - The Figma connector, signed in
 -/mcp server setup:
+  1. Open a terminal (PowerShell) and start Claude Code:
 
-1. Open a terminal (PowerShell) and start Claude Code:
+  ```
+  claude
+  ```
 
-```
-claude
-```
+  2. If Figma isn't set up yet, exit, add it, then start claude again:
 
-2. If Figma isn't set up yet, exit, add it, then start claude again:
+  ```
+  claude mcp add --transport http figma https://mcp.figma.com/mcp
+  ```
 
-```
-claude mcp add --transport http figma https://mcp.figma.com/mcp
-```
+  3. Inside the claude session, type:
 
-3. Inside the claude session, type:
-
-```
-/mcp
-```
-4. Pick figma (or figma-desktop) from the list, choose Authenticate, and finish signing in when your browser opens.
-- Optional: a Design System artifact in Claude Design, or a reference (image, screenshot or Figma file) to build one from
-- The Figma plugin for Claude Code (recommended, for the `figma-use` and `figma-generate-design` skills)
+  ```
+  /mcp
+  ```
+  4. Pick figma (or figma-desktop) from the list, choose Authenticate, and finish signing in when your browser opens.
+  - Optional: a Design System artifact in Claude Design, or a reference (image, screenshot or Figma file) to build one from
+  - The Figma plugin for Claude Code (recommended, for the `figma-use` and `figma-generate-design` skills)
 
 ## Install (each team member, once)
 
