@@ -1,4 +1,4 @@
-# README
+# 📄 README
 
 # Design automation pipeline
 
@@ -8,7 +8,7 @@ A Claude Code plugin that takes a raw design brief to a client-ready Figma file:
 
 See *Design Automation Multi-Agent Blueprint v2* for the full design.
 
-## What’s inside
+## 📦 What’s inside
 
 ```
 .claude-plugin/
@@ -31,26 +31,23 @@ agents/
   handoff-agent.md       approved design → native Figma file with state frames
 ```
 
-## Requirements
+## 🛠️ Requirements
 
 - Claude Code Desktop with paid plan.
 - Git for desktop https://git-scm.com/install/
 - The Figma connector, signed in
 -/mcp server setup:
   1. Open a terminal (PowerShell) and start Claude Code:
-
   ```
   claude
   ```
 
   2. If Figma isn't set up yet, exit, add it, then start claude again:
-
   ```
   claude mcp add --transport http figma https://mcp.figma.com/mcp
   ```
 
   3. Inside the claude session, type:
-
   ```
   /mcp
   ```
@@ -58,35 +55,32 @@ agents/
   - Optional: a Design System artifact in Claude Design, or a reference (image, screenshot or Figma file) to build one from
   - The Figma plugin for Claude Code (recommended, for the `figma-use` and `figma-generate-design` skills)
 
-## Install (each team member, once)
+## 📀 Install (each team member, once)
 
 In Claude code chat:
-
 ```
 /plugin marketplace add https://github.com/ibnfahmi/Claude-design-automation-pipeline.git
 ```
 
 Then:
-
 ```
 /plugin install design-automation@design-team
 ```
 Or just open the plugin and click install.
 
-## <img width="480" height="480" alt="SwipeUpGIF" src="https://github.com/user-attachments/assets/bb0aeeaf-36fb-4423-856e-6467627dfd1e" />
-Update plugin to recieve enhanced pipeline
+## ⬆️ Update plugin to recieve enhanced pipeline
 
+In Claude code chat:
 ```
 claude plugin marketplace update design-team
 ```
 
-Then
-
+Then:
 ```
 claude plugin update design-automation@design-team
 ```
 
-## Use (per client project)
+## 🧑‍💻 Use (per client project)
 
 1. Create a new folder for the client and start a new Claude Code session in it.
 2. Run `/design-pipeline`. (Plugin skills may also show as `/design-automation:design-pipeline`.)
@@ -101,14 +95,14 @@ claude plugin update design-automation@design-team
 
 Progress is saved in `design-pipeline-state.json` in the client folder, so you can stop and run `/design-continue` in a later session.
 
-## Recommended test order
+## 💡 Recommended test order
 
 1. **Brief Agent** — run it on a few real briefs and check the spec, especially the *Interactions and states* table.
 2. **Design Agent + Auditor + review loop** — confirm edits and comments made in Claude Design are read back correctly, and that the Auditor can click through the canvas's interactions.
 3. **Handoff Agent** — confirm each state becomes its own annotated frame and check whether prototype links are created.
 4. **Full run** on a real brief.
 
-## Open items
+## ⁉️ Open items
 
 - How much of the Claude Design canvas can be edited by hand, and whether those edits read back — to be tested.
 - Creating Figma prototype links through the connector — expected to work, not yet confirmed. The fallback is annotated state frames.
