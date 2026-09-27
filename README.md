@@ -68,7 +68,7 @@ Then:
 ```
 Or just open the plugin and click install.
 
-## ⬆️ Update plugin to recieve enhanced pipeline
+## ⬆️ Update plugin to recieve enhanced pipeline updates
 
 In Claude code chat:
 ```
