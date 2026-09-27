@@ -31,6 +31,26 @@ agents/
 
 - Claude Code with Artifacts / Claude Design available (for example, the Claude desktop app’s Code tab)
 - The Figma connector, signed in
+-/mcp server setup:
+
+1. Open a terminal (PowerShell) and start Claude Code:
+
+```
+claude
+```
+
+2. If Figma isn't set up yet, exit, add it, then start claude again:
+
+```
+claude mcp add --transport http figma https://mcp.figma.com/mcp
+```
+
+3. Inside the claude session, type:
+
+```
+/mcp
+```
+4. Pick figma (or figma-desktop) from the list, choose Authenticate, and finish signing in when your browser opens.
 - A design system set up in Claude Design (recommended)
 - The Figma plugin for Claude Code (recommended, for the `figma-use` and `figma-generate-design` skills)
 
