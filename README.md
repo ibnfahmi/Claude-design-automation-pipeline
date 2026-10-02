@@ -33,7 +33,8 @@ agents/
 
 ## 🛠️ Requirements
 
-- Claude Code Desktop with paid plan.
+- Claude Code Desktop installed with paid plan.
+- Claude CLI installed and signed-in
 - Git for desktop https://git-scm.com/install/
 - The Figma connector, signed in
 -/mcp server setup:
