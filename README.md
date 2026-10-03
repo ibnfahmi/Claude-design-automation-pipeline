@@ -8,9 +8,13 @@ A Claude Code plugin that takes a raw design brief to a client-ready Figma file:
 
 See *Design Automation Multi-Agent Blueprint v2* for the full design.
 
-## v0.3.0 — Task-Optimized Models (Now Live)
 
-Each agent runs on the optimal Claude model for its task: **Opus 5.5** for reasoning-heavy stages (Brief, Audit, System), **Sonnet 5.5** for creative/structural work (Design, Handoff). This reduces pipeline cost by ~50–60% vs. all-Opus while maintaining quality on critical stages. See [CHANGELOG.md](CHANGELOG.md) for full release notes, or [MODEL-OPTIMIZATION.md](MODEL-OPTIMIZATION.md) for detailed strategy.
+## 🆕 v0.3.0 — Task-Optimized Models (Now Live)
+
+Each agent runs on the optimal Claude model for its task: **Opus 5.5** for reasoning-heavy stages (Brief, Audit, System), **Sonnet 5.5** for creative/structural work (Design, Handoff). This reduces pipeline cost by **~50–60%** vs. all-Opus while maintaining quality on critical stages. See [CHANGELOG.md](CHANGELOG.md) for full release notes, or [MODEL-OPTIMIZATION.md](MODEL-OPTIMIZATION.md) for detailed strategy.
+
+
+
 
 ## 📦 What’s inside
 
@@ -32,6 +36,8 @@ agents/
   design-auditor.md      usability heuristics, WCAG AA and every interaction tested
   handoff-agent.md       approved design → native Figma file with state frames
 ```
+
+
 
 ## 🛠️ Requirements
 
@@ -59,6 +65,8 @@ claude mcp add --transport http figma https://mcp.figma.com/mcp
 4. Pick figma (or figma-desktop) from the list, choose Authenticate, and finish signing in when your browser opens.
 - Optional: a Design System artifact in Claude Design, or a reference (image, screenshot or Figma file) to build one from
 - The Figma plugin for Claude Code (recommended, for the `figma-use` and `figma-generate-design` skills)
+
+
 
 ## 📀 Install (each team member, once)
 
@@ -92,6 +100,8 @@ Or just open the plugin and click install.
 7. Run `/design-continue` to send changes back, or say **approved** to build the Figma file. Unfixed critical audit issues need an explicit "approve anyway".
 
 Progress is saved in `design-pipeline-state.json` in the client folder, so you can stop and run `/design-continue` in a later session.
+
+
 
 ## ⬆️ Update plugin to recieve enhanced pipeline updates
 
