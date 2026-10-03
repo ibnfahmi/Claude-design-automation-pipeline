@@ -8,13 +8,9 @@ A Claude Code plugin that takes a raw design brief to a client-ready Figma file:
 
 See *Design Automation Multi-Agent Blueprint v2* for the full design.
 
-## v0.2.0 — Model Optimization
+## v0.3.0 — Task-Optimized Models (Now Live)
 
-Each agent is now assigned the optimal Claude model for its task:
-- **Brief & Auditor & Design System:** Opus 5.5 (complex reasoning, quality-critical)
-- **Design & Handoff:** Sonnet 5.5 (creative work, efficiency)
-
-This reduces pipeline cost by ~50–60% vs. all-Opus while maintaining quality. [See MODEL-OPTIMIZATION.md for details.](MODEL-OPTIMIZATION.md)
+Each agent runs on the optimal Claude model for its task: **Opus 5.5** for reasoning-heavy stages (Brief, Audit, System), **Sonnet 5.5** for creative/structural work (Design, Handoff). This reduces pipeline cost by ~50–60% vs. all-Opus while maintaining quality on critical stages. See [CHANGELOG.md](CHANGELOG.md) for full release notes, or [MODEL-OPTIMIZATION.md](MODEL-OPTIMIZATION.md) for detailed strategy.
 
 ## What’s inside
 
