@@ -90,17 +90,3 @@ Or just open the plugin and click install.
 7. Run `/design-continue` to send changes back, or say **approved** to build the Figma file. Unfixed critical audit issues need an explicit "approve anyway".
 
 Progress is saved in `design-pipeline-state.json` in the client folder, so you can stop and run `/design-continue` in a later session.
-
-## Recommended test order
-
-1. **Brief Agent** — run it on a few real briefs and check the spec, especially the *Interactions and states* table.
-2. **Design Agent + Auditor + review loop** — confirm edits and comments made in Claude Design are read back correctly, and that the Auditor can click through the canvas's interactions.
-3. **Handoff Agent** — confirm each state becomes its own annotated frame and check whether prototype links are created.
-4. **Full run** on a real brief.
-
-## Open items
-
-- How much of the Claude Design canvas can be edited by hand, and whether those edits read back — to be tested.
-- Creating Figma prototype links through the connector — expected to work, not yet confirmed. The fallback is annotated state frames.
-- Whether subagents can use the Artifact, Figma and browser tools directly. If not, move those calls into the Orchestrator.
-- Whether Claude Design canvases are clickable in the browser. If not, the Auditor checks each state's artboard instead of clicking through.
