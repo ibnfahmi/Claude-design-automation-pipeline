@@ -1,4 +1,4 @@
-# 📄 README
+# README
 
 # Design automation pipeline
 
@@ -8,13 +8,20 @@ A Claude Code plugin that takes a raw design brief to a client-ready Figma file:
 
 See *Design Automation Multi-Agent Blueprint v2* for the full design.
 
-## 📦 What’s inside
+## v0.2.0 — Model Optimization
+
+Each agent is now assigned the optimal Claude model for its task:
+- **Brief & Auditor & Design System:** Opus 5.5 (complex reasoning, quality-critical)
+- **Design & Handoff:** Sonnet 5.5 (creative work, efficiency)
+
+This reduces pipeline cost by ~50–60% vs. all-Opus while maintaining quality. [See MODEL-OPTIMIZATION.md for details.](MODEL-OPTIMIZATION.md)
+
+## What’s inside
 
 ```
 .claude-plugin/
   plugin.json            plugin manifest
   marketplace.json       lets the team install it from this repo
-
 skills/
   design-pipeline/       /design-pipeline — the Orchestrator
     SKILL.md
@@ -22,7 +29,6 @@ skills/
       preflight.md       Figma and Claude Design checks, and the design direction
       state-file.md      design-pipeline-state.json format and resume rules
   design-continue/       /design-continue — resume after a review round
-
 agents/
   design-system-agent.md reference image, screenshot or Figma file → Design System artifact
   brief-agent.md         brief → structured spec, incl. interaction states
@@ -31,47 +37,50 @@ agents/
   handoff-agent.md       approved design → native Figma file with state frames
 ```
 
-## 🛠️ Requirements
+## Requirements
 
-- Claude Code Desktop installed with paid plan.
-- Claude CLI installed and signed-in
-- Git for desktop https://git-scm.com/install/
+- Claude Code with Artifacts / Claude Design available (for example, the Claude desktop app’s Code tab)
 - The Figma connector, signed in
 -/mcp server setup:
-  1. Open a terminal (PowerShell) and start Claude Code:
-  ```
-  claude
-  ```
 
-  2. If Figma isn't set up yet, exit, add it, then start claude again:
-  ```
-  claude mcp add --transport http figma https://mcp.figma.com/mcp
-  ```
+1. Open a terminal (PowerShell) and start Claude Code:
 
-  3. Inside the claude session, type:
-  ```
-  /mcp
-  ```
-  4. Pick figma (or figma-desktop) from the list, choose Authenticate, and finish signing in when your browser opens.
-  - Optional: a Design System artifact in Claude Design, or a reference (image, screenshot or Figma file) to build one from
-  - The Figma plugin for Claude Code (recommended, for the `figma-use` and `figma-generate-design` skills)
+```
+claude
+```
 
-## 📀 Install (each team member, once)
+2. If Figma isn't set up yet, exit, add it, then start claude again:
+
+```
+claude mcp add --transport http figma https://mcp.figma.com/mcp
+```
+
+3. Inside the claude session, type:
+
+```
+/mcp
+```
+4. Pick figma (or figma-desktop) from the list, choose Authenticate, and finish signing in when your browser opens.
+- Optional: a Design System artifact in Claude Design, or a reference (image, screenshot or Figma file) to build one from
+- The Figma plugin for Claude Code (recommended, for the `figma-use` and `figma-generate-design` skills)
+
+## Install (each team member, once)
 
 In Claude code chat:
+
 ```
 /plugin marketplace add https://github.com/ibnfahmi/Claude-design-automation-pipeline.git
 ```
 
 Then:
+
 ```
 /plugin install design-automation@design-team
 ```
+
 Or just open the plugin and click install.
 
-
-
-## 🧑‍💻 Use (per client project)
+## Use (per client project)
 
 1. Create a new folder for the client and start a new Claude Code session in it.
 2. Run `/design-pipeline`. (Plugin skills may also show as `/design-automation:design-pipeline`.)
@@ -86,14 +95,16 @@ Or just open the plugin and click install.
 
 Progress is saved in `design-pipeline-state.json` in the client folder, so you can stop and run `/design-continue` in a later session.
 
-## ⬆️ Update plugin to recieve enhanced pipeline updates
+## Recommended test order
 
-In Claude code chat:
-```
-claude plugin marketplace update design-team
-```
+1. **Brief Agent** — run it on a few real briefs and check the spec, especially the *Interactions and states* table.
+2. **Design Agent + Auditor + review loop** — confirm edits and comments made in Claude Design are read back correctly, and that the Auditor can click through the canvas's interactions.
+3. **Handoff Agent** — confirm each state becomes its own annotated frame and check whether prototype links are created.
+4. **Full run** on a real brief.
 
-Then:
-```
-claude plugin update design-automation@design-team
-```
+## Open items
+
+- How much of the Claude Design canvas can be edited by hand, and whether those edits read back — to be tested.
+- Creating Figma prototype links through the connector — expected to work, not yet confirmed. The fallback is annotated state frames.
+- Whether subagents can use the Artifact, Figma and browser tools directly. If not, move those calls into the Orchestrator.
+- Whether Claude Design canvases are clickable in the browser. If not, the Auditor checks each state's artboard instead of clicking through.

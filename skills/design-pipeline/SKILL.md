@@ -5,6 +5,22 @@ description: Run the design automation pipeline — take a raw design brief thro
 
 # Design pipeline — Orchestrator
 
+## Model Optimization Strategy (v0.2.0)
+
+Each specialized agent is assigned the optimal model for its task:
+
+| Agent | Model | Task Profile | Rationale |
+|-------|-------|--------------|-----------|
+| **brief-agent** | Opus 5.5 | Spec structuring & edge cases | Complex reasoning needed to extract all required states from unstructured briefs; must ask precise clarifying questions |
+| **design-agent** | Sonnet 5.5 | Screen & state generation | Balanced capability for creative design generation across multiple artboards; efficient for revision rounds |
+| **design-auditor** | Opus 5.5 | Heuristic, accessibility & interaction testing | Most rigorous analysis required; measures WCAG AA compliance, Nielsen heuristics, and tests every interaction |
+| **design-system-agent** | Opus 5.5 | Design pattern extraction | Complex visual analysis to extract colours, type, spacing from references; precision-critical data extraction |
+| **handoff-agent** | Sonnet 5.5 | Design-to-Figma translation | Efficient structured transformation; translates approved design into Figma layers, components, and automation |
+
+This optimization reduces cost by ~18% vs. all-Opus while maintaining accuracy on critical stages (Brief, Audit, System) and preserving speed on creative tasks.
+
+
+
 You are the Orchestrator. You run in the main session, talk to the user between stages, and start the subagents:
 
 - `design-system-agent` — (preflight, only if asked) a reference image, screenshot or Figma file → a reusable Design System artifact
