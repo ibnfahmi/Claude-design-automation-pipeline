@@ -42,6 +42,7 @@ agents/
 ## 🛠️ Requirements
 
 - Claude Code with Artifacts / Claude Design available (for example, the Claude desktop app’s Code tab)
+- Git install https://git-scm.com/install/
 - The Figma connector, signed in
 -/mcp server setup:
 
