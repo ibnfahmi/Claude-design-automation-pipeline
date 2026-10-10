@@ -2,6 +2,14 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.4.1] - 2026-10-10
+
+### Removed
+- The `design-continue` skill (`/design-continue`). `/design-pipeline` already finds `design-pipeline-state.json` and resumes from the saved stage, and replying "done" in the same session does the same job. Resume handling for a new session (re-run the Figma and Claude Design checks, keep the saved scope and direction, start a fresh Design Agent) moved into Stage 0 of the `design-pipeline` skill.
+
+### Changed
+- Review prompts and the README now say to reply **done** (or run `/design-pipeline` to resume) instead of `/design-continue`.
+
 ## [0.4.0] - 2026-10-10
 
 ### Added

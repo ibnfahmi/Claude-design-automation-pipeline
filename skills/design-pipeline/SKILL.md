@@ -1,6 +1,6 @@
 ---
 name: design-pipeline
-description: Run the design automation pipeline — take a raw design brief (or an existing canvas) through platform scope, a structured spec with numbered requirements, user stories for review, a Claude Design draft that is audited for usability and checked for coverage against the brief, and a client-ready Figma file with every interaction state exported. Use when the user runs /design-pipeline (optionally with --skip-stories) or asks to start a new design from a brief.
+description: Run the design automation pipeline — take a raw design brief (or an existing canvas) through platform scope, a structured spec with numbered requirements, user stories for review, a Claude Design draft that is audited for usability and checked for coverage against the brief, and a client-ready Figma file with every interaction state exported. Use when the user runs /design-pipeline (optionally with --skip-stories), asks to start a new design from a brief, or wants to resume a run in the current folder.
 ---
 
 # Design pipeline — Orchestrator
@@ -29,7 +29,10 @@ Never skip a stage (except the stories step when the user passed `--skip-stories
 
 Look for `design-pipeline-state.json` in the current folder (format in `references/state-file.md`).
 
-- Found and `stage` is not `done` → summarise where the run stopped and ask: resume, or start over? On resume, jump to that stage.
+- Found and `stage` is not `done` → summarise where the run stopped and ask: resume, or start over? On resume, jump to that stage:
+  - `review` → run the "When the user returns" steps of Stage 4. Anything the user typed with the command (for example `/design-pipeline approved`) counts as review feedback.
+  - `audit` → rerun Stage 3b. `stories` → continue the stories review (Stage 2b).
+  - In a new session, first re-run the Figma and Claude Design checks, keep the saved scope and direction (telling the user which are in use, and letting them change them), and start a fresh Design Agent if one is needed (the old agent ID won't work).
 - Not found → start a new run at Stage 1.
 
 ## Stage 1 — Preflight
@@ -82,11 +85,11 @@ Give the user:
 - the interaction list
 - the **audit** result: pass/fail, interactions passed, platform checks passed, counts by severity, and the critical and major issues in one line each (full report: `audit-round-<n>.md`)
 - the **coverage** result: *Done / Missing / Added* counts, each Missing requirement and each "Added (unrequested)" item in one line (full report: `coverage-round-<n>.md`)
-- this instruction: *"Edit the canvas and leave comments in Claude Design. When you're done, type `/design-continue` — or say 'approved' if it's ready for Figma. Tell me which audit issues to fix (for example 'fix all critical and major'). By default, the critical audit issues and every missing **must** requirement go into the next round. For each unrequested addition, tell me to keep it (I'll add it to the spec) or remove it."*
+- this instruction: *"Edit the canvas and leave comments in Claude Design. When you're done, reply 'done' here (or run `/design-pipeline` in a new session to resume) — or say 'approved' if it's ready for Figma. Tell me which audit issues to fix (for example 'fix all critical and major'). By default, the critical audit issues and every missing **must** requirement go into the next round. For each unrequested addition, tell me to keep it (I'll add it to the spec) or remove it."*
 
 Set `stage: "review"` in the state file and **end your turn**. Do not poll.
 
-When the user returns (via `/design-continue`, or by replying here):
+When the user returns (by replying here, or by running `/design-pipeline` and choosing to resume):
 
 1. Read the latest version of the design (Artifact `read` on `design_url`) so you see any direct edits.
 2. Read all open comments on it (load `ArtifactComments` via ToolSearch if needed).

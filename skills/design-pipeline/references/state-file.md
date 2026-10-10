@@ -1,6 +1,6 @@
 # State file: `design-pipeline-state.json`
 
-Written to the client project folder (the session's working directory) after every stage. It lets `/design-continue` or `/design-pipeline` resume a run in a later session.
+Written to the client project folder (the session's working directory) after every stage. It lets `/design-pipeline` resume a run in a later session.
 
 ```json
 {

@@ -9,9 +9,9 @@ A Claude Code plugin that takes a raw design brief (or an existing canvas) to a 
 See *Design Automation Multi-Agent Blueprint v2* for the full design.
 
 
-## 🆕 v0.4.0 — Platforms, stories and coverage
+## 🆕 v0.4.1 — Platforms, stories and coverage
 
-Pick your platforms in preflight (web app, dashboard, landing page, mobile, tablet, TV, kiosk/ATM and 9 more), each with its own short questions on breakpoints, device frames and constraints. See a quick **style preview** of your product before the slow design-system build, review **user stories** before design starts (`--skip-stories` to skip), and get a **Done / Missing / Added** coverage report against your brief or BRD after every round. See [CHANGELOG.md](CHANGELOG.md) for the full notes, [profiles/README.md](profiles/README.md) to add a platform, and [MODEL-OPTIMIZATION.md](MODEL-OPTIMIZATION.md) for the per-agent models.
+Pick your platforms in preflight (web app, dashboard, landing page, mobile, tablet, TV, kiosk/ATM and 9 more), each with its own short questions on breakpoints, device frames and constraints. See a quick **style preview** of your product before the slow design-system build, review **user stories** before design starts (`--skip-stories` to skip), and get a **Done / Missing / Added** coverage report against your brief or BRD after every round. `/design-continue` is removed: run `/design-pipeline` again to resume. See [CHANGELOG.md](CHANGELOG.md) for the full notes, [profiles/README.md](profiles/README.md) to add a platform, and [MODEL-OPTIMIZATION.md](MODEL-OPTIMIZATION.md) for the per-agent models.
 
 
 
@@ -28,7 +28,6 @@ skills/
     references/
       preflight.md       tool checks, starting point, platform scope, design direction and style preview
       state-file.md      design-pipeline-state.json and design-manifest.json formats, resume rules
-  design-continue/       /design-continue — resume after a review round
 agents/
   design-system-agent.md reference (image, screenshot, URL, Figma) → tokens fast, then Design System artifact
   brief-agent.md         brief, BRD or canvas → spec with numbered requirements and interaction states
@@ -106,9 +105,9 @@ Or just open the plugin and click install.
 5. Review the **user stories** in `user-stories.md` (skip with `/design-pipeline --skip-stories`).
 6. After each design round the Auditor tests the draft (Nielsen's heuristics, WCAG 2.1 AA, platform checks, a click-through of every interaction) and saves `audit-round-<n>.md`. The Coverage Agent compares the draft with your brief and saves `coverage-round-<n>.md` (Done / Missing / Added).
 7. Review the draft, the audit and the coverage report in Claude Design: edit the canvas, leave comments, and say which issues to fix and which unrequested additions to keep or remove.
-8. Run `/design-continue` to send changes back, or say **approved** to build the Figma file. Unfixed critical audit issues and missing must-have requirements need an explicit "approve anyway".
+8. Reply **done** to send changes back, or say **approved** to build the Figma file. Unfixed critical audit issues and missing must-have requirements need an explicit "approve anyway".
 
-Progress is saved in `design-pipeline-state.json` in the client folder, so you can stop and run `/design-continue` in a later session.
+Progress is saved in `design-pipeline-state.json` in the client folder, so you can stop and run `/design-pipeline` again in a later session to resume.
 
 
 
