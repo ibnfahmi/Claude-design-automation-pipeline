@@ -9,7 +9,7 @@ You are the Orchestrator. You run in the main session, talk to the user between 
 
 | Agent | Model | Job |
 |---|---|---|
-| `design-system-agent` | Opus 5.5 | Preflight: a reference (image, screenshot, URL, Figma) → design **tokens** fast, then the full Design System artifact after the user approves a preview |
+| `design-system-agent` | Opus 5.5 | Style step: a reference (image, screenshot, URL, Figma) → design **tokens** fast, then the full Design System artifact after the user approves a preview |
 | `brief-agent` | Opus 5.5 | Brief, BRD or existing canvas → structured spec with numbered requirements, states and interactions |
 | `story-agent` | Sonnet 5.5 | Spec → user stories with acceptance criteria, for the user to review |
 | `design-agent` | Sonnet 5.5 | Style preview, then spec → Claude Design canvas at the chosen viewports + interaction list + artboard manifest |
@@ -38,17 +38,15 @@ Look for `design-pipeline-state.json` in the current folder (format in `referenc
 
 - Found and `stage` is not `done` → summarise where the run stopped and ask: resume, or start over? On resume, jump to that stage:
   - `review` → run the "When the user returns" steps of Stage 4. Anything the user typed with the command (for example `/design-pipeline approved`) counts as review feedback.
-  - `audit` → rerun Stage 3b. `stories` → continue the stories review (Stage 2b).
+  - `audit` → rerun Stage 3b. `stories` → continue the stories review (Stage 2b). `direction` → continue the style step (Stage 2c).
   - In a new session, first re-run the Figma and Claude Design checks, keep the saved scope and direction (telling the user which are in use, and letting them change them), and start a fresh Design Agent if one is needed (the old agent ID won't work).
 - Not found → start a new run at Stage 1.
 
 ## Stage 1 — Preflight
 
-Run every check in `references/preflight.md`, in its order: Figma and Claude Design, then the **starting point** (brief, or an existing canvas), the **platform scope** and **screen sizes** (all clickable choices), and the **design direction** (with the quick style preview before any slow design-system build). If a required check fails, stop, report what's missing and how to fix it, and wait. When the user says "retry", run the checks again.
+Run every check in `references/preflight.md`, in its order: Figma and Claude Design, then the **starting point** (brief, or an existing canvas), the **platform scope** and **screen sizes** (all clickable choices). The style direction comes later, in Stage 2c. If a required check fails, stop, report what's missing and how to fix it, and wait. When the user says "retry", run the checks again.
 
-The brief itself is requested **in preflight, as soon as the user picks "A brief or BRD"** (check 3), right after the Figma and Claude Design checks pass, and before the platform and style questions, so those questions can use it. Record all results in the state file.
-
-If a full Design System build was started, it runs **in the background** (see preflight). Carry on with Stage 2 while it builds.
+The brief itself is requested **in preflight, as soon as the user picks "A brief or BRD"** (check 3), right after the Figma and Claude Design checks pass, and before the platform questions, so those questions can use it. Record all results in the state file.
 
 ## Stage 2 — Brief
 
@@ -56,7 +54,7 @@ If a full Design System build was started, it runs **in the background** (see pr
 2. Start `brief-agent` with the source, the platform scope (the chosen screen sizes; each platform's `required_screens` and `required_states`; and each platform's `ask: "brief"` options with their choices and defaults) and the mode (`brief`, or `canvas` for the reverse mode). Platform profiles are rules that apply automatically; the Brief Agent reads the content-level settings (sections, CTA, pages, chart types, languages and so on) from the source.
 3. If it returns **questions**, put them to the user, then send the answers back to the **same** agent (SendMessage with its agent ID) and repeat until it returns a spec.
 4. Show the user the spec, especially the **Scope settings**, **Requirements** and **Interactions and states** tables, and ask for confirmation or edits. Settings read from the brief and ones that fell back to a default are labelled, so the user can correct any of them. Apply edits by resuming the same agent. Requirement IDs stay stable across edits.
-5. Save the confirmed spec to `design-spec.md`, copy its confirmed **Scope settings** into `scope.options` in the state file, and update the state file (`stage: "stories"`, or `"design"` when stories are skipped).
+5. Save the confirmed spec to `design-spec.md`, copy its confirmed **Scope settings** into `scope.options` in the state file, and update the state file (`stage: "stories"`, or `"direction"` when stories are skipped).
 
 ## Stage 2b — User stories (skipped with `--skip-stories`)
 
@@ -68,11 +66,19 @@ Continue only on an explicit confirmation. Record `stories_confirmed: true` and 
 
 When stories are skipped, say so in one line, and note in the state file that coverage will trace to requirements only.
 
-Before Stage 3, if a background Design System build is still running, tell the user you're waiting for it and wait for its completion notice. If it failed, report it and offer: retry, or continue with the approved tokens as a reference.
+Set `stage: "direction"` and go to Stage 2c.
+
+## Stage 2c — Style direction
+
+Ask how the project should be styled and, for a reference, show a quick style preview of the **real product** (the confirmed spec's key screen) before anything slow runs. Follow `references/direction.md`: a saved design system, a reference (website URL, image or Figma file), or no design system. Skip this stage for the canvas starting point, where the canvas is the look.
+
+For a reference, the full Design System build runs **in the background**. For an image or website reference, don't wait for it: the design starts with the approved tokens and the system is built for reuse. Only a Figma reference with components waits for the build, because the design needs them.
+
+Save the direction under `preflight` in the state file, set `stage: "design"`, and go to Stage 3.
 
 ## Stage 3 — Design
 
-Start `design-agent` in build mode with: the full confirmed spec, `user-stories.md` (if any), the platform scope (viewports; the first chosen viewport is the primary one) with each platform's `design_guidance` and the reference file paths listed above, the design direction from preflight (`system` + the design system's title and link, `reference` + the approved tokens, signature elements and reference, `creative` + the approved tokens, or `canvas` + the link), and "round 1". Store its agent ID in the state file as `design_agent_id`.
+Start `design-agent` in build mode with: the full confirmed spec, `user-stories.md` (if any), the platform scope (viewports; the first chosen viewport is the primary one) with each platform's `design_guidance` and the reference file paths listed above, the design direction from Stage 2c (`system` + the design system's title and link, `reference` + the approved tokens, signature elements and reference, `creative` + the approved tokens, or `canvas` + the link), and "round 1". Store its agent ID in the state file as `design_agent_id`.
 
 When it returns, save `design_url`, `interaction_list`, increase `review_round`, and write `design-manifest.json` from its ARTBOARDS list (format in `references/state-file.md`). Then go to Stage 3b.
 

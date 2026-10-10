@@ -4,12 +4,12 @@
 
 A Claude Code plugin that takes a raw design brief (or an existing canvas) to a client-ready Figma file:
 
-**Preflight (platform scope, design direction, style preview) → Brief Agent → User stories (your review) → Design Agent (Claude Design) → Auditor + Coverage report ⇄ your review → Figma re-check → Handoff Agent (Figma)**
+**Preflight (brief, platforms, screen sizes) → Brief Agent → User stories (your review) → Style direction and preview → Design Agent (Claude Design) → Auditor + Coverage report ⇄ your review → Figma re-check → Handoff Agent (Figma)**
 
 See *Design Automation Multi-Agent Blueprint v2* for the full design.
 
 
-## 🆕 v0.4.9 — Platforms, stories and coverage
+## 🆕 v0.4.10 — Platforms, stories and coverage
 
 Click your platforms in preflight (web app, dashboard, landing page, mobile, tablet, TV, kiosk/ATM and 9 more) and the screen sizes; each platform's rules then apply automatically, and content details such as sections and CTA are read from your brief. See a quick **style preview** of your product before the slow design-system build, review **user stories** before design starts (`--skip-stories` to skip), and get a **Done / Missing / Added** coverage report against your brief or BRD after every round. `/design-continue` is removed: run `/design-pipeline` again to resume. See [CHANGELOG.md](CHANGELOG.md) for the full notes, [profiles/README.md](profiles/README.md) to add a platform, and [MODEL-OPTIMIZATION.md](MODEL-OPTIMIZATION.md) for the per-agent models.
 
@@ -26,7 +26,8 @@ skills/
   design-pipeline/       /design-pipeline — the Orchestrator
     SKILL.md
     references/
-      preflight.md       tool checks, starting point, platform scope, design direction and style preview
+      preflight.md       tool checks, starting point and brief, platform scope and screen sizes
+      direction.md       style direction (design system, reference or creative) and the style preview
       state-file.md      design-pipeline-state.json and design-manifest.json formats, resume rules
 agents/
   design-system-agent.md reference (image, screenshot, URL, Figma) → tokens fast, then Design System artifact

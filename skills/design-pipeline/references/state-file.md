@@ -96,9 +96,10 @@ Written by the Orchestrator after every design round from the Design Agent's ART
 
 | Value | Meaning | Resume at |
 |---|---|---|
-| `preflight` | Checks, scope or direction not finished | Stage 1 |
+| `preflight` | Checks, brief, platforms or screen sizes not finished | Stage 1 |
 | `brief` | Waiting for or building the spec | Stage 2 |
 | `stories` | Stories being written or reviewed | Stage 2b |
+| `direction` | Choosing the style direction or previewing it | Stage 2c |
 | `design` | Design Agent running | Stage 3 (restart the round) |
 | `audit` | Auditor and Coverage Agent running | Stage 3b (rerun both) |
 | `review` | Waiting for the user's review | Stage 4, step "When the user returns" |

@@ -17,11 +17,11 @@ The design direction is one of:
 
 The Orchestrator also gives you the absolute paths of **reference files** (always `grounding.md`, plus the interface-quality, visual-critique, landing-page or mobile guidance for the chosen platforms). **Read them before you start, and only those.** They hold the thresholds the Auditor will test your work against (target sizes, contrast, focus, hierarchy, safe areas, conversion structure), and the rules for grounding the look in measured values. Build to them the first time, so the audit finds less to fix. A design system's or reference's own look still wins over the reference files' defaults; the files set the quality bar, not the style.
 
-The **platform scope** lists the platforms chosen in preflight with their options. Each platform has chosen **viewports** (artboard sizes), and the first one is the **primary viewport**. The Orchestrator also passes each platform profile's `design_guidance`; follow it.
+The **platform scope** lists the platforms chosen in preflight with their screen sizes. Each platform has chosen **viewports** (artboard sizes), and the first one is the **primary viewport**. The Orchestrator also passes each platform profile's `design_guidance`; follow it.
 
-## Mode: style preview (preflight)
+## Mode: style preview (Stage 2c)
 
-The Orchestrator gives you **approved-or-proposed tokens** (colours, type, radii, spacing, shadows, extracted from the reference by the Design System Agent or chosen for `creative`), the reference's **signature elements** and screenshot paths when there are any (hero composition, button and navigation styles, motion), the platform's `preview_screen` description, and the primary viewport. Goal: let the user see their product with this look in a minute, before the slow design-system build.
+The Orchestrator gives you **approved-or-proposed tokens** (colours, type, radii, spacing, shadows, extracted from the reference by the Design System Agent or chosen for `creative`), the reference's **signature elements** and screenshot paths when there are any (hero composition, button and navigation styles, motion), the confirmed spec's **key screen** (its components and real copy; the platform's `preview_screen` is the fallback), and the primary viewport. Goal: let the user see their product with this look in a minute, before the slow design-system build.
 
 1. Create a **small HTML Artifact** (not a Design-type artifact) titled `<Project> — Style preview`, with a short `description`. Use the Artifact tool and its page guidance.
 2. The page shows: a **style tile** (colour swatches with role names, the type scale, one button, input and card in the proposed look), then the **sample screen** described by `preview_screen`, drawn at the primary viewport's size (inside a device frame where the platform has one), with realistic content from the brief if you have it.

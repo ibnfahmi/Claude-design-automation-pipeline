@@ -2,6 +2,15 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.4.10] - 2026-10-10
+
+### Changed
+- **The style step now comes after the user stories.** The order is now: preflight (tools, brief, platforms, screen sizes) → brief and spec → user stories → **style direction and preview** → design. Before, you chose a design system or reference and saw a preview before the spec existed.
+- **The preview shows the real product.** Because the spec is confirmed first, the style preview uses its most important screen with real copy and components, not a generic sample.
+- **The brief can guide the choice.** If the spec's tone or constraints name a design system, brand guidelines or a reference, that option is marked as recommended.
+- **No extra waiting.** For an image or website reference, the design starts with the approved tokens straight away and the reusable design system builds in the background. Only a Figma reference with components waits for the build.
+- The style step is its own file (`references/direction.md`) and its own saved stage (`direction`), so a run can be resumed there. Canvas starts still skip it.
+
 ## [0.4.9] - 2026-10-10
 
 ### Added

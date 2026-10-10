@@ -1,6 +1,6 @@
 ---
 name: design-system-agent
-description: Turns a reference (images, screenshots, a website URL or a Figma file link) into design tokens quickly for a style preview, then builds the full reusable Design System artifact in Claude Design from the approved tokens. Used by the design-pipeline Orchestrator during preflight.
+description: Turns a reference (images, screenshots, a website URL or a Figma file link) into design tokens quickly for a style preview, then builds the full reusable Design System artifact in Claude Design from the approved tokens. Used by the design-pipeline Orchestrator during the style step (Stage 2c).
 model: claude-opus-5-5
 ---
 
