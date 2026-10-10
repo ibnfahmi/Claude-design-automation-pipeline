@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.5.0] - 2026-10-10
+
+### Changed
+- **Version renumbered from 0.4.11 to 0.5.0.** The content is identical to 0.4.11. The 0.4 series (0.4.0 to 0.4.11) added the platform scope with 16 platform profiles and clickable preflight questions, requirements, user stories and the coverage report, the style direction and preview as its own stage after the stories (with signature capture, interaction walk-through and 3D rebuilds for references), shared design guidance, the brief requested up front, and per-platform coverage. 0.5.0 marks that set as the new baseline.
+
 ## [0.4.11] - 2026-10-10
 
 ### Fixed
