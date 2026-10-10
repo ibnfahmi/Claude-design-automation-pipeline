@@ -32,6 +32,7 @@ Reasonable overrides:
 
 ## History
 
+- **0.5.6:** no model changes.
 - **0.5.5:** no model changes.
 - **0.5.4:** no model changes.
 - **0.5.3:** no model changes; the Design Agent also builds `share/` and the Auditor tests it from disk.

@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.5.6] - 2026-10-10
+
+### Changed
+- The README no longer carries a "what's new" section for each release. Release notes live in this changelog; the README gets an announcement only for a major update the maintainer asks for.
+
 ## [0.5.5] - 2026-10-10
 
 ### Changed

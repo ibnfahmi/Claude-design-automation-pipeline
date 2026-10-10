@@ -9,17 +9,7 @@ A Claude Code plugin that takes a raw design brief (or an existing code project 
 See *Design Automation Multi-Agent Blueprint v2* for the full design.
 
 
-## 🆕 v0.5.5 — Git requirement restored
-
-Git is listed in the requirements again (with its install link) and checked in preflight, because each round is committed to a local repository in `code/`.
-
-## v0.5.3 — Share build
-
-Every project now also produces a `share/` folder (or one `share/index.html`) that opens by double-click, offline, so reviewers of any tech level need nothing installed. The Auditor tests it from disk. Plain HTML, CSS and JS is now the recommended stack in the preflight question.
-
-## v0.5.2 — Code first
-
-The output is now a **working code project** in `code/` (in the stack you choose per project: React + Vite + Tailwind, Next.js, plain HTML, or your own; some platforms have their own target: an extension, HTML emails, a TV or kiosk stage), not a Claude Design canvas. The style preview is a real route of that project, every screen and state is a frame you can open at `/frames`, journeys can be walked at `/journeys`, and the Auditor and Coverage Agent test the running app. Figma is an optional export at the end. See [CHANGELOG.md](CHANGELOG.md) for the full notes and [profiles/README.md](profiles/README.md) to add a platform.
+Release notes are in [CHANGELOG.md](CHANGELOG.md). To add a platform, see [profiles/README.md](profiles/README.md).
 
 ## 📦 What’s inside
 
