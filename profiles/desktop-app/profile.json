@@ -100,6 +100,7 @@
     }
   ],
   "preview_screen": "The main window with title bar, toolbar or sidebar, and the primary working area.",
+  "code_target": "React prototype inside a window frame per operating system, with menus and shortcuts. Not an Electron build unless asked.",
   "required_screens": [
     "Preferences / settings window",
     "About dialog"
@@ -124,7 +125,8 @@
       "_shared/references/polish.md",
       "_shared/references/states-and-feedback.md",
       "_shared/references/forms.md",
-      "_shared/references/dark-mode.md"
+      "_shared/references/dark-mode.md",
+      "_shared/references/code-quality.md"
     ],
     "checks": [
       "The minimum window size is designed and no primary action is clipped at it.",

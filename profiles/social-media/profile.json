@@ -101,6 +101,7 @@
     }
   ],
   "preview_screen": "One post in the first chosen format with headline, brand mark and visual.",
+  "code_target": "One route per asset at its exact pixel size, exportable as an image.",
   "derive_when_silent": "When the brief doesn't describe the posts, derive a small set from the product: a launch announcement, a key-feature highlight, and a customer-benefit post, in the chosen formats.",
   "required_screens": [],
   "required_states": [],
@@ -112,7 +113,8 @@
   "auditor": {
     "references": [
       "_shared/references/interface-quality.md",
-      "_shared/references/visual-critique.md"
+      "_shared/references/visual-critique.md",
+      "_shared/references/code-quality.md"
     ],
     "checks": [
       "Key text and logo sit inside safe areas for each format, clear of platform UI overlays.",

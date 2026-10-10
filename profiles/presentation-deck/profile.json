@@ -103,6 +103,7 @@
     }
   ],
   "preview_screen": "The title slide and one content slide.",
+  "code_target": "Slide components with keyboard navigation on a fixed-ratio stage that scales to fit.",
   "derive_when_silent": "When the brief doesn't outline the deck, derive a story arc from the product: problem, solution, how it works, key features, who it is for, proof or traction placeholders, and a call to action.",
   "required_screens": [
     "Title slide",
@@ -118,7 +119,8 @@
     "references": [
       "_shared/references/interface-quality.md",
       "_shared/references/visual-critique.md",
-      "_shared/references/data-viz.md"
+      "_shared/references/data-viz.md",
+      "_shared/references/code-quality.md"
     ],
     "checks": [
       "Each slide has one clear point and an obvious entry point.",

@@ -93,6 +93,7 @@
     }
   ],
   "preview_screen": "The primary surface (popup or side panel) at its real size, with realistic content.",
+  "code_target": "A real Manifest V3 extension project (manifest.json, popup, side panel and options pages built with Vite) plus preview routes that render each surface at its real size.",
   "required_screens": [
     "First-run / permissions explanation",
     "Store listing icon set (16, 32, 48, 128)"
@@ -116,7 +117,8 @@
       "_shared/references/visual-critique.md",
       "_shared/references/polish.md",
       "_shared/references/states-and-feedback.md",
-      "_shared/references/dark-mode.md"
+      "_shared/references/dark-mode.md",
+      "_shared/references/code-quality.md"
     ],
     "checks": [
       "Every surface is designed at its real size and nothing is clipped at it.",

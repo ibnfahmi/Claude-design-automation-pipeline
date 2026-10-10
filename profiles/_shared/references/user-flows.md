@@ -46,4 +46,4 @@ When the experience spans more than one platform or channel (web, app, email, su
 
 ## What the Coverage Agent checks
 
-For every journey step: the screen or state exists on the canvas, at every viewport the scope chose for that platform. For every branch and exit: the state exists (error, empty, timeout, cancel). A journey is fully designed only when all its steps and branches are.
+For every journey step: the screen or state exists as a frame in the running app, at every viewport the scope chose for that platform. For every branch and exit: the state exists (error, empty, timeout, cancel). A journey is fully designed only when all its steps and branches are.

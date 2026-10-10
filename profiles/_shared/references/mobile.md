@@ -1,6 +1,6 @@
 # Mobile design guidance
 
-Used by `mobile-app`, `tablet-app` and the mobile breakpoints of web profiles. Distilled from Emil Kowalski's `mobile-native` skill and Jakub Krehel's `better-accessibility` hit-area rules (both MIT). See `NOTICE.md`. The source skills are code-level; this file keeps what a designer decides on the canvas.
+Used by `mobile-app`, `tablet-app` and the mobile breakpoints of web profiles. Distilled from Emil Kowalski's `mobile-native` skill and Jakub Krehel's `better-accessibility` hit-area rules (both MIT). See `NOTICE.md`. The source skills are code-level; this file keeps what the design decides, which the code then implements.
 
 ## Frames
 

@@ -100,12 +100,12 @@
     {
       "id": "viewport",
       "ask": "auto",
-      "question": "Documentation canvas width?",
+      "question": "Docs page width?",
       "type": "single",
       "choices": [
         {
           "value": "doc",
-          "label": "1440 documentation canvas",
+          "label": "1440 docs page",
           "size": [
             1440,
             1024
@@ -117,6 +117,7 @@
     }
   ],
   "preview_screen": "A style tile: colour swatches with roles, the type scale, and one button, input and card in the proposed look.",
+  "code_target": "A component library project with a docs route per component showing every variant, state, size and theme.",
   "required_screens": [
     "Foundations overview",
     "One documentation page per component"
@@ -136,7 +137,8 @@
       "_shared/references/interface-quality.md",
       "_shared/references/visual-critique.md",
       "_shared/references/polish.md",
-      "_shared/references/dark-mode.md"
+      "_shared/references/dark-mode.md",
+      "_shared/references/code-quality.md"
     ],
     "checks": [
       "Every component shows all its states, sizes and themes, and no state is described without being shown.",

@@ -144,6 +144,7 @@
     }
   ],
   "preview_screen": "The home screen inside the first chosen device frame, with status bar, primary content and navigation.",
+  "code_target": "Responsive React prototype inside device frames (status bar, safe areas, home indicator) with tab or stack navigation and touch interactions. A prototype, not native code.",
   "required_screens": [
     "Splash or launch",
     "Onboarding (if the brief implies first-run)",
@@ -172,7 +173,8 @@
       "_shared/references/states-and-feedback.md",
       "_shared/references/forms.md",
       "_shared/references/dark-mode.md",
-      "_shared/references/localization.md"
+      "_shared/references/localization.md",
+      "_shared/references/code-quality.md"
     ],
     "checks": [
       "No content sits under the status bar, notch or home indicator; fixed bars extend into the safe area.",

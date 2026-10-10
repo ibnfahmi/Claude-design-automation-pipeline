@@ -8,7 +8,7 @@
     {
       "name": "design-automation",
       "source": "./",
-      "description": "Brief → Claude Design → Figma design pipeline."
+      "description": "Brief → user journeys → working code design pipeline, with an optional Figma export."
     }
   ]
 }

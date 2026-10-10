@@ -2,19 +2,16 @@
 
 # Design automation pipeline
 
-A Claude Code plugin that takes a raw design brief (or an existing canvas) to a client-ready Figma file:
+A Claude Code plugin that takes a raw design brief (or an existing code project or Figma file) to a **working code project**, with an optional Figma export:
 
-**Preflight (brief, platforms, screen sizes) → Brief Agent → User journeys (your review) → Style direction and preview → Design Agent (Claude Design) → Auditor + Coverage report ⇄ your review → Figma re-check → Handoff Agent (Figma)**
+**Preflight (Node check, brief, platforms, screen sizes) → Brief Agent → User journeys (your review) → Style direction and live preview → Design Agent builds the code → Auditor + Coverage report on the running app ⇄ your review → production check → optional Figma export**
 
 See *Design Automation Multi-Agent Blueprint v2* for the full design.
 
 
-## 🆕 v0.5.1 — Platforms, journeys and coverage
+## 🆕 v0.6.0 — Code first
 
-Click your platforms in preflight (web app, dashboard, landing page, mobile, tablet, TV, kiosk/ATM and 9 more) and the screen sizes; each platform's rules then apply automatically, and content details such as sections and CTA are read from your brief. See a quick **style preview** of your product before the slow design-system build, review **user journeys** (user flows for every platform and across platforms) before design starts (`--skip-journeys` to skip), and get a **Done / Missing / Added** coverage report against your brief or BRD after every round. `/design-continue` is removed: run `/design-pipeline` again to resume. See [CHANGELOG.md](CHANGELOG.md) for the full notes, [profiles/README.md](profiles/README.md) to add a platform, and [MODEL-OPTIMIZATION.md](MODEL-OPTIMIZATION.md) for the per-agent models.
-
-
-
+The output is now a **working code project** in `code/` (in the stack you choose per project: React + Vite + Tailwind, Next.js, plain HTML, or your own; some platforms have their own target: an extension, HTML emails, a TV or kiosk stage), not a Claude Design canvas. The style preview is a real route of that project, every screen and state is a frame you can open at `/frames`, journeys can be walked at `/journeys`, and the Auditor and Coverage Agent test the running app. Figma is an optional export at the end. See [CHANGELOG.md](CHANGELOG.md) for the full notes and [profiles/README.md](profiles/README.md) to add a platform.
 
 ## 📦 What’s inside
 
@@ -30,13 +27,13 @@ skills/
       direction.md       style direction (design system, reference or creative) and the style preview
       state-file.md      design-pipeline-state.json and design-manifest.json formats, resume rules
 agents/
-  design-system-agent.md reference (image, screenshot, URL, Figma) → tokens fast, then Design System artifact
-  brief-agent.md         brief, BRD or canvas → spec with numbered requirements and interaction states
+  design-system-agent.md reference (image, screenshot, URL, Figma) → tokens fast, then a design-system folder
+  brief-agent.md         brief, BRD, existing code or Figma → spec with numbered requirements and interaction states
   journey-agent.md       spec → user journeys as user flows (every platform, cross-platform paths), for your review
-  design-agent.md        style preview; spec → Claude Design canvas at the chosen viewports
-  design-auditor.md      usability heuristics, WCAG AA, platform checks and every interaction tested
+  design-agent.md        scaffold and style preview; spec and journeys → a working, responsive code project with a frame registry
+  design-auditor.md      tests the running app: heuristics, WCAG AA, platform checks, code checks and every interaction
   coverage-agent.md      brief/BRD vs design → Done, Missing, Added
-  handoff-agent.md       approved design → native Figma file with state frames
+  handoff-agent.md       optional: approved app → Figma file with a frame per screen and state
 profiles/
   index.json             the platform list
   <platform>/profile.json  questions, required screens and states, audit checks (16 platforms)
@@ -48,33 +45,19 @@ NOTICE.md                attributions for the open-source guidance
 
 ## 🛠️ Requirements
 
-- Claude Code with Artifacts / Claude Design available (for example, the Claude desktop app’s Code tab)
-- Git install https://git-scm.com/install/
-- The Figma connector, signed in
--/mcp server setup:
-
-1. Open a terminal (PowerShell) and start Claude Code:
-
-```
-claude
-```
-
-2. If Figma isn't set up yet, exit, add it, then start claude again:
+- Claude Code (for example the Claude desktop app's Code tab, which also gives the built-in browser pane the pipeline uses to preview and test the app)
+- **Node.js 20 or newer** and npm, because the output is a real code project
+- Optional, only for the Figma export or a Figma reference: the Figma connector, signed in
+  1. Open a terminal (PowerShell) and start Claude Code: `claude`
+  2. If Figma isn't set up yet, exit, add it, then start claude again:
 
 ```
 claude mcp add --transport http figma https://mcp.figma.com/mcp
 ```
 
-3. Inside the claude session, type:
-
-```
-/mcp
-```
-4. Pick figma (or figma-desktop) from the list, choose Authenticate, and finish signing in when your browser opens.
-- Optional: a Design System artifact in Claude Design, or a reference (image, screenshot or Figma file) to build one from
-- The Figma plugin for Claude Code (recommended, for the `figma-use` and `figma-generate-design` skills)
-
-
+  3. Inside the claude session, type `/mcp`, pick figma (or figma-desktop), choose Authenticate, and finish signing in when your browser opens.
+- Optional: a saved design-system folder (in `~/.claude/design-systems/`), or a reference (image, screenshot, website URL or Figma file) to take the look from
+- The Figma plugin for Claude Code (recommended for the export, for the `figma-use` and `figma-generate-design` skills)
 
 ## 📀 Install (each team member, once)
 
@@ -98,15 +81,16 @@ Or just open the plugin and click install.
 
 1. Create a new folder for the client and start a new Claude Code session in it.
 2. Run `/design-pipeline`. (Plugin skills may also show as `/design-automation:design-pipeline`.)
-3. Pass the preflight check, then choose:
-   - **where to start**: a brief or BRD, or an existing Claude Design canvas or Figma file;
-   - **the platforms** (one or several), and answer each platform's short questions (or take the defaults), such as device frames, breakpoints and navigation;
-   - **the design direction**: a saved design system; a reference (image, screenshot, website URL or Figma file) with a quick style preview before the design system is built; or no design system, where the Design Agent chooses the look.
-4. Paste the brief (or point to the BRD files) and answer any questions. Confirm the numbered requirements.
+3. Pass the Node check, then choose:
+   - **where to start**: a brief or BRD, an existing code project, or a Figma file;
+   - **the platforms** (one or several), the **screen sizes** and the **code stack** (React + Vite + Tailwind, Next.js, plain HTML, or your own, each with a short note on when to use it), by clicking;
+   - then paste the brief (or point to the BRD files).
+4. Answer any questions, and confirm the numbered requirements.
 5. Review the **user journeys** in `user-journeys.md`: flows with screens, decisions, error paths and exits, for every platform and across platforms (skip with `/design-pipeline --skip-journeys`).
-6. After each design round the Auditor tests the draft (Nielsen's heuristics, WCAG 2.1 AA, platform checks, a click-through of every interaction) and saves `audit-round-<n>.md`. The Coverage Agent compares the draft with your brief and saves `coverage-round-<n>.md` (Done / Missing / Added).
-7. Review the draft, the audit and the coverage report in Claude Design: edit the canvas, leave comments, and say which issues to fix and which unrequested additions to keep or remove.
-8. Reply **done** to send changes back, or say **approved** to build the Figma file. Unfixed critical audit issues and missing must-have requirements need an explicit "approve anyway".
+6. Choose the **style**: a saved design system, a reference (image, screenshot, website URL or Figma file) with a live preview of your product in that look, or no design system.
+7. The Design Agent builds the project in `code/`. After each round the Auditor tests the running app (Nielsen's heuristics, WCAG 2.1 AA, platform checks, code checks, a click-through of every interaction) and saves `audit-round-<n>.md`. The Coverage Agent compares the app with your brief and saves `coverage-round-<n>.md` (Done / Missing / Added).
+8. Try the app in the browser pane (frames at `/frames`, journeys at `/journeys`), and tell Claude what to change, or edit the code yourself: your edits are kept. Say which issues to fix and which unrequested additions to keep or remove.
+9. Reply **done** to send changes back, or say **approved** to finish. Unfixed critical audit issues and missing must-have requirements need an explicit "approve anyway". After approval you can optionally export the app to a Figma file.
 
 Progress is saved in `design-pipeline-state.json` in the client folder, so you can stop and run `/design-pipeline` again in a later session to resume.
 

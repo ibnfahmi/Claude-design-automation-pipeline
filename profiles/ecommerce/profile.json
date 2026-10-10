@@ -109,6 +109,7 @@
     }
   ],
   "preview_screen": "A product detail page: gallery, title, price, variant selector and the add-to-cart button, with realistic product content.",
+  "code_target": "React + Vite storefront: listing, product, cart and checkout flows with an in-memory cart and a mock catalogue.",
   "required_screens": [
     "Cart (empty)",
     "Order confirmation"
@@ -135,7 +136,8 @@
       "_shared/references/polish.md",
       "_shared/references/states-and-feedback.md",
       "_shared/references/forms.md",
-      "_shared/references/localization.md"
+      "_shared/references/localization.md",
+      "_shared/references/code-quality.md"
     ],
     "checks": [
       "Price, variant, stock status and delivery estimate are visible on the product page without scrolling at the primary viewport.",

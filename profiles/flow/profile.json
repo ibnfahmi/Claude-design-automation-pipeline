@@ -95,6 +95,7 @@
     }
   ],
   "preview_screen": "The first step of the flow with its progress indicator, one primary action and a back control.",
+  "code_target": "A React flow with working steps, validation, back navigation and a completion state.",
   "required_screens": [
     "Success / completion screen"
   ],
@@ -119,7 +120,8 @@
       "_shared/references/polish.md",
       "_shared/references/states-and-feedback.md",
       "_shared/references/forms.md",
-      "_shared/references/localization.md"
+      "_shared/references/localization.md",
+      "_shared/references/code-quality.md"
     ],
     "checks": [
       "Every step shows progress and has a way back that keeps entered data.",

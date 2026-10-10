@@ -117,6 +117,7 @@
     }
   ],
   "preview_screen": "The main logged-in screen: navigation, a page title with its primary action, and one list or card group with realistic content.",
+  "code_target": "React + Vite app (default stack): routes for the product's screens, working forms, navigation and states.",
   "required_screens": [
     "Sign in (if auth is yes)",
     "Settings or profile",
@@ -142,7 +143,8 @@
       "_shared/references/states-and-feedback.md",
       "_shared/references/forms.md",
       "_shared/references/dark-mode.md",
-      "_shared/references/localization.md"
+      "_shared/references/localization.md",
+      "_shared/references/code-quality.md"
     ],
     "checks": [
       "The layout holds at every chosen breakpoint, and the navigation collapses deliberately at the smallest.",

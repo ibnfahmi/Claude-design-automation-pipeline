@@ -171,6 +171,7 @@
     }
   ],
   "preview_screen": "The welcome screen: a clear title, the two or three main service buttons at kiosk scale, a language switch and an accessibility button.",
+  "code_target": "A fixed-size stage at the machine's screen size, with idle, timeout-warning and reset behaviour built in.",
   "required_screens": [
     "Welcome / start with language selection",
     "Accessibility settings",
@@ -204,7 +205,8 @@
       "_shared/references/grounding.md",
       "_shared/references/states-and-feedback.md",
       "_shared/references/forms.md",
-      "_shared/references/localization.md"
+      "_shared/references/localization.md",
+      "_shared/references/code-quality.md"
     ],
     "checks": [
       "Every touch target meets the chosen size (about 20 mm physical or larger) and is spaced to avoid mistaken touches.",

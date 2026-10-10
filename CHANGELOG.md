@@ -2,6 +2,25 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.6.0] - 2026-10-10
+
+### Changed
+- **Code first. The Claude Design canvas is gone.** The pipeline's deliverable is a **working code project** in `code/` inside the client folder (its own local git repository, never pushed). The stack is chosen per project (see below); the reference layout is React + Vite + TypeScript + Tailwind CSS + React Router. Each platform declares a `code_target`: an app, a responsive prototype inside device or window frames, a real Manifest V3 extension project, HTML email templates, one route per social asset, slide components, or a fixed-size TV or kiosk stage with focus navigation and idle and reset behaviour.
+- **Real interactions, tokens and frames.** Everything the references describe actually works (navigation, forms with validation, menus, dialogs, motion). Design tokens are CSS variables in `tokens.css` that Tailwind maps to. Every screen and state from the spec and the journeys is a registered **frame** reachable at `/frames/<slug>` with no manual steps, with a gallery at `/frames` and the journeys as ordered links at `/journeys`.
+- **The style preview is a route of the project.** In the style step, the Design Agent scaffolds `code/`, adds `/style-preview` and starts the app with the preview tool, so the preview and the full build share one project and the preview components are reused. 3D references are built with `three` installed from npm.
+- **Design systems are portable folders**, not Claude Design artifacts: `tokens.json`, `tokens.css`, a Tailwind theme, a brand book and, from Figma, React components, saved by default in `~/.claude/design-systems/<name>/` so any project can use them.
+- **The Auditor and Coverage Agent test the running app.** The Auditor resizes the browser to each chosen viewport, clicks through the real app and the journeys, runs the build, reads the console and network, and checks the source against the new `code-quality.md` (distilled from Emil Kowalski's `mobile-native` and Jakub Krehel's accessibility, layout, typography and UI skills). The Coverage Agent checks frames by route and source file.
+- **User edits are kept.** At the start of a revision round the Design Agent reads `git status` and `git diff` in `code/`, and keeps what you changed by hand.
+- **Figma is an optional export.** After approval the pipeline asks whether to export to Figma. The Handoff Agent captures each frame from the running app (or builds it natively if capture isn't available), binds the tokens as variables, writes motion notes from the real code, puts requirement IDs, journey steps and the source file on each frame, and wires prototype links in journey order. The Figma connector is checked only then, or when you start from or reference a Figma file.
+- **The stack is asked per project**, with a short note on when to use each: React + Vite + Tailwind (apps, dashboards, prototypes), Next.js (SEO, marketing site plus app in one project), plain HTML, CSS and JS (small static pages), or your own (Vue, Svelte, Astro and so on). It is skipped for an existing code project (its stack is kept) and where every platform has its own fixed target.
+- **Preflight checks Node and npm** (Node 20 or newer) instead of Claude Design and Figma. **Starting points** are now a brief, an existing code project (worked on in its own stack, on a `design-automation` branch), or a Figma file.
+- New shared references `code-conventions.md` (layout, tokens, frames, running, quality gates, git) and `code-quality.md` (the code-level bar), the latter added to every platform's audit references.
+- Renames: `design_url` → `dev_url` and `code_dir`, artboards → frames, the manifest's `code_file`, `route` and `source: existing`, and the review stage now centres on the running app.
+
+### Notes
+- The mobile, tablet and desktop outputs are web prototypes in device and window frames, not native code.
+- The Design Agent now writes a full application each round, which is heavier work than drawing screens; consider overriding it to Opus for large projects (see `MODEL-OPTIMIZATION.md`).
+
 ## [0.5.1] - 2026-10-10
 
 ### Changed

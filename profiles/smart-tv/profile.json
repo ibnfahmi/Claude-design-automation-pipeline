@@ -39,7 +39,7 @@
     {
       "id": "resolution",
       "ask": "preflight",
-      "question": "Design canvas?",
+      "question": "Stage size?",
       "type": "single",
       "choices": [
         {
@@ -133,6 +133,7 @@
     }
   ],
   "preview_screen": "The home screen: a hero or featured item, two content rows, and the focused item clearly highlighted, inside the overscan safe zone.",
+  "code_target": "A fixed-size stage that scales to fit, with spatial (D-pad) focus navigation and a visible focus state.",
   "required_screens": [
     "Home",
     "Detail view for an item",
@@ -160,7 +161,8 @@
       "_shared/references/interface-quality.md",
       "_shared/references/visual-critique.md",
       "_shared/references/grounding.md",
-      "_shared/references/states-and-feedback.md"
+      "_shared/references/states-and-feedback.md",
+      "_shared/references/code-quality.md"
     ],
     "checks": [
       "No content or control sits in the overscan margin.",

@@ -112,6 +112,7 @@
     }
   ],
   "preview_screen": "The help center home: search, popular topics, and category cards.",
+  "code_target": "A React docs site with search, category and article routes, a table of contents and a no-results state.",
   "derive_when_silent": "When the brief doesn't describe help content, derive a help-center structure from the product's features and flows: getting started, one article group per main feature, account and billing, troubleshooting, and contact support.",
   "required_screens": [
     "Home with search",
@@ -138,7 +139,8 @@
       "_shared/references/visual-critique.md",
       "_shared/references/polish.md",
       "_shared/references/states-and-feedback.md",
-      "_shared/references/localization.md"
+      "_shared/references/localization.md",
+      "_shared/references/code-quality.md"
     ],
     "checks": [
       "Article body line length is about 60-80 characters and line height is 1.4 or more.",

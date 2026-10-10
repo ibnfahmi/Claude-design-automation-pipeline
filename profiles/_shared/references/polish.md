@@ -16,10 +16,10 @@ Used by the Design Agent (apply while building), the Auditor (a final polish pas
 
 - Stroke tracks the text beside it: about 1.5px next to regular text, 2px next to medium or semibold, 2.5px next to bold. One icon set per surface.
 - Size inline icons at 1em to 1.25em of the adjacent text. Check every icon at the smallest size it renders (often 16px).
-- **Outline is the default state, fill marks active** (selected tab, saved bookmark, liked heart). Show both states on the canvas.
+- **Outline is the default state, fill marks active** (selected tab, saved bookmark, liked heart). Implement both states.
 - Mirror an icon in RTL only if its meaning follows reading direction (back arrows, chevrons, list and indent glyphs). Logos, checkmarks, clocks and play controls stay.
 
-## Motion (show as notes; a static canvas can't play it)
+## Motion (implement it in code; a Figma export carries it as motion notes)
 
 | Case | Value |
 |---|---|

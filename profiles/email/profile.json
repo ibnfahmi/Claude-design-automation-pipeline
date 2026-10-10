@@ -98,6 +98,7 @@
     }
   ],
   "preview_screen": "The first email in the list at 600px: header with logo, headline, body copy and the primary button.",
+  "code_target": "HTML email templates (table layout, inline-friendly CSS) in emails/, with a preview route in light, dark and images-blocked views.",
   "derive_when_silent": "When the brief doesn't list emails, derive the transactional emails the product's flows imply: welcome after sign-up, verification or password reset, receipts or confirmations for the main actions, and notifications for the events users care about.",
   "required_screens": [],
   "required_states": [
@@ -114,7 +115,8 @@
     "references": [
       "_shared/references/interface-quality.md",
       "_shared/references/visual-critique.md",
-      "_shared/references/dark-mode.md"
+      "_shared/references/dark-mode.md",
+      "_shared/references/code-quality.md"
     ],
     "checks": [
       "The main message and primary action survive with images blocked.",

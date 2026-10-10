@@ -102,6 +102,7 @@
     }
   ],
   "preview_screen": "The main screen in the first chosen frame and orientation, using the extra width (sidebar, split panes or a multi-column layout).",
+  "code_target": "Responsive React prototype inside tablet frames, in both orientations if chosen.",
   "required_screens": [],
   "required_states": [
     "Keyboard open",
@@ -121,7 +122,8 @@
       "_shared/references/visual-critique.md",
       "_shared/references/polish.md",
       "_shared/references/states-and-feedback.md",
-      "_shared/references/forms.md"
+      "_shared/references/forms.md",
+      "_shared/references/code-quality.md"
     ],
     "checks": [
       "The layout uses the available width and is not a scaled-up phone layout.",

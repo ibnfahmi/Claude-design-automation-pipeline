@@ -152,6 +152,7 @@
     }
   ],
   "preview_screen": "The overview page: a KPI row, one main chart, and a table with realistic numbers and a filter bar.",
+  "code_target": "React + Vite app with a sidebar or top-nav shell, working filters, tables and charts (an accessible charting library or hand-built SVG), mock data.",
   "required_screens": [
     "Overview",
     "Detail view for a table row",
@@ -180,7 +181,8 @@
       "_shared/references/polish.md",
       "_shared/references/states-and-feedback.md",
       "_shared/references/data-viz.md",
-      "_shared/references/dark-mode.md"
+      "_shared/references/dark-mode.md",
+      "_shared/references/code-quality.md"
     ],
     "checks": [
       "Every chart has a title, labelled axes or direct labels, units, and a legend or direct labels that don't rely on colour alone.",
