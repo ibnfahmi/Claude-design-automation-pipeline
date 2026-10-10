@@ -2,6 +2,16 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.4.8] - 2026-10-10
+
+### Fixed
+- **Choosing "A brief or BRD" never asked for the brief.** The pipeline went straight to the platform question, and only asked for the brief later, in Stage 2, after platforms, screen sizes and style.
+
+### Changed
+- **The brief is requested as soon as you pick it.** Right after the Figma and Claude Design checks, the pipeline asks you to paste the brief or point to your BRD or other documents (PDF, Word, Markdown or text; drag a file into the chat), reads all of it, saves it as `brief-source.md`, and gives a two-line read-back so you can see it was understood. A one-sentence description is accepted if you have nothing fuller.
+- **The later questions use it.** The platform question marks the platforms your brief implies as recommended, and the style preview takes its one-line product description from the brief instead of asking for it.
+- Stage 2 no longer asks for the brief again, except on a resumed run where `brief-source.md` is missing.
+
 ## [0.4.7] - 2026-10-10
 
 ### Changed
