@@ -2,16 +2,16 @@
 
 # Design automation pipeline
 
-A Claude Code plugin that takes a raw design brief to a client-ready Figma file:
+A Claude Code plugin that takes a raw design brief (or an existing canvas) to a client-ready Figma file:
 
-**Preflight (design direction) → Brief Agent → Design Agent (Claude Design) → Auditor ⇄ your review → Figma re-check → Handoff Agent (Figma)**
+**Preflight (platform scope, design direction, style preview) → Brief Agent → User stories (your review) → Design Agent (Claude Design) → Auditor + Coverage report ⇄ your review → Figma re-check → Handoff Agent (Figma)**
 
 See *Design Automation Multi-Agent Blueprint v2* for the full design.
 
 
-## 🆕 v0.3.0 — Task-Optimized Models (Now Live)
+## 🆕 v0.4.0 — Platforms, stories and coverage
 
-Each agent runs on the optimal Claude model for its task: **Opus 5.5** for reasoning-heavy stages (Brief, Audit, System), **Sonnet 5.5** for creative/structural work (Design, Handoff). This reduces pipeline cost by **~50–60%** vs. all-Opus while maintaining quality on critical stages. See [CHANGELOG.md](CHANGELOG.md) for full release notes, or [MODEL-OPTIMIZATION.md](MODEL-OPTIMIZATION.md) for detailed strategy.
+Pick your platforms in preflight (web app, dashboard, landing page, mobile, tablet, TV, kiosk/ATM and 9 more), each with its own short questions on breakpoints, device frames and constraints. See a quick **style preview** of your product before the slow design-system build, review **user stories** before design starts (`--skip-stories` to skip), and get a **Done / Missing / Added** coverage report against your brief or BRD after every round. See [CHANGELOG.md](CHANGELOG.md) for the full notes, [profiles/README.md](profiles/README.md) to add a platform, and [MODEL-OPTIMIZATION.md](MODEL-OPTIMIZATION.md) for the per-agent models.
 
 
 
@@ -26,15 +26,22 @@ skills/
   design-pipeline/       /design-pipeline — the Orchestrator
     SKILL.md
     references/
-      preflight.md       Figma and Claude Design checks, and the design direction
-      state-file.md      design-pipeline-state.json format and resume rules
+      preflight.md       tool checks, starting point, platform scope, design direction and style preview
+      state-file.md      design-pipeline-state.json and design-manifest.json formats, resume rules
   design-continue/       /design-continue — resume after a review round
 agents/
-  design-system-agent.md reference image, screenshot or Figma file → Design System artifact
-  brief-agent.md         brief → structured spec, incl. interaction states
-  design-agent.md        spec → Claude Design canvas + interaction list
-  design-auditor.md      usability heuristics, WCAG AA and every interaction tested
+  design-system-agent.md reference (image, screenshot, URL, Figma) → tokens fast, then Design System artifact
+  brief-agent.md         brief, BRD or canvas → spec with numbered requirements and interaction states
+  story-agent.md         spec → user stories with acceptance criteria, for your review
+  design-agent.md        style preview; spec → Claude Design canvas at the chosen viewports
+  design-auditor.md      usability heuristics, WCAG AA, platform checks and every interaction tested
+  coverage-agent.md      brief/BRD vs design → Done, Missing, Added
   handoff-agent.md       approved design → native Figma file with state frames
+profiles/
+  index.json             the platform list
+  <platform>/profile.json  questions, required screens and states, audit checks (16 platforms)
+  _shared/references/    distilled guidance used by the profiles (see NOTICE.md)
+NOTICE.md                attributions for the open-source guidance
 ```
 
 
@@ -91,14 +98,15 @@ Or just open the plugin and click install.
 
 1. Create a new folder for the client and start a new Claude Code session in it.
 2. Run `/design-pipeline`. (Plugin skills may also show as `/design-automation:design-pipeline`.)
-3. Pass the preflight check and choose the design direction:
-   - **a saved design system**, picked from your Design System artifacts;
-   - **a reference** (image, screenshot or Figma file), which can be turned into a new reusable design system;
-   - **no design system**, and the Design Agent chooses the look.
-4. Paste the brief and answer any questions.
-5. After each design round the Auditor tests the draft: Nielsen's heuristics, WCAG 2.1 AA and a click-through of every interaction. Its report is saved as `audit-round-<n>.md`.
-6. Review the draft and the audit in Claude Design: edit the canvas, leave comments, and say which audit issues to fix.
-7. Run `/design-continue` to send changes back, or say **approved** to build the Figma file. Unfixed critical audit issues need an explicit "approve anyway".
+3. Pass the preflight check, then choose:
+   - **where to start**: a brief or BRD, or an existing Claude Design canvas or Figma file;
+   - **the platforms** (one or several), and answer each platform's short questions (or take the defaults), such as device frames, breakpoints and navigation;
+   - **the design direction**: a saved design system; a reference (image, screenshot, website URL or Figma file) with a quick style preview before the design system is built; or no design system, where the Design Agent chooses the look.
+4. Paste the brief (or point to the BRD files) and answer any questions. Confirm the numbered requirements.
+5. Review the **user stories** in `user-stories.md` (skip with `/design-pipeline --skip-stories`).
+6. After each design round the Auditor tests the draft (Nielsen's heuristics, WCAG 2.1 AA, platform checks, a click-through of every interaction) and saves `audit-round-<n>.md`. The Coverage Agent compares the draft with your brief and saves `coverage-round-<n>.md` (Done / Missing / Added).
+7. Review the draft, the audit and the coverage report in Claude Design: edit the canvas, leave comments, and say which issues to fix and which unrequested additions to keep or remove.
+8. Run `/design-continue` to send changes back, or say **approved** to build the Figma file. Unfixed critical audit issues and missing must-have requirements need an explicit "approve anyway".
 
 Progress is saved in `design-pipeline-state.json` in the client folder, so you can stop and run `/design-continue` in a later session.
 

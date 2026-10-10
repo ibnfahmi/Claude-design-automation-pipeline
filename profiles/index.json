@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "platforms": [
+    "web-app",
+    "dashboard",
+    "landing-page",
+    "ecommerce",
+    "mobile-app",
+    "tablet-app",
+    "desktop-app",
+    "browser-extension",
+    "design-system-library",
+    "email",
+    "presentation-deck",
+    "social-media",
+    "flow",
+    "docs-help-center",
+    "smart-tv",
+    "kiosk"
+  ],
+  "other": "Free-text platform with no profile. Ask for the viewport size and any constraints, and use the web-app profile's checks."
+}

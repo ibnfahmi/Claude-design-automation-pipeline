@@ -1,7 +1,7 @@
 {
   "name": "design-automation",
-  "version": "0.3.0",
-  "description": "Brief → Claude Design → Figma pipeline: an Orchestrator skill plus Design System, Brief, Design, Auditor and Handoff agents with task-optimized models, design-direction preflight, usability audits, Claude Design review loop, and state/interaction export to Figma. Reduces cost ~50–60% vs. all-Opus.",
+  "version": "0.4.0",
+  "description": "Brief or existing canvas → platform scope → user stories → Claude Design → Figma pipeline. Sixteen platform profiles (web app, dashboard, landing page, mobile, TV, kiosk and more), a quick style preview before the design-system build, an audit and a Done/Missing/Added coverage report after every round, and state/interaction export to Figma.",
   "author": {
     "name": "Ahmed Fahmi"
   }

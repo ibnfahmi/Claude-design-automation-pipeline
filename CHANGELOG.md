@@ -2,6 +2,32 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.4.0] - 2026-10-10
+
+### Added
+- **Platform scope in preflight.** Choose from 16 platforms (web app, dashboard, landing page, e-commerce, mobile app, tablet app, desktop app, browser extension, design system, email, presentation deck, social media, standalone flow, docs/help center, smart TV, kiosk/ATM/self-service machine) or describe another. Each platform asks its own short questions with defaults: device frames, breakpoints, navigation, sections, density, input methods, hardware touchpoints, languages, accessibility mode, and any compliance standard to follow. Answers set the artboard sizes and the audit checks.
+- **Platform profiles** (`profiles/<id>/profile.json`): a platform is one data file, so new platforms need no code change. Format in `profiles/README.md`.
+- **Quick style preview.** When styling from a reference (image, screenshot, website URL or Figma), tokens are measured first and a preview of *your* product in that look is shown before the slow design-system build. Approve, tweak or try another reference. The full build then runs **in the background** while you continue with the brief. "Tokens only" and "this project only" options skip or shrink the build. The creative direction can be previewed too.
+- **Numbered requirements.** The spec lists requirements `R-1…` traced to the brief, and every screen and state references them.
+- **User stories gate** (`story-agent`). Stories with acceptance criteria are written for you to review before design starts. Skip with `--skip-stories`.
+- **Coverage report every round** (`coverage-agent`). Compares the design with the original brief or BRD and reports **Done / Missing / Added**, split into profile-standard additions and unrequested additions. Runs in parallel with the audit. Missing "must" requirements go into the next round by default.
+- **Start from an existing canvas.** A Claude Design canvas or Figma file can be the starting point; the Brief Agent writes the spec from what's there, then the pipeline audits and fills gaps.
+- **Artboard manifest** (`design-manifest.json`) mapping every artboard to its requirements, stories and viewport, used by coverage and handoff.
+- **Shared reference guidance** in `profiles/_shared/references/`, distilled from open-source skills (see `NOTICE.md`).
+
+### Changed
+- The Auditor runs each platform's checks at every chosen viewport, and reports platform checks passed.
+- The Design Agent designs every screen at every chosen viewport and states at the primary viewport.
+- The Handoff Agent organises Figma pages per platform and records requirement and story IDs on frames.
+- The Design System Agent accepts a website URL as a reference.
+- Cost figures removed from `MODEL-OPTIMIZATION.md`, `AGENT-MODEL-REFERENCE.md`, `SKILL.md` and the plugin description. Earlier versions quoted dollar amounts and percentage savings (and the figures disagreed with each other); they were estimates, not measurements.
+
+### Not included
+- Two-way sync between a code folder and the canvas is planned for a later version. `design-manifest.json` has a reserved `code_file` field for it.
+
+### Compatibility
+- State files from 0.3.0 still load. A run without `scope` asks the platform questions on resume.
+
 ## [0.3.0] - 2026-10-03
 
 ### Added

@@ -1,0 +1,82 @@
+{
+  "id": "dashboard",
+  "label": "Dashboard / admin panel",
+  "summary": "Data-heavy screens: KPIs, charts, tables, filters and roles",
+  "options": [
+    {
+      "id": "viewport",
+      "question": "Primary viewport?",
+      "type": "multi",
+      "choices": [
+        {"value": "desktop", "label": "Desktop 1440", "size": [1440, 900]},
+        {"value": "wide", "label": "Wide 1920", "size": [1920, 1080]},
+        {"value": "laptop", "label": "Laptop 1280", "size": [1280, 800]},
+        {"value": "tablet", "label": "Tablet 768", "size": [768, 1024]},
+        {"value": "mobile", "label": "Mobile 375", "size": [375, 812]}
+      ],
+      "default": ["desktop"],
+      "viewport": true
+    },
+    {
+      "id": "density",
+      "question": "Data density?",
+      "type": "single",
+      "choices": [{"value": "comfortable", "label": "Comfortable"}, {"value": "compact", "label": "Compact (more rows per screen)"}],
+      "default": "comfortable"
+    },
+    {
+      "id": "chart_types",
+      "question": "Which chart types are needed?",
+      "type": "multi",
+      "choices": [
+        {"value": "line", "label": "Line / area (trends)"},
+        {"value": "bar", "label": "Bar / column (comparison)"},
+        {"value": "donut", "label": "Donut / pie (share)"},
+        {"value": "table", "label": "Data table"},
+        {"value": "map", "label": "Map"},
+        {"value": "funnel", "label": "Funnel"}
+      ],
+      "default": ["line", "bar", "table"]
+    },
+    {
+      "id": "navigation",
+      "question": "Navigation pattern?",
+      "type": "single",
+      "choices": [{"value": "sidebar", "label": "Sidebar"}, {"value": "topbar", "label": "Top bar"}],
+      "default": "sidebar"
+    },
+    {
+      "id": "roles",
+      "question": "Are there different roles or permission views (for example admin and viewer)?",
+      "type": "text",
+      "default": "One role"
+    },
+    {
+      "id": "dark_mode",
+      "question": "Is a dark theme needed?",
+      "type": "single",
+      "choices": [{"value": "no", "label": "Light only"}, {"value": "yes", "label": "Light and dark"}],
+      "default": "no"
+    }
+  ],
+  "preview_screen": "The overview page: a KPI row, one main chart, and a table with realistic numbers and a filter bar.",
+  "required_screens": ["Overview", "Detail view for a table row", "Settings"],
+  "required_states": ["Empty state for charts and tables (no data yet)", "Loading skeletons shaped like the charts", "Error state per widget with retry", "Filter applied with no results", "Date range picker open", "Table row selected and bulk action bar"],
+  "design_guidance": [
+    "Raise data-ink ratio: remove needless gridlines, 3D effects and shadows; let the data speak.",
+    "Colour encodes meaning (up/down, category, time), never decoration. Don't use colour alone for status.",
+    "Numbers are right-aligned in tables, use tabular figures, and show units.",
+    "Use realistic, uneven values (47.2%, 1,284) and not round placeholders.",
+    "Each widget has its own title, time range and loading/error state."
+  ],
+  "auditor": {
+    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/grounding.md"],
+    "checks": [
+      "Every chart has a title, labelled axes or direct labels, units, and a legend or direct labels that don't rely on colour alone.",
+      "Chart series colours stay distinguishable at 3:1 against the background and against each other, and still work for common colour-blindness.",
+      "Table columns align by type (numbers right, text left) and long values truncate with a way to read the full text.",
+      "Every widget has loading, empty and error states, and filters have a no-results state.",
+      "A visible scope is shown for filtered data (date range, segment) so users know what they are looking at."
+    ]
+  }
+}

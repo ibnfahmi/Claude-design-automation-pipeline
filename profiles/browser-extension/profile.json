@@ -1,0 +1,52 @@
+{
+  "id": "browser-extension",
+  "label": "Browser extension",
+  "summary": "Popup, side panel, options page or content-script UI",
+  "options": [
+    {
+      "id": "surfaces",
+      "question": "Which extension surfaces?",
+      "type": "multi",
+      "choices": [
+        {"value": "popup", "label": "Toolbar popup (about 360x600)", "size": [360, 600]},
+        {"value": "side-panel", "label": "Side panel (about 400x800)", "size": [400, 800]},
+        {"value": "options", "label": "Options page (1024x768)", "size": [1024, 768]},
+        {"value": "content", "label": "UI injected into web pages (overlay, button, tooltip)"},
+        {"value": "new-tab", "label": "New tab page (1440x900)", "size": [1440, 900]}
+      ],
+      "default": ["popup"],
+      "viewport": true
+    },
+    {
+      "id": "browsers",
+      "question": "Which browsers?",
+      "type": "multi",
+      "choices": [{"value": "chrome", "label": "Chrome / Edge"}, {"value": "firefox", "label": "Firefox"}, {"value": "safari", "label": "Safari"}],
+      "default": ["chrome"]
+    },
+    {
+      "id": "dark_mode",
+      "question": "Follow the browser's light and dark theme?",
+      "type": "single",
+      "choices": [{"value": "yes", "label": "Yes"}, {"value": "no", "label": "Light only"}],
+      "default": "yes"
+    }
+  ],
+  "preview_screen": "The primary surface (popup or side panel) at its real size, with realistic content.",
+  "required_screens": ["First-run / permissions explanation", "Store listing icon set (16, 32, 48, 128)"],
+  "required_states": ["Not signed in", "Loading", "Error / no connection", "Empty", "Disabled on the current page (unsupported site)", "Badge states on the toolbar icon"],
+  "design_guidance": [
+    "Respect the fixed surface sizes; popups cannot scroll gracefully, so keep content short.",
+    "Injected UI must not hide or break the host page; show it on a neutral sample page background.",
+    "Explain each permission the extension requests in plain language."
+  ],
+  "auditor": {
+    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md"],
+    "checks": [
+      "Every surface is designed at its real size and nothing is clipped at it.",
+      "Injected UI is shown over both a light and a dark sample page and stays legible.",
+      "Permissions are explained before they are requested.",
+      "The toolbar icon and badge states are designed, including disabled."
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "id": "flow",
+  "label": "Onboarding or checkout flow (standalone)",
+  "summary": "A multi-step journey designed as one flow",
+  "options": [
+    {
+      "id": "flow_type",
+      "question": "Which flow?",
+      "type": "single",
+      "choices": [
+        {"value": "onboarding", "label": "Onboarding / sign-up"},
+        {"value": "checkout", "label": "Checkout / payment"},
+        {"value": "setup", "label": "Setup wizard"},
+        {"value": "application", "label": "Application form (multi-step)"},
+        {"value": "recovery", "label": "Account recovery"}
+      ],
+      "default": "onboarding"
+    },
+    {
+      "id": "viewport",
+      "question": "Which viewports?",
+      "type": "multi",
+      "choices": [
+        {"value": "mobile", "label": "Mobile 375", "size": [375, 812]},
+        {"value": "desktop", "label": "Desktop 1440", "size": [1440, 900]},
+        {"value": "tablet", "label": "Tablet 768", "size": [768, 1024]}
+      ],
+      "default": ["mobile", "desktop"],
+      "viewport": true
+    },
+    {
+      "id": "steps",
+      "question": "How many steps (or leave it to the design)?",
+      "type": "text",
+      "default": "Let the design decide"
+    },
+    {
+      "id": "save_resume",
+      "question": "Can the user save and resume later?",
+      "type": "single",
+      "choices": [{"value": "yes", "label": "Yes"}, {"value": "no", "label": "No"}],
+      "default": "no"
+    }
+  ],
+  "preview_screen": "The first step of the flow with its progress indicator, one primary action and a back control.",
+  "required_screens": ["Success / completion screen"],
+  "required_states": ["Progress indicator at each step", "Back navigation keeping entered data", "Field validation errors", "Server error with retry", "Session timeout or interrupted flow", "Optional steps skipped"],
+  "design_guidance": [
+    "One goal per step; ask only for what is needed now.",
+    "Show progress and what is left; allow going back without losing data.",
+    "Explain why sensitive information is requested, next to the field.",
+    "End with a clear completion state and the obvious next action."
+  ],
+  "auditor": {
+    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md"],
+    "checks": [
+      "Every step shows progress and has a way back that keeps entered data.",
+      "Each step has one primary action; optional steps are clearly optional.",
+      "Validation and server errors are designed for every input step.",
+      "The completion screen states what happened and what to do next."
+    ]
+  }
+}

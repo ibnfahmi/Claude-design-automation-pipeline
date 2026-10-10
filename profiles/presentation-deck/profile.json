@@ -1,0 +1,67 @@
+{
+  "id": "presentation-deck",
+  "label": "Presentation / pitch deck",
+  "summary": "Slides for presenting or reading",
+  "options": [
+    {
+      "id": "format",
+      "question": "Slide format?",
+      "type": "single",
+      "choices": [
+        {"value": "16:9", "label": "16:9 widescreen (1920x1080)", "size": [1920, 1080]},
+        {"value": "4:3", "label": "4:3 (1440x1080)", "size": [1440, 1080]}
+      ],
+      "default": "16:9",
+      "viewport": true
+    },
+    {
+      "id": "slide_count",
+      "question": "Roughly how many slides?",
+      "type": "text",
+      "default": "10-12"
+    },
+    {
+      "id": "use",
+      "question": "How will it be used?",
+      "type": "single",
+      "choices": [
+        {"value": "presented", "label": "Presented live (projector, large screen)"},
+        {"value": "read", "label": "Read alone (sent as a file)"}
+      ],
+      "default": "presented"
+    },
+    {
+      "id": "slide_types",
+      "question": "Which slide types?",
+      "type": "multi",
+      "choices": [
+        {"value": "title", "label": "Title"},
+        {"value": "agenda", "label": "Agenda"},
+        {"value": "section", "label": "Section divider"},
+        {"value": "content", "label": "Content (text and image)"},
+        {"value": "data", "label": "Data / chart"},
+        {"value": "quote", "label": "Quote or testimonial"},
+        {"value": "team", "label": "Team"},
+        {"value": "closing", "label": "Closing / contact"}
+      ],
+      "default": ["title", "agenda", "section", "content", "data", "closing"]
+    }
+  ],
+  "preview_screen": "The title slide and one content slide.",
+  "required_screens": ["Title slide", "Closing slide"],
+  "required_states": [],
+  "design_guidance": [
+    "One idea per slide; the headline states the point.",
+    "For live presenting, body text large enough to read from the back of the room (a working minimum of 24pt at 1080p); for reading alone, denser slides are fine.",
+    "Reuse a small set of layouts consistently."
+  ],
+  "auditor": {
+    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md"],
+    "checks": [
+      "Each slide has one clear point and an obvious entry point.",
+      "Text size suits the chosen use (presented or read).",
+      "Layouts repeat consistently across slides of the same type.",
+      "Charts have a title, labels and a takeaway, and colour is not the only encoding."
+    ]
+  }
+}

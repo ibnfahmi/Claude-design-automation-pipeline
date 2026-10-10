@@ -1,0 +1,63 @@
+{
+  "id": "docs-help-center",
+  "label": "Docs / help center",
+  "summary": "Documentation, knowledge base or support site",
+  "options": [
+    {
+      "id": "breakpoints",
+      "question": "Which breakpoints?",
+      "type": "multi",
+      "choices": [
+        {"value": "desktop", "label": "Desktop 1440", "size": [1440, 900]},
+        {"value": "tablet", "label": "Tablet 768", "size": [768, 1024]},
+        {"value": "mobile", "label": "Mobile 375", "size": [375, 812]}
+      ],
+      "default": ["desktop", "mobile"],
+      "viewport": true
+    },
+    {
+      "id": "content_types",
+      "question": "Content types?",
+      "type": "multi",
+      "choices": [
+        {"value": "articles", "label": "How-to articles"},
+        {"value": "reference", "label": "API / reference pages"},
+        {"value": "tutorials", "label": "Step-by-step tutorials"},
+        {"value": "faq", "label": "FAQ"},
+        {"value": "release-notes", "label": "Release notes"}
+      ],
+      "default": ["articles", "faq"]
+    },
+    {
+      "id": "search",
+      "question": "Search prominence?",
+      "type": "single",
+      "choices": [{"value": "hero", "label": "Search is the main entry point"}, {"value": "nav", "label": "Search in the navigation"}],
+      "default": "hero"
+    },
+    {
+      "id": "contact",
+      "question": "Support contact path?",
+      "type": "single",
+      "choices": [{"value": "form", "label": "Contact form"}, {"value": "chat", "label": "Live chat"}, {"value": "none", "label": "None"}],
+      "default": "form"
+    }
+  ],
+  "preview_screen": "The help center home: search, popular topics, and category cards.",
+  "required_screens": ["Home with search", "Category page", "Article page with table of contents", "Search results", "No results"],
+  "required_states": ["Search suggestions open", "No search results with alternatives", "Article feedback (was this helpful)", "Code block copy confirmation (reference content)", "Mobile navigation open"],
+  "design_guidance": [
+    "Reading comfort first: a line length of about 60-80 characters, generous line height, clear heading hierarchy.",
+    "Always show where the reader is (breadcrumbs, highlighted nav, in-page table of contents).",
+    "Search results show a snippet and the matched context."
+  ],
+  "auditor": {
+    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md"],
+    "checks": [
+      "Article body line length is about 60-80 characters and line height is 1.4 or more.",
+      "The reader's location is visible (breadcrumbs, nav state, table of contents).",
+      "Search has suggestions and a no-results state with a next step.",
+      "Code blocks scroll or wrap without clipping and have a copy control."
+    ]
+  }
+}

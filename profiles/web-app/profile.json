@@ -1,0 +1,64 @@
+{
+  "id": "web-app",
+  "label": "Web app / SaaS",
+  "summary": "Responsive product UI with navigation, forms, lists and settings",
+  "options": [
+    {
+      "id": "breakpoints",
+      "question": "Which breakpoints should be designed?",
+      "type": "multi",
+      "choices": [
+        {"value": "desktop", "label": "Desktop 1440", "size": [1440, 900]},
+        {"value": "laptop", "label": "Laptop 1280", "size": [1280, 800]},
+        {"value": "tablet", "label": "Tablet 768", "size": [768, 1024]},
+        {"value": "mobile", "label": "Mobile 375", "size": [375, 812]},
+        {"value": "wide", "label": "Wide 1920", "size": [1920, 1080]}
+      ],
+      "default": ["desktop", "mobile"],
+      "viewport": true
+    },
+    {
+      "id": "navigation",
+      "question": "Which primary navigation pattern?",
+      "type": "single",
+      "choices": [
+        {"value": "sidebar", "label": "Left sidebar"},
+        {"value": "topbar", "label": "Top bar"},
+        {"value": "both", "label": "Top bar and sidebar"},
+        {"value": "decide", "label": "Let the design decide"}
+      ],
+      "default": "decide"
+    },
+    {
+      "id": "dark_mode",
+      "question": "Is a dark theme needed?",
+      "type": "single",
+      "choices": [{"value": "no", "label": "Light only"}, {"value": "yes", "label": "Light and dark"}],
+      "default": "no"
+    },
+    {
+      "id": "auth",
+      "question": "Does the product have sign-in, sign-up and account screens?",
+      "type": "single",
+      "choices": [{"value": "yes", "label": "Yes, design them"}, {"value": "no", "label": "No, the user is already signed in"}],
+      "default": "yes"
+    }
+  ],
+  "preview_screen": "The main logged-in screen: navigation, a page title with its primary action, and one list or card group with realistic content.",
+  "required_screens": ["Sign in (if auth is yes)", "Settings or profile", "404 / not found"],
+  "required_states": ["Empty state for every list", "Loading skeleton for every data view", "Form validation errors", "Error with retry", "Unsaved changes confirmation"],
+  "design_guidance": [
+    "One primary action per view; secondary actions move into a menu past three.",
+    "Design the navigation collapse at the smallest chosen breakpoint (menu, drawer or bottom bar).",
+    "Show the current location in the navigation."
+  ],
+  "auditor": {
+    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md"],
+    "checks": [
+      "The layout holds at every chosen breakpoint, and the navigation collapses deliberately at the smallest.",
+      "Every list, table and form has empty, loading and error states.",
+      "The current page or section is indicated in the navigation.",
+      "Destructive actions confirm and say what will be lost."
+    ]
+  }
+}

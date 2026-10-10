@@ -1,0 +1,109 @@
+{
+  "id": "kiosk",
+  "label": "Kiosk / ATM / self-service machine",
+  "summary": "Public self-service machines: government service booths, bank ATMs, ticketing, check-in, self-checkout",
+  "options": [
+    {
+      "id": "machine_type",
+      "question": "What kind of machine?",
+      "type": "single",
+      "choices": [
+        {"value": "gov-booth", "label": "Government service booth"},
+        {"value": "atm", "label": "Bank ATM"},
+        {"value": "ticketing", "label": "Ticketing or transport"},
+        {"value": "check-in", "label": "Check-in (airport, hotel, clinic)"},
+        {"value": "self-checkout", "label": "Retail self-checkout"},
+        {"value": "info", "label": "Information point"}
+      ],
+      "default": "gov-booth"
+    },
+    {
+      "id": "screen",
+      "question": "Screen size and orientation?",
+      "type": "single",
+      "choices": [
+        {"value": "portrait-1080", "label": "Portrait 1080x1920 (typical 21.5-inch)", "size": [1080, 1920]},
+        {"value": "landscape-1080", "label": "Landscape 1920x1080", "size": [1920, 1080]},
+        {"value": "landscape-768", "label": "Landscape 1366x768 (ATM-style)", "size": [1366, 768]}
+      ],
+      "default": "portrait-1080",
+      "viewport": true
+    },
+    {
+      "id": "input",
+      "question": "Input devices?",
+      "type": "multi",
+      "choices": [
+        {"value": "touch", "label": "Touchscreen"},
+        {"value": "keypad", "label": "Physical keypad / PIN pad"},
+        {"value": "side-buttons", "label": "Side buttons beside the screen"}
+      ],
+      "default": ["touch"]
+    },
+    {
+      "id": "hardware",
+      "question": "Hardware touchpoints used in the flow?",
+      "type": "multi",
+      "choices": [
+        {"value": "card", "label": "Card reader"},
+        {"value": "cash", "label": "Cash dispenser / acceptor"},
+        {"value": "printer", "label": "Receipt or ticket printer"},
+        {"value": "scanner", "label": "ID / document / barcode scanner"},
+        {"value": "biometric", "label": "Biometric (fingerprint, face)"},
+        {"value": "nfc", "label": "NFC / contactless"}
+      ],
+      "default": []
+    },
+    {
+      "id": "languages",
+      "question": "Languages (include RTL languages such as Arabic if needed)?",
+      "type": "text",
+      "default": "One language"
+    },
+    {
+      "id": "accessibility_mode",
+      "question": "Accessibility mode?",
+      "type": "multi",
+      "choices": [
+        {"value": "high-contrast", "label": "High-contrast mode"},
+        {"value": "large-text", "label": "Larger text mode"},
+        {"value": "audio", "label": "Audio guidance (headphone jack)"},
+        {"value": "reach", "label": "Reachable-height layout for wheelchair users"}
+      ],
+      "default": ["high-contrast", "large-text", "reach"]
+    },
+    {
+      "id": "compliance",
+      "question": "Is there an accessibility or compliance standard to follow (for example ADA, EN 301 549, or a local government guideline)? Name it, or say none.",
+      "type": "text",
+      "default": "None specified"
+    }
+  ],
+  "preview_screen": "The welcome screen: a clear title, the two or three main service buttons at kiosk scale, a language switch and an accessibility button.",
+  "required_screens": ["Welcome / start with language selection", "Accessibility settings", "Confirmation / receipt", "Thank you with automatic reset"],
+  "required_states": ["Idle / attract screen", "Inactivity timeout warning with a countdown and a Continue button", "Session reset (return to start, data cleared)", "Error with a clear next step and a staff-help option", "Out of service", "Hardware prompts (insert card, take card, take cash, take receipt, scan document) for each chosen touchpoint", "Hardware fault (device jammed or unavailable)", "Processing / please wait", "Cancel confirmation"],
+  "design_guidance": [
+    "Design for strangers in a hurry, standing up, possibly with a queue behind them. One task per screen, plain words, no jargon.",
+    "Large targets, well beyond mobile sizes (a working default is about 20 mm physical size; confirm the screen's pixel density), with generous spacing to avoid mistaken touches.",
+    "No hover, no small gestures, no long press, no double tap.",
+    "Keep the primary controls in the lower-middle of the screen and within reach for a seated user; do not place critical controls at the top of a tall screen.",
+    "Every step shows how to go back or cancel. Destructive or irreversible actions confirm first.",
+    "Sensitive entry (PIN, ID number) is masked, with no personal data left visible after the session resets.",
+    "Show the hardware prompts visually and in text, pointing toward where the physical slot is."
+  ],
+  "auditor": {
+    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/grounding.md"],
+    "checks": [
+      "Every touch target meets the chosen size (about 20 mm physical or larger) and is spaced to avoid mistaken touches.",
+      "No flow depends on hover, long press, double tap or small gestures.",
+      "Every screen has a way back or to cancel, and irreversible actions confirm.",
+      "The idle, timeout-warning, session-reset, error, out-of-service and hardware-fault states are designed.",
+      "Each chosen hardware touchpoint has its own prompt screen telling the user what to do next.",
+      "Sensitive fields are masked, and the reset state shows no personal data.",
+      "Text and controls reach high contrast in a bright public setting, and the larger-text and high-contrast modes are designed when chosen.",
+      "If an RTL language is in scope, the layout, icons and progress indicators mirror correctly.",
+      "Controls needed by a seated user are within reach when the reachable layout is chosen.",
+      "If a compliance standard was named, each of its requirements that applies to the design has been checked and listed as met or not."
+    ]
+  }
+}

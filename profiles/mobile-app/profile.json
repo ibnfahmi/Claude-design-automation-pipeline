@@ -1,0 +1,85 @@
+{
+  "id": "mobile-app",
+  "label": "Mobile app (iOS / Android)",
+  "summary": "Native-feeling phone app, one or both operating systems",
+  "options": [
+    {
+      "id": "os",
+      "question": "Which operating system?",
+      "type": "single",
+      "choices": [
+        {"value": "ios", "label": "iOS"},
+        {"value": "android", "label": "Android"},
+        {"value": "both", "label": "Both (shared design, platform-aware patterns)"}
+      ],
+      "default": "both"
+    },
+    {
+      "id": "device_frames",
+      "question": "Which device frames should be designed?",
+      "type": "multi",
+      "choices": [
+        {"value": "iphone-16", "label": "iPhone 16 (393x852)", "size": [393, 852]},
+        {"value": "iphone-16-pro-max", "label": "iPhone 16 Pro Max (440x956)", "size": [440, 956]},
+        {"value": "iphone-se", "label": "iPhone SE, small (375x667)", "size": [375, 667]},
+        {"value": "pixel", "label": "Android Pixel (412x915)", "size": [412, 915]},
+        {"value": "android-small", "label": "Android small (360x800)", "size": [360, 800]}
+      ],
+      "default": ["iphone-16"],
+      "viewport": true
+    },
+    {
+      "id": "orientation",
+      "question": "Orientation?",
+      "type": "single",
+      "choices": [{"value": "portrait", "label": "Portrait only"}, {"value": "both", "label": "Portrait and landscape"}],
+      "default": "portrait"
+    },
+    {
+      "id": "navigation",
+      "question": "Primary navigation pattern?",
+      "type": "single",
+      "choices": [
+        {"value": "tabs", "label": "Bottom tab bar (3-5 destinations)"},
+        {"value": "stack", "label": "Stack with back navigation"},
+        {"value": "drawer", "label": "Drawer"},
+        {"value": "decide", "label": "Let the design decide"}
+      ],
+      "default": "decide"
+    },
+    {
+      "id": "dark_mode",
+      "question": "Is dark mode needed?",
+      "type": "single",
+      "choices": [{"value": "no", "label": "Light only"}, {"value": "yes", "label": "Light and dark"}],
+      "default": "no"
+    },
+    {
+      "id": "screens",
+      "question": "Which screens to design? (leave as default to take them from the brief)",
+      "type": "text",
+      "default": "From the brief"
+    }
+  ],
+  "preview_screen": "The home screen inside the first chosen device frame, with status bar, primary content and navigation.",
+  "required_screens": ["Splash or launch", "Onboarding (if the brief implies first-run)", "Permission request (if the product uses camera, location, notifications)"],
+  "required_states": ["Keyboard open on every screen with an input", "Pull-to-refresh on refreshable lists", "Offline", "Empty, loading skeleton and error for every data screen", "Pressed state for primary controls", "Bottom sheet open with its dismiss action"],
+  "design_guidance": [
+    "Draw the real device frame: status bar, notch or Dynamic Island, home indicator. Keep content out of the safe areas; extend bar backgrounds into them.",
+    "Targets 44x44 (iOS) or 48x48 (Android) at least; primary actions in the lower half.",
+    "With 'both' selected, follow each platform's navigation and control conventions, and call out where the two designs differ.",
+    "Tappable elements show a pressed state; do not rely on hover."
+  ],
+  "auditor": {
+    "references": ["_shared/references/mobile.md", "_shared/references/interface-quality.md", "_shared/references/visual-critique.md"],
+    "checks": [
+      "No content sits under the status bar, notch or home indicator; fixed bars extend into the safe area.",
+      "Every interactive target measures at least 44x44 (iOS) or 48x48 (Android), and no two hit areas overlap.",
+      "Every screen with an input has a keyboard-open state in which the focused field and its submit action stay visible.",
+      "Primary actions are within the lower half of the screen; destructive actions are not next to the easiest reach.",
+      "Every gesture (swipe, pull, drag) has a visible tappable alternative.",
+      "Every chosen device frame is designed, including the smallest, with no clipped content on it.",
+      "Every tappable element has a pressed state; no information depends on hover."
+    ]
+  }
+}
