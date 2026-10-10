@@ -9,9 +9,9 @@ A Claude Code plugin that takes a raw design brief (or an existing code project 
 See *Design Automation Multi-Agent Blueprint v2* for the full design.
 
 
-## 🆕 v0.5.4 — Git requirement restored
+## 🆕 v0.5.5 — Git requirement restored
 
-Git is listed in the requirements again and checked in preflight, because each round is committed to a local repository in `code/`.
+Git is listed in the requirements again (with its install link) and checked in preflight, because each round is committed to a local repository in `code/`.
 
 ## v0.5.3 — Share build
 
@@ -55,7 +55,7 @@ NOTICE.md                attributions for the open-source guidance
 
 - Claude Code (for example the Claude desktop app's Code tab, which also gives the built-in browser pane the pipeline uses to preview and test the app)
 - **Node.js 20 or newer** and npm, because the output is a real code project
-- **Git** (install from https://git-scm.com/install/): each design round is committed to a local repository in `code/`, and the plugin itself is installed from a Git URL
+- Git install https://git-scm.com/install/
 - Optional, only for the Figma export or a Figma reference: the Figma connector, signed in
   1. Open a terminal (PowerShell) and start Claude Code: `claude`
   2. If Figma isn't set up yet, exit, add it, then start claude again:

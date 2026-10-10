@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.5.5] - 2026-10-10
+
+### Changed
+- The README requirement for Git uses the original wording: "Git install https://git-scm.com/install/".
+
 ## [0.5.4] - 2026-10-10
 
 ### Fixed
