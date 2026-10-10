@@ -2,6 +2,17 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.4.6] - 2026-10-10
+
+### Fixed
+- **A 3D reference came out as a flat 2D illustration, and its click-through behaviour was missing.** On the Cyera reference, the real site draws a WebGL scene and each click on the main button advances a stepped intro (the 3D camera pans sideways, the headline splits, a progress bar and Skip appear), but the preview only recreated the first screen, with 2D shapes.
+
+### Changed
+- **The reference step now walks the interactions.** For a website, the Design System Agent clicks the primary button and other primary controls step by step (up to about six steps), recording for each step the trigger, a screenshot, what changed (camera move, slide, text swap), whether click, scroll or time drove it, the progress indicator, how the button changed, and the timing and easing. It also records how the page is drawn (HTML, SVG, video or a WebGL canvas, and which libraries) so 3D motion is recognised as 3D.
+- **The preview rebuilds 3D as 3D.** When the reference is a WebGL scene, the Design Agent builds a lightweight real 3D scene (Three.js from an allowed CDN) with low-poly shapes in the reference's palette, depth layers, a moving camera and pointer parallax, falling back to 2D CSS if WebGL is unavailable. The reference's custom models, textures and shaders are not reproduced, and the preview says so.
+- **The preview is a working click-through.** The first two or three steps are built so the main button advances with the same transition, duration and easing as the reference, with its button change, progress indicator and Skip control.
+- **The build keeps the behaviour.** Each captured interaction step becomes a state artboard (for example `Intro / Step 2 - Orbit`) with the transition noted for the handoff, and the Auditor flags a captured behaviour that is missing from the design as major.
+
 ## [0.4.5] - 2026-10-10
 
 ### Fixed

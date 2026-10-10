@@ -56,7 +56,7 @@ Review every screen and state against Nielsen's 10 usability heuristics:
 ## 5. Design-system fidelity
 
 - **system:** colours, type styles, radii, spacing and components come from the design system; list anything off-system.
-- **reference:** the look matches the reference (palette, type, shape language) without copying its content.
+- **reference:** the look matches the reference (palette, type, shape language) without copying its content. Also check that the reference's **signature elements** are present: the hero composition, the button and navigation styles, and each captured interaction step as a state (with its transition noted). A reference whose behaviour was captured but is missing from the design is a major finding.
 - **creative:** the direction is consistent across screens and meets the accessibility checks.
 
 ## 6. Platform checks

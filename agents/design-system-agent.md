@@ -30,8 +30,10 @@ Read the `grounding.md` file the Orchestrator gives you first. Ground the tokens
 2. **Take screenshots** of the loaded page: the first screen at about 1440 wide, the same at about 390 wide, and one or two scroll positions. Save them in the current folder (for example `reference-shots/`), and look at them. These are your evidence for composition and motion; computed styles can't show a WebGL scene.
 3. **Hero composition.** Describe what fills the first screen: a full-bleed illustration, photo, video, WebGL or canvas scene, gradient, or plain background; where the heading, subheading and buttons sit; how much is empty; the depth layers.
 4. **Components.** Measure the primary and secondary buttons and the navigation, including **hover and pressed** states where you can trigger them: shape and radius, fill, text colour, border, shadow or glow, padding, any inner icon or arrow tile, and the transition. Measure the nav links and any pill or outline button there.
-5. **Motion.** List what moves and how: running CSS or Web Animations (`document.getAnimations()`), a canvas or WebGL scene (a canvas element, or scripts such as three, theatre, gsap, lottie, rive, spline), video, scroll or hover effects, and the page-load sequence. Note durations and easing where the page reveals them.
-6. Classify each signature element for the preview: **reproducible** (plain CSS, SVG or a static image), **approximate** (WebGL, video, 3D: it can only be suggested with a still or a CSS-animated approximation), or **not reproducible** (give the reason). Be honest. Never present an approximation as the real thing.
+5. **Rendering.** Say how the page is drawn: plain HTML and CSS, SVG, video, or a **WebGL canvas** (a `canvas` that returns a `webgl` or `webgl2` context). Read the loaded resource names (`performance.getEntriesByType('resource')`) and script names for engines and libraries (three, babylon, theatre, gsap, lottie, rive, spline, flicking, draco model decoders, shader files). A WebGL scene means the motion is **3D** (a camera that moves through depth, objects that rotate and float in space), not 2D animation.
+6. **Walk the interactions.** A page's behaviour is part of its look. Use the built-in browser to **click the primary button and the other primary controls, step by step**, for up to about six steps, or until the flow ends or leaves the page. Also try scrolling, hovering a few key elements, and any Skip, Next, tab or menu control you find. For **each step** record: the trigger (what you clicked), a screenshot, the visible text now, what changed (a camera or scene move and its direction, a horizontal or vertical slide, a fade, a text swap, objects entering), whether it was triggered by click, scroll or time, any progress indicator, and how the button changed (label, fill inverted, icon). Take timing from the page (`transition` and animation durations and easing in computed styles, `getAnimations()`), or from comparing frames. Don't stop after the first screen. An "intro that advances on each click" is a different design from a hero that scrolls.
+7. **Motion.** List what moves and how: running CSS or Web Animations (`document.getAnimations()`), a canvas or WebGL scene (a canvas element, or scripts such as three, theatre, gsap, lottie, rive, spline), video, scroll or hover effects, and the page-load sequence. Note durations and easing where the page reveals them.
+8. Classify each signature element for the preview: **reproducible** (plain CSS, SVG or a static image), **approximate** (a WebGL or 3D scene with custom models: the preview can rebuild the 3D motion with simple low-poly shapes in a lightweight 3D library, but not the original models or shaders), or **not reproducible** (give the reason). Be honest. Never present an approximation as the real thing.
 
 Take the look only: never copy the site's artwork, illustrations, logos, 3D models, copy or brand marks. Describe them so they can be re-drawn in the same style.
 
@@ -58,8 +60,13 @@ SIGNATURE (websites and screenshots; omit for Figma):
   hero: <composition in 2-3 sentences: what fills it, where the text and buttons sit, depth layers>
   primary_button: <shape, fill, text, border/shadow, inner icon tile, hover, transition>
   secondary_button / nav: <same>
-  motion: <what moves and how, with durations where known>
-  reproducibility: hero = approximate (WebGL scene) | motion = reproducible (CSS float) | ...
+  rendering: html/css | svg | video | webgl (engine or libraries found: three, theatre, flicking, ...)
+  motion: <what moves and how, in 2D or 3D, with durations where known>
+  interactions:
+    1. click "Begin Your Mission" -> scene pans sideways, headline splits left and right, rings appear; button inverts (1.0s, cubic-bezier(1,0,0,1))
+    2. click again -> pans again to "Your Mission" with a progress bar and a Skip link
+    (each: trigger -> what changes -> direction, duration, easing; and the screenshot for each step)
+  reproducibility: hero = approximate (3D scene, rebuilt with low-poly shapes) | interactions = reproducible | ...
 NOT_EXTRACTED:
 - one line each (other themes, exact fonts, components, logos)
 ```

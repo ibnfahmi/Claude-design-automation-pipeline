@@ -25,7 +25,7 @@ Written to the client project folder (the session's working directory) after eve
       "url": "https://claude.ai/artifact/… or null",
       "approved": true,
       "tokens": {"colours": {}, "type": {}, "spacing": [], "radii": [], "shadows": {}},
-      "signature": {"hero": "", "primary_button": "", "motion": "", "screenshots": [], "reproducibility": ""}
+      "signature": {"hero": "", "primary_button": "", "rendering": "html | svg | video | webgl", "motion": "", "interactions": [{"trigger": "click CTA", "result": "camera pans sideways, headline splits", "transition": "1.0s cubic-bezier(1,0,0,1)"}], "screenshots": [], "reproducibility": ""}
     }
   },
   "scope": {
