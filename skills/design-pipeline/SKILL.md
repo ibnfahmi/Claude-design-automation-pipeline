@@ -19,7 +19,7 @@ The deliverable is a **working code project** (`code/` in the client folder), no
 
 Models are set per agent in each agent file's frontmatter. See `MODEL-OPTIMIZATION.md` and `AGENT-MODEL-REFERENCE.md` for the reasoning and how to override. Cost figures in those documents are estimates, not measurements.
 
-Never skip a stage (except the journeys step when the user passed `--skip-journeys`), and never run the final stages without an explicit approval from the user. Before each stage, tell the user in one line which stage is running.
+Never skip a stage (except the user journeys step, which is optional: see Stage 2b), and never run the final stages without an explicit approval from the user. Before each stage, tell the user in one line which stage is running.
 
 **Where the platform profiles are.** `profiles/` is in the plugin root: from this skill's base directory, `../../profiles/`. `profiles/index.json` lists the platforms; each `profiles/<id>/profile.json` holds its preflight questions, required screens and states, design guidance, `code_target` (what the platform is built as) and audit checks (format in `profiles/README.md`). Pass subagents the absolute paths and the profile contents they need.
 
@@ -31,7 +31,7 @@ Never skip a stage (except the journeys step when the user passed `--skip-journe
 - **Handoff Agent**: `_shared/references/handoff-spec.md` and `_shared/references/polish.md`.
 Tell each agent to read only the files you list.
 
-**Flags.** If the invocation includes `--skip-journeys` (or the user says to skip the journeys), set `skip_journeys: true` in the state file. Nothing else changes except Stage 2b.
+**Flags.** If the invocation includes `--skip-journeys` (or the user says to skip the journeys), set `skip_journeys: true` in the state file and don't ask the Stage 2b question. Nothing else changes except Stage 2b.
 
 ## Stage 0 — Resume or start
 
@@ -58,7 +58,13 @@ The brief itself is requested **in preflight, as soon as the user picks "A brief
    Show the user the spec, especially the **Platform coverage**, **Scope settings**, **Requirements** and **Interactions and states** tables, and ask for confirmation or edits. Settings read from the brief and ones that fell back to a default are labelled, so the user can correct any of them. Apply edits by resuming the same agent. Requirement IDs stay stable across edits.
 5. Save the confirmed spec to `design-spec.md`, copy its confirmed **Scope settings** into `scope.options` in the state file, and update the state file (`stage: "journeys"`, or `"direction"` when journeys are skipped).
 
-## Stage 2b — User journeys (skipped with `--skip-journeys`)
+## Stage 2b — User journeys (optional)
+
+The journeys step is **optional, and the user decides each time**. Unless `skip_journeys` is already `true` (from the `--skip-journeys` flag or an earlier answer on a resumed run), ask with AskUserQuestion once the spec is confirmed: *"Write user journeys for you to review before design starts?"* (header: `Journeys`), with two options:
+1. **Yes, write the journeys (Recommended)** — "Step-by-step flows for every platform, with error paths and exits. You review them first, and the coverage report checks the app against every step."
+2. **No, skip them** — "Go straight to the style step. The app takes its flows from the spec, and coverage is checked against the requirements only. Faster, with less to review."
+
+Save the answer as `skip_journeys` in the state file. On **No**, jump to the last paragraph of this stage. On **Yes**, continue:
 
 Set `stage: "journeys"`. Start `journey-agent` with the confirmed spec, the platform scope, `brief-source.md` and the absolute path of `_shared/references/user-flows.md`. It saves `user-journeys.md` and returns a summary.
 

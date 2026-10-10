@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.5.7] - 2026-10-10
+
+### Changed
+- **The user journeys step is optional, and you choose each run.** After you confirm the spec, the pipeline asks "Write user journeys for you to review before design starts?" with two clickable options: Yes (recommended) or No, skip them. On No it goes straight to the style step, the app takes its flows from the spec, and coverage is checked against the requirements only. The `--skip-journeys` flag still works and skips the question.
+
 ## [0.5.6] - 2026-10-10
 
 ### Changed

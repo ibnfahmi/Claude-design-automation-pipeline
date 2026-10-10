@@ -85,7 +85,7 @@ Or just open the plugin and click install.
    - **the platforms** (one or several), the **screen sizes** and the **code stack** (React + Vite + Tailwind, Next.js, plain HTML, or your own, each with a short note on when to use it), by clicking;
    - then paste the brief (or point to the BRD files).
 4. Answer any questions, and confirm the numbered requirements.
-5. Review the **user journeys** in `user-journeys.md`: flows with screens, decisions, error paths and exits, for every platform and across platforms (skip with `/design-pipeline --skip-journeys`).
+5. Review the **user journeys** in `user-journeys.md`: flows with screens, decisions, error paths and exits, for every platform and across platforms (optional: the pipeline asks whether you want them, or pass `/design-pipeline --skip-journeys` to skip the question).
 6. Choose the **style**: a saved design system, a reference (image, screenshot, website URL or Figma file) with a live preview of your product in that look, or no design system.
 7. The Design Agent builds the project in `code/`. After each round the Auditor tests the running app (Nielsen's heuristics, WCAG 2.1 AA, platform checks, code checks, a click-through of every interaction) and saves `audit-round-<n>.md`. The Coverage Agent compares the app with your brief and saves `coverage-round-<n>.md` (Done / Missing / Added).
 8. Try the app in the browser pane (frames at `/frames`, journeys at `/journeys`), and tell Claude what to change, or edit the code yourself: your edits are kept. Say which issues to fix and which unrequested additions to keep or remove.
