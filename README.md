@@ -9,7 +9,7 @@ A Claude Code plugin that takes a raw design brief (or an existing canvas) to a 
 See *Design Automation Multi-Agent Blueprint v2* for the full design.
 
 
-## 🆕 v0.4.8 — Platforms, stories and coverage
+## 🆕 v0.4.9 — Platforms, stories and coverage
 
 Click your platforms in preflight (web app, dashboard, landing page, mobile, tablet, TV, kiosk/ATM and 9 more) and the screen sizes; each platform's rules then apply automatically, and content details such as sections and CTA are read from your brief. See a quick **style preview** of your product before the slow design-system build, review **user stories** before design starts (`--skip-stories` to skip), and get a **Done / Missing / Added** coverage report against your brief or BRD after every round. `/design-continue` is removed: run `/design-pipeline` again to resume. See [CHANGELOG.md](CHANGELOG.md) for the full notes, [profiles/README.md](profiles/README.md) to add a platform, and [MODEL-OPTIMIZATION.md](MODEL-OPTIMIZATION.md) for the per-agent models.
 

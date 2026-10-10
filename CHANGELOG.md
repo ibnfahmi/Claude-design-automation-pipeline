@@ -2,6 +2,12 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.4.9] - 2026-10-10
+
+### Added
+- **"Use a reference" starts with a clickable choice of reference type**: a website URL, an image or screenshot, or a Figma file or frame. The website option lists three inspiration sources to help find a reference: Awwwards nominees (https://www.awwwards.com/websites/nominees/), Behance UI/UX galleries (https://www.behance.net/galleries/ui-ux) and Muzli search (https://search.muz.li/). They are shown again, as links, in the message that asks for the address.
+- **Gallery pages are handled.** An Awwwards entry is followed to the real site. A Behance or similar project page is treated as images of the design, so the tokens come from the design and not from the gallery's own interface. A listing or search page isn't accepted as a reference; the pipeline asks for one project's link.
+
 ## [0.4.8] - 2026-10-10
 
 ### Fixed

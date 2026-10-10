@@ -26,6 +26,8 @@ Read the `grounding.md` file the Orchestrator gives you first. Ground the tokens
 
 ### Reading a website
 
+0. **Check what kind of page it is.** If the address is a showcase or gallery page (for example Awwwards, Behance, Dribbble or Muzli) rather than the site itself, don't measure that page's own interface. For an Awwwards entry, follow its link to the real site. For a Behance or similar project page, capture the project's images (screenshots of the image areas) and treat them as screenshots; look for the design in them, not in the page chrome. For a listing or search page, return the problem and ask for one project's link.
+
 1. **Wait for the real page, not the loader.** Many sites open on a preloader (a logo, a progress bar, floating shapes) for 10 to 40 seconds while heavy assets (WebGL, 3D models, fonts) load. Measuring that screen gives the loader's colours, not the site's. Open the URL in the built-in browser, then wait and re-check until the loader is gone: the main heading and the primary button are visible, and network activity has settled. Allow up to about 60 seconds. If it never finishes, say so and report that nothing below was measured from the real page.
 2. **Take screenshots** of the loaded page: the first screen at about 1440 wide, the same at about 390 wide, and one or two scroll positions. Save them in the current folder (for example `reference-shots/`), and look at them. These are your evidence for composition and motion; computed styles can't show a WebGL scene.
 3. **Hero composition.** Describe what fills the first screen: a full-bleed illustration, photo, video, WebGL or canvas scene, gradient, or plain background; where the heading, subheading and buttons sit; how much is empty; the depth layers.
