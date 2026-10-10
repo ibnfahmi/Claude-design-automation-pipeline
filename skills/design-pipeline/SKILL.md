@@ -40,12 +40,12 @@ Look for `design-pipeline-state.json` in the current folder (format in `referenc
 - Found and `stage` is not `done` → summarise where the run stopped and ask: resume, or start over? On resume, jump to that stage:
   - `review` → run the "When the user returns" steps of Stage 4. Anything the user typed with the command (for example `/design-pipeline approved`) counts as review feedback.
   - `audit` → rerun Stage 3b. `journeys` → continue the journeys review (Stage 2b). `direction` → continue the style step (Stage 2c).
-  - In a new session, first re-run the tool check (Node and npm), keep the saved scope and direction (telling the user which are in use, and letting them change them), restart the dev server with the preview tool, and start a fresh Design Agent if one is needed (the old agent ID won't work). The code in `code/` is the source of truth; read `git log` and `git status` to see where it stands.
+  - In a new session, first re-run the tool check (Node, npm and Git), keep the saved scope and direction (telling the user which are in use, and letting them change them), restart the dev server with the preview tool, and start a fresh Design Agent if one is needed (the old agent ID won't work). The code in `code/` is the source of truth; read `git log` and `git status` to see where it stands.
 - Not found → start a new run at Stage 1.
 
 ## Stage 1 — Preflight
 
-Run every check in `references/preflight.md`, in its order: Node and npm, then the **starting point** (a brief, an existing code project, or a Figma file), the **platform scope**, **screen sizes** and **code stack** (all clickable choices; the stack is asked per project, with a short note on when to use each). The style direction comes later, in Stage 2c. If a required check fails, stop, report what's missing and how to fix it, and wait. When the user says "retry", run the checks again.
+Run every check in `references/preflight.md`, in its order: Node, npm and Git, then the **starting point** (a brief, an existing code project, or a Figma file), the **platform scope**, **screen sizes** and **code stack** (all clickable choices; the stack is asked per project, with a short note on when to use each). The style direction comes later, in Stage 2c. If a required check fails, stop, report what's missing and how to fix it, and wait. When the user says "retry", run the checks again.
 
 The brief itself is requested **in preflight, as soon as the user picks "A brief or BRD"** (check 2), right after the tool check passes, and before the platform questions, so those questions can use it. Record all results in the state file.
 

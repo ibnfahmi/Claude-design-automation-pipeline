@@ -11,7 +11,7 @@ Written to the client project folder (the session's working directory) after eve
   "starting_point": "brief | code | figma",
   "existing_source": "folder path or Figma link, only when starting_point is code or figma",
   "preflight": {
-    "node": "ok — node 20.x, npm 10.x",
+    "node": "ok — node 20.x, npm 10.x, git 2.x",
     "direction": "system | reference | creative | existing",
     "design_system_name": "Acme Brand DS, or null",
     "design_system_path": "~/.claude/design-systems/acme-brand-ds or a folder path, or null",
@@ -109,4 +109,4 @@ Written by the Orchestrator after every build round from the Design Agent's FRAM
 | `handoff` | Approved; optional Figma export started | Stage 6 |
 | `done` | Code (and optional Figma file) delivered | Offer to start a new run |
 
-Always re-run the tool check (Node and npm) when resuming in a new session, and restart the dev server with the preview tool. Keep the saved scope, starting point and design direction instead of asking again, but tell the user which are in use and let them change them. If `design_system_status` is `building`, check whether the design-system folder now exists before deciding it failed.
+Always re-run the tool check (Node, npm and Git) when resuming in a new session, and restart the dev server with the preview tool. Keep the saved scope, starting point and design direction instead of asking again, but tell the user which are in use and let them change them. If `design_system_status` is `building`, check whether the design-system folder now exists before deciding it failed.

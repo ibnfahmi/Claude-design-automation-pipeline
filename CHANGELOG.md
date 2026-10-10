@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.5.4] - 2026-10-10
+
+### Fixed
+- **Git is a requirement again.** It was dropped from the README requirements in the code-first rewrite, but the pipeline needs it: every round is committed to a local repository in `code/`, and revision rounds read `git diff` to keep the user's own edits. The README lists it, and the preflight tool check now tests Node, npm and Git and stops with a clear message if Git is missing.
+
 ## [0.5.3] - 2026-10-10
 
 ### Added

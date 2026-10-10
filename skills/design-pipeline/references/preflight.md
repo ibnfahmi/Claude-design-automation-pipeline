@@ -2,7 +2,7 @@
 
 Run these in order at Stage 1.
 
-1. Node and npm
+1. Node, npm and Git
 2. Starting point, and the brief itself (or the existing project)
 3. Platform scope (clickable)
 4. Screen sizes (clickable)
@@ -10,13 +10,13 @@ Run these in order at Stage 1.
 
 The **style direction** (a saved design system, a reference, or no design system, with a quick preview) is not part of preflight. It is its own step, Stage 2c, after the spec and the user journeys are confirmed, so the preview can use the real product. See `direction.md`. The **Figma connector** is only needed for an optional export at the end (Stage 6), or when the user starts from, or takes a reference from, a Figma file; it is checked then.
 
-## 1. Node and npm — required
+## 1. Node, npm and Git — required
 
 The output is a code project, so the machine needs to run one.
 
-- Run `node --version` and `npm --version` (Bash, or PowerShell on Windows).
-- **Pass:** Node 20 or newer and npm are installed. Note the versions.
-- **Fail:** missing, or Node older than 20. Tell the user: *"The pipeline builds a real code project, so it needs Node.js 20 or newer. Install it from nodejs.org, then type 'retry'."* You can't install software for the user.
+- Run `node --version`, `npm --version` and `git --version` (Bash, or PowerShell on Windows).
+- **Pass:** Node 20 or newer, npm and Git are installed. Note the versions.
+- **Fail:** any of them missing, or Node older than 20. Tell the user what is missing: *"The pipeline builds a real code project, so it needs Node.js 20 or newer (nodejs.org) and Git (git-scm.com/install). Install what's missing, then type 'retry'."* Git is needed because every round is committed to a local repository in `code/`, and revision rounds read `git diff` to keep the user's own edits. You can't install software for the user.
 - Also check the preview tool is available (`preview_start`, found with ToolSearch if deferred). If it isn't, note that the dev server must be started with `npm run dev` and opened in the user's own browser, and the Auditor will audit from the source and from screenshots the user shares. Don't fail the check for this.
 
 ## 2. Starting point — always ask
@@ -98,7 +98,7 @@ If the user typed another stack, confirm it in one line, and note that the layou
 
 Show a short checklist, e.g.
 
-- ✅ Node 20.11, npm 10.2
+- ✅ Node 20.11, npm 10.2, Git 2.45
 - ✅ Starting point — brief
 - ✅ Scope — Mobile app (iPhone 16, iPhone SE), Landing page (Desktop 1440, Tablet 768, Mobile 375)
 - ✅ Code stack — Plain HTML, CSS and JS (double-click share file)
