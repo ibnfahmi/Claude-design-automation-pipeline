@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.6.0] - 2026-10-10
+
+### Changed
+- **Review comments are applied automatically, like in a normal Claude Code artifact session.** A comment sent to Claude from the review page now arrives in the session as an `[Artifact comment sent to Claude]` message and is handled on the spot: the Design Agent changes the local `code/`, `share/` is rebuilt and committed (`Comment <thread id>: <summary>`), the page is republished to the same link, and the thread gets a one-line reply and is resolved. There is no "say done" step for comments, and comment fixes skip the full audit (the next full round covers them). Frames and components now carry `data-frame` and `data-component` attributes so a comment's anchor can be traced to its source file.
+
 ## [0.5.9] - 2026-10-10
 
 ### Added

@@ -75,6 +75,10 @@ The spec and the journeys name screens and states as `Screen / State` (for examp
 
 Viewports come from the scope: the primary viewport for states, and every chosen viewport for each screen. Make the app genuinely responsive (the frames at different widths are the same components), and use a device or window frame wrapper only where the platform has one.
 
+## Anchors for comments
+
+Every frame root has `data-frame="Screen / State"` and every reusable component root has `data-component="Name"`, so a review comment on the published page can be traced back to its source file (see `share-build.md`).
+
 ## Interactions are real
 
 Buttons, menus, dialogs, tabs, forms (with validation), toggles and navigation actually work, with the motion and states the references describe. A flow the journeys describe can be walked by clicking through the real app. Where something needs a backend, use a small in-memory mock so the flow completes.

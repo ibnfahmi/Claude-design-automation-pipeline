@@ -31,6 +31,10 @@ Stakeholders in a review come from every industry and every level of tech knowle
 
 **Other stacks** — build a static, relative-path, classic-script output if the stack can; test it as below; if it can't, say so in the report rather than claim a share file.
 
+## Anchors for review comments
+
+A comment on the review page is anchored to the *built* page (text, element, element path). So that Claude can find the source: give every frame's root element `data-frame="Screen / State"`, give each reusable component's root a `data-component="Name"`, keep real text in the markup (not baked into images), and keep ids and test ids stable.
+
 ## Publishing as a review page
 
 The single-file `share/index.html` is also what gets published as the private review page (`review-page.md`). Keep it within the Artifact limits: under 16 MB, no external scripts (everything inlined), stylesheets and fonts only from Google Fonts if not embedded.

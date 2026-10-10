@@ -114,7 +114,7 @@ Before handing over the round, handle the **review page** as `references/review-
 
 Give the user:
 - the running app (the preview opens in the built-in browser pane; give the address too, so they can open it in their own browser), the gallery at `/frames`, and the journeys at `/journeys`
-- the **review page** link, if one is published, with how to comment on it (select what to change, leave a comment, send the thread to Claude)
+- the **review page** link, if one is published, with how to comment on it (select what to change, leave a comment, send the thread to Claude: it is applied to the code automatically, no need to say 'done')
 - the interaction list
 - the **audit** result: pass/fail, interactions passed, platform checks passed, counts by severity, and the critical and major issues in one line each (full report: `audit-round-<n>.md`)
 - the **coverage** result: *Done / Missing / Added* counts, each Missing requirement and each "Added (unrequested)" item in one line (full report: `coverage-round-<n>.md`)
@@ -125,14 +125,14 @@ Set `stage: "review"` in the state file and **end your turn**. Do not poll.
 When the user returns (by replying here, or by running `/design-pipeline` and choosing to resume):
 
 1. Read what changed in the code since the last commit (`git status`, `git diff` in `code/`), so you see any direct edits, and pass them on.
-2. Take anything the user typed in this session into account. If a review page is published, **read its comment threads** and add them as change requests (`references/review-page.md`, "Reading and applying comments").
+2. Take anything the user typed in this session into account. If a review page is published, read any open comment threads once and handle them (`references/review-page.md`); comments sent to Claude are normally handled the moment they arrive.
 3. Decide:
    - **Explicit approval** ("approved", "ship it", or equivalent) and no unresolved change requests:
      - If the latest audit has **critical** issues that weren't fixed, or the latest coverage report has **must** requirements still Missing, list them and ask once: *"Approve anyway, or fix these first?"* Approve only on an explicit "approve anyway".
      - Then set `approved: true`, go to Stage 5.
-   - **Anything else** — feedback, edits, "looks good but…" → it's a change request. Summarise the changes back to the user in a few bullets, including the audit issues and coverage gaps to fix, and what to do with each unrequested addition. A kept addition is added to the spec as a new requirement (resume the Brief Agent; new `R-` ID at the end) and, if the new item changes a flow, to the journeys if they exist (resume the Journey Agent). Then resume the Design Agent (SendMessage to `design_agent_id`) with the feedback, the review-page comments (thread id and text each), those audit issues, the coverage gaps, the removals, the note "keep the user's direct code edits", and the round number. If the agent can't be resumed (for example a new session), start a fresh `design-agent` with the spec, the design direction, the current `code/` project, and the feedback. Then run Stage 3b again and repeat Stage 4.
+   - **Anything else** — feedback, edits, "looks good but…" → it's a change request. Summarise the changes back to the user in a few bullets, including the audit issues and coverage gaps to fix, and what to do with each unrequested addition. A kept addition is added to the spec as a new requirement (resume the Brief Agent; new `R-` ID at the end) and, if the new item changes a flow, to the journeys if they exist (resume the Journey Agent). Then resume the Design Agent (SendMessage to `design_agent_id`) with the feedback,  those audit issues, the coverage gaps, the removals, the note "keep the user's direct code edits", and the round number. If the agent can't be resumed (for example a new session), start a fresh `design-agent` with the spec, the design direction, the current `code/` project, and the feedback. Then run Stage 3b again and repeat Stage 4.
 
-After a revision round returns, republish the review page and reply to and resolve the threads it fixed (`review-page.md`) before going back to Stage 3b.
+After a revision round returns, republish the review page (`review-page.md`) before going back to Stage 3b.
 
 If feedback is ambiguous, ask the user rather than guessing.
 
