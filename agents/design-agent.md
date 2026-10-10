@@ -74,7 +74,7 @@ The Orchestrator sends you the user's comments, a summary of the changes wanted,
 1. **Read what the user changed in the code first**: `git status` and `git diff` against the last commit. The user may have edited files directly. **Keep their edits** unless the feedback says otherwise.
 2. Apply every requested change. If a change affects a state, update that frame too. Build the Missing items. Remove only what the user asked you to remove.
 3. Add or remove frames if the feedback changes the interactions, and keep the registry, the gallery, `/journeys` and the interaction list in step.
-4. Re-run the quality gates, check the changed frames in the browser, and commit: `Round <n>: <summary>`.
+4. Re-run the quality gates, rebuild `share/` as `share-build.md` describes, check the changed frames in the browser, and commit: `Round <n>: <summary>`.
 
 ## Output (build and revision)
 
@@ -89,6 +89,7 @@ SUMMARY:
 - creative direction only: the palette, type and shape choices, and why
 - revision rounds: which audit issues and coverage gaps you fixed, and any direct user edits you kept
 GATES: build <pass|fail> · lint <pass|n/a> · console errors <none|n> · frames rendered <n>/<n>
+SHARE: share/index.html <built|not supported: reason> · size <MB> · zip <share.zip|n/a>
 INTERACTIONS:
 - Home → click notification icon → Home / Notifications open
 - …

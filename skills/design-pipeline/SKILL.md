@@ -24,9 +24,9 @@ Never skip a stage (except the journeys step when the user passed `--skip-journe
 **Where the platform profiles are.** `profiles/` is in the plugin root: from this skill's base directory, `../../profiles/`. `profiles/index.json` lists the platforms; each `profiles/<id>/profile.json` holds its preflight questions, required screens and states, design guidance, `code_target` (what the platform is built as) and audit checks (format in `profiles/README.md`). Pass subagents the absolute paths and the profile contents they need.
 
 **Reference files.** `profiles/_shared/references/` holds the shared guidance. Resolve these absolute paths once and hand them over as listed:
-- **Design Agent** (all modes): `_shared/references/code-conventions.md`, `_shared/references/code-quality.md`, `_shared/references/grounding.md`, plus every file listed in `auditor.references` of each platform in the scope. These are the same thresholds the Auditor will test against, so the first build meets them. In `style preview` mode, when the reference's `rendering` is `webgl` (or the brief asks for a 3D hero), also give it `_shared/references/webgl-3d.md`.
+- **Design Agent** (all modes): `_shared/references/code-conventions.md`, `_shared/references/share-build.md`, `_shared/references/code-quality.md`, `_shared/references/grounding.md`, plus every file listed in `auditor.references` of each platform in the scope. These are the same thresholds the Auditor will test against, so the first build meets them. In `style preview` mode, when the reference's `rendering` is `webgl` (or the brief asks for a 3D hero), also give it `_shared/references/webgl-3d.md`.
 - **Design System Agent** (`tokens` and `full` modes): `_shared/references/grounding.md`.
-- **Auditor**: `_shared/references/code-conventions.md` and the files in `auditor.references` of each platform in the scope (which include `code-quality.md`).
+- **Auditor**: `_shared/references/code-conventions.md`, `_shared/references/share-build.md` and the files in `auditor.references` of each platform in the scope (which include `code-quality.md`).
 - **Coverage Agent**: `_shared/references/user-flows.md` and `_shared/references/code-conventions.md`.
 - **Handoff Agent**: `_shared/references/handoff-spec.md` and `_shared/references/polish.md`.
 Tell each agent to read only the files you list.
@@ -86,7 +86,7 @@ Save the direction under `preflight` in the state file, set `stage: "design"`, a
 
 Start `design-agent` in build mode with: the full confirmed spec, `user-journeys.md` (if any), the chosen `stack`, the platform scope (viewports; the first chosen viewport is the primary one) with each platform's `design_guidance` and `code_target` and the reference file paths listed above, the design direction from Stage 2c (`system` + the design system folder, `reference` + the approved tokens, signature elements and reference, `creative` + the approved tokens, or `existing` + the code folder or Figma link), and "round 1". Store its agent ID in the state file as `design_agent_id`.
 
-When it returns, save `dev_url`, `interaction_list`, increase `review_round`, and write `design-manifest.json` from its FRAMES list (format in `references/state-file.md`). If its `GATES` line shows a failing build, send it back to fix that before auditing. Then go to Stage 3b.
+When it returns, save `dev_url`, `share_status` from its SHARE line, `interaction_list`, increase `review_round`, and write `design-manifest.json` from its FRAMES list (format in `references/state-file.md`). If its `GATES` line shows a failing build, send it back to fix that before auditing. Then go to Stage 3b.
 
 ## Stage 3b — Audit and coverage (every round)
 
@@ -122,7 +122,7 @@ If feedback is ambiguous, ask the user rather than guessing.
 
 ## Stage 5 — Production check
 
-Run the quality gates from `_shared/references/code-conventions.md` one last time on the approved code: a clean `npm run build` (and lint), no console errors on any frame route, a fresh install works (`npm ci` or `npm install`). Make sure `code/README.md` explains how to install, run and build, where the tokens are, how the frames and journeys routes work, and what is mock data. Commit as `Approved`. If a gate fails, send it back to the Design Agent.
+Run the quality gates from `_shared/references/code-conventions.md` one last time on the approved code: a clean `npm run build` (and lint), no console errors on any frame route, a fresh install works (`npm ci` or `npm install`), and `share/` is rebuilt from the approved code and passes the file-open test (`share-build.md`). Make sure `code/README.md` explains how to install, run and build, where the tokens are, how the frames and journeys routes work, and what is mock data. Commit as `Approved`. If a gate fails, send it back to the Design Agent.
 
 ## Stage 6 — Optional Figma export
 
@@ -134,6 +134,7 @@ On yes: run the Figma connector check (call its `whoami`; if it isn't connected,
 
 Set `stage: "done"`. Give the user:
 - the path to the code project (`code/`), how to run it (`npm install`, `npm run dev`), and the git history of the rounds
+- **the file to send to reviewers:** `share/index.html` (or `share.zip` for the plain HTML stack, to unzip then open), with its test result. If the stack cannot make one (Next.js, some others), say so plainly and offer a static export or a hosted link; never claim a share file works unless the file-open test passed
 - a short summary: platforms built, frames built, journeys walkable, the final audit result and the final coverage result (Done / Missing / Added)
 - the Figma file link, if one was exported
 - anything that needs a manual touch (for example mock data that needs a real backend, placeholder content marked as needing real data)

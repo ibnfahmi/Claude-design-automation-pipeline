@@ -45,6 +45,8 @@ Written to the client project folder (the session's working directory) after eve
   "journeys_confirmed": false,
   "code_dir": "code/",
   "stack": "react-vite-ts-tailwind | nextjs | html-css-js | other: <name>",
+  "share_dir": "share/",
+  "share_status": "pass | pass with issues | fail | not verified | not supported",
   "dev_port": 5173,
   "dev_url": "http://localhost:5173",
   "design_agent_id": "agent id, valid only in the session that started it",

@@ -85,10 +85,12 @@ The deliverable is code, and the right stack depends on the project, so **ask ev
 
 Ask with AskUserQuestion: *"Which stack should the code use?"* (header: `Code stack`), with a short note on when to use each:
 
-1. **React + Vite + Tailwind (Recommended)** — "Best for web apps, dashboards and interactive prototypes: a single-page app that runs and rebuilds instantly, with no server needed. The usual choice when the product is mostly an app behind a sign-in."
-2. **Next.js** — "Best when a real marketing site or SEO matters, or you want a landing page and a signed-in app together in one production-style project, with routing by folders and server rendering."
-3. **Plain HTML, CSS and JS** — "Best for a small static site or a single landing page with no app logic. Nothing to learn, easy to hand to anyone, and the lightest output; gets hard to manage past a handful of pages."
-4. **Other** (type it) — "Any other stack you use, such as Vue, Svelte or Astro. Tell me the name and I'll follow its conventions."
+1. **Plain HTML, CSS and JS (Recommended)** — "Best when many people with different tech levels will review the design: the result opens by double-click, offline, with nothing to install. Right for landing pages, marketing sites and small prototypes (up to about six screens). Gets harder to manage for apps with a lot of shared state."
+2. **React + Vite + Tailwind** — "Best for web apps, dashboards and interactive prototypes with lots of screens and state, and for work developers may take over. You also get a one-file `share/index.html` that opens by double-click, so reviewers still need nothing installed."
+3. **Next.js** — "Best when a real marketing site or SEO matters, or you want a landing page and a signed-in app together in one production-style project. It needs a server, so it can't promise a double-click file for reviewers."
+4. **Other** (type it) — "Any other stack you use, such as Vue, Svelte or Astro. Tell me the name and I'll follow its conventions; I'll say whether it can produce a double-click file."
+
+Whatever the choice, every project also gets a `share/` folder for reviewers (rules in `_shared/references/share-build.md`), except where the stack cannot make one: say so in the report line.
 
 If the user typed another stack, confirm it in one line, and note that the layout and quality gates in `code-conventions.md` apply in its equivalent form. Save `stack` in the state file (`react-vite-ts-tailwind`, `nextjs`, `html-css-js`, or `other: <name>`) and its dev port (Vite 5173, Next.js 3000, otherwise the stack's default).
 
@@ -99,6 +101,6 @@ Show a short checklist, e.g.
 - ✅ Node 20.11, npm 10.2
 - ✅ Starting point — brief
 - ✅ Scope — Mobile app (iPhone 16, iPhone SE), Landing page (Desktop 1440, Tablet 768, Mobile 375)
-- ✅ Code stack — React + Vite + Tailwind
+- ✅ Code stack — Plain HTML, CSS and JS (double-click share file)
 
 Save the results under `preflight` and `scope` in the state file. The design direction is saved later, in Stage 2c.

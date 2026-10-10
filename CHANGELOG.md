@@ -2,6 +2,16 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.5.3] - 2026-10-10
+
+### Added
+- **A share build for reviewers.** Every project now also produces a `share/` folder that opens by double-click from disk, offline, with nothing to install, so stakeholders of any tech level can review. Plain HTML projects ship `share/` as a self-contained copy plus `share.zip`; React + Vite projects get a separate single-file build (`share/index.html`, hash routing, embedded fonts and assets, mock data). New reference `_shared/references/share-build.md` lists what `file://` blocks and the rule for each.
+- **A `file://` open test.** The Auditor opens `share/index.html` from disk, walks the journeys, and checks the console for blocked requests. The result (pass, pass with issues, fail, not verified, not supported) is in the audit and the final report; the pipeline never says a share file works unless this test passed.
+
+### Changed
+- **Plain HTML, CSS and JS is now the first, recommended stack** in the preflight question, with a note on each option about sharing and handoff. The plain HTML stack no longer uses Vite or ES modules (which browsers block from disk): classic scripts, relative links, no build step.
+- Next.js cannot promise a double-click file; the preflight note and the final report say so and offer a static export or a hosted link.
+
 ## [0.5.2] - 2026-10-10
 
 _This release was published for a short time as 0.6.0 and renumbered 0.5.2 to follow the numbering rule (last digit 0 to 9, then the middle number goes up). The content is the same._

@@ -32,6 +32,7 @@ Reasonable overrides:
 
 ## History
 
+- **0.5.3:** no model changes; the Design Agent also builds `share/` and the Auditor tests it from disk.
 - **0.5.2:** the pipeline became code first (no Claude Design canvas): the Design Agent builds a working project, the Auditor and Coverage Agent test the running app, and the Handoff Agent is an optional Figma export.
 
 - **0.3.0:** replaced `model: inherit` with per-agent assignments.

@@ -16,8 +16,10 @@ The user picks the stack in preflight (`stack` in the state file; there is no as
 |---|---|
 | `react-vite-ts-tailwind` | As described below. Dev port 5173 |
 | `nextjs` | App Router with TypeScript and Tailwind. Pages in `app/`, shared UI in `components/`, tokens in `app/tokens.css` imported by the root layout, client components where interaction is needed. The dev routes are `app/frames/[slug]/page.tsx`, `app/frames/page.tsx`, `app/journeys/page.tsx` and `app/style-preview/page.tsx` (the App Router treats folders that start with an underscore as private, so the dev routes have none). Dev port 3000 |
-| `html-css-js` | A multi-page static site on Vite's vanilla template (so there is a dev server and a build): `index.html` and one `.html` per page, `styles/tokens.css` and plain CSS (no Tailwind), small ES modules for behaviour, `frames/<slug>.html` plus `frames/index.html` (the gallery), `journeys/index.html` and `style-preview.html`. Dev port 5173 |
+| `html-css-js` | A multi-page static site with **no build step and no bundler**, so it opens by double-click: `index.html` and one `.html` per page linked with relative paths, `styles/tokens.css` and plain CSS (no Tailwind), behaviour in classic `<script src>` files (no `type="module"`, no `fetch` of local files, data kept in a JS object), fonts in `fonts/` loaded by relative `@font-face`, `frames/<slug>.html` plus `frames/index.html` (the gallery), `journeys/index.html` and `style-preview.html`. For previewing, serve the folder with `npx --yes serve code -l 5173` (the `dev` script). The "build" gate is a check that every page loads and every relative link resolves. Dev port 5173 |
 | other (the user typed it) | Follow that stack's own conventions and give it the same pieces: tokens as CSS variables, a frame for every `Screen / State` reachable without manual steps, a frames gallery, a journeys index, and a build that passes |
+
+Every stack also produces a `share/` folder that opens by double-click; the rules and the test are in `share-build.md`.
 
 The dev routes are `/frames`, `/frames/<slug>`, `/journeys` and `/style-preview` in every stack. They are review tooling; keep them out of the way of the real app's routes.
 
@@ -101,6 +103,7 @@ Buttons, menus, dialogs, tabs, forms (with validation), toggles and navigation a
 - No console errors or failed requests on any frame route.
 - Every frame in the registry renders at its viewport with no clipped or overlapping content.
 - The checks in `code-quality.md` pass.
+- `share/` is rebuilt from the current code (`share-build.md`), and its `file://` open test passes where the stack supports it.
 
 ## Git
 
