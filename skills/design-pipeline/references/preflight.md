@@ -5,8 +5,8 @@ Run these in order at Stage 1. Run check 1 again before the handoff (Stage 5).
 1. Figma connector
 2. Claude Design
 3. Starting point (brief or existing canvas)
-4. Platform scope
-5. Platform options
+4. Platform scope (clickable)
+5. Screen sizes (clickable)
 6. Design direction (with a quick style preview before any slow design-system build)
 
 Connector tool names differ between machines (claude.ai connectors carry an ID in their name), so find tools by what they do, not by an exact name. Use ToolSearch with keywords like `figma whoami` or `use_figma` if tools are deferred.
@@ -39,61 +39,44 @@ If the previous run in this folder used one, put it first with "(used last time)
 - **Brief or BRD:** save `starting_point: "brief"`. The source is collected in Stage 2.
 - **Existing design:** ask for the link. For a Claude Design artifact, confirm it opens (Artifact `read`). For a Figma link, call the connector's metadata tool on it. If it can't be read, say why and ask again. Save `starting_point: "canvas"` and the link. In this case the design direction (check 6) is the canvas itself: skip the direction question, set `direction: "canvas"`, and don't run a style preview. Still ask the platform scope (checks 4 and 5).
 
-## 4. Platform scope — always ask
+## 4. Platform scope — always ask, with clickable choices
 
-Ask which platforms this project covers. Many projects span several (for example a landing page plus the app). Read `profiles/index.json` and each profile's `label` and `summary`.
+Ask which platforms the project covers. Many projects span several (for example a landing page plus the app). Always use the AskUserQuestion tool, so the user clicks and never types numbers. The tool allows at most 4 questions per call and 4 options per question, so the 16 platforms are asked in two short steps. Read `profiles/index.json` (its `families` and each profile's `label` and `summary`) so the choices stay in sync when platforms are added.
 
-The list is longer than AskUserQuestion allows, so show a numbered list in your message and ask the user to reply with the numbers or names (several allowed):
+If `design-pipeline-state.json` from an earlier run names a scope, first ask one question, *"Same platforms as last time: ...?"* with **Yes, same (Recommended)** and **Change them**. On yes, skip to check 5.
 
-```
-Which platforms is this project for? Reply with numbers or names, e.g. "1, 3, 5".
- 1. Web app / SaaS
- 2. Dashboard / admin panel
- 3. Landing page / marketing site
- 4. E-commerce (product, cart, checkout)
- 5. Mobile app (iOS / Android)
- 6. Tablet app
- 7. Desktop app (Windows / macOS / Linux)
- 8. Browser extension
- 9. Design system / component library
-10. Email templates
-11. Presentation / pitch deck
-12. Social media assets
-13. Onboarding or checkout flow (standalone)
-14. Docs / help center
-15. Smart TV / streaming
-16. Kiosk / ATM / self-service machine
-17. Other (describe it)
-```
+**Step A — one question, multi-select:** *"What kind of product is this?"* (header: `Product type`). One option per family, the description listing its platforms, for example:
 
-(Generate the list from `profiles/index.json` so it stays in sync when platforms are added; "Other" is always last.)
+- **Websites and web apps** — Web app, dashboard, landing page, e-commerce
+- **Mobile, tablet, desktop and extensions** — Mobile app, tablet app, desktop app, browser extension
+- **Content and marketing** — Email, presentation deck, social media, docs / help center
+- **Public screens, systems and flows** — Smart TV, kiosk / ATM, design system, onboarding or checkout flow
 
-- **Other:** ask for a description, the viewport size, and any constraints. It has no profile. Use the `web-app` profile's checks and `_shared/references/interface-quality.md` as the baseline.
-- If `design-pipeline-state.json` from an earlier run names a scope, offer it first: "Same as last time: …".
-- Save the chosen platform IDs.
+The tool's built-in **Other** covers anything else. If the user types an other-platform description, ask for its viewport size and constraints, and use the `web-app` profile's rules as the baseline.
 
-## 5. Platform options — one card per platform
+**Step B — one call, one multi-select question per chosen family:** *"Which websites and web apps?"* (header: the family's short name), with one option per platform in that family (label = the platform's label, description = its `summary`).
 
-For each chosen platform, read its `profile.json` and show **one card** with its `options`, numbered, each with the choices and its default. Example:
+Save the chosen platform IDs.
 
-```
-Mobile app (iOS / Android) — 6 questions, defaults shown in [brackets]
- 1. Operating system: iOS / Android / Both  [Both]
- 2. Device frames: iPhone 16 (393x852) / iPhone 16 Pro Max / iPhone SE small (375x667) / Pixel (412x915) / Android small (360x800)  [iPhone 16]
- 3. Orientation: Portrait only / Portrait and landscape  [Portrait only]
- 4. Navigation: Bottom tabs / Stack / Drawer / Let the design decide  [Let the design decide]
- 5. Dark mode: Light only / Light and dark  [Light only]
- 6. Screens to design: free text  [From the brief]
-Reply "defaults", or change some, e.g. "2: iPhone 16, iPhone SE; 5: both".
-```
+## 5. Screen sizes — the only per-platform question
 
-- "defaults" (or "ok", "yes") takes every default. A partial answer changes only the options named; the rest keep their defaults.
-- Show cards one platform at a time; when the user answers one, show the next. With three or more platforms, offer "use defaults for the rest".
-- Validate answers against each option's choices. If a value isn't recognised, ask again for that option only.
-- The option marked `viewport: true` gives the artboard sizes: store each chosen choice's label and `size`. **The first chosen size is the primary viewport**, where all interaction states are designed. Every screen is designed at every chosen size.
-- Free-text options (like a named compliance standard) are stored as given. Never assume which standard applies to a country or organisation; use what the user wrote.
+A platform profile is a set of **rules that apply automatically**: its required screens and states, design guidance, audit checks and reference files. You don't ask about them. Everything about the *content* (the page sections, the primary CTA and conversion goal, e-commerce pages, chart types, roles, languages, hardware, dark mode, and so on) is read from the brief or BRD by the Brief Agent, and shown to the user for confirmation in the spec (Stage 2).
 
-Save the result as `scope` in the state file (format in `state-file.md`).
+Preflight asks only what the brief rarely says and that decides which artboards get drawn: the **screen sizes**. These are each profile option marked `"ask": "preflight"`. Options marked `"ask": "auto"` have a single choice and are used without asking. Options marked `"ask": "brief"` are not asked here.
+
+**Step A — one question:** *"Screen sizes: use the recommended sizes for every platform?"* (header: `Screen sizes`)
+
+- **Use recommended sizes (Recommended)** — the description lists each platform's defaults, for example "Landing page: Desktop 1440, Tablet 768, Mobile 375 · Mobile app: iPhone 16".
+- **Choose for each platform** — "Pick the sizes yourself."
+
+**Step B — only if the user chose "Choose for each platform":** one AskUserQuestion call per batch of 4 platforms, one question per platform:
+
+- question = the option's `question`; header = a short name (for example `Web sizes`, `Mobile frames`); `multiSelect` is true for `type: multi` and false for `type: single`.
+- options = the **first 4** of the option's `choices` (label as written; add "(Recommended)" to the defaults). Choices beyond the fourth are reachable through **Other**. If the user types a size the profile doesn't list, accept a name plus a width and height; ask for the numbers if missing.
+
+**Saving.** Store each chosen choice's label and `size`. The **primary viewport** is the first of the chosen choices in the profile's own choice order (for example Desktop 1440 for a web page, iPhone 16 for a mobile app). Interaction states are designed at the primary viewport, and the user can change which one is primary when they confirm the spec.
+
+Save the result as `scope` in the state file (format in `state-file.md`). Pass each platform's `ask: "brief"` options, with their choices and defaults, to the Brief Agent.
 
 ## 6. Design direction — always ask
 

@@ -5,65 +5,178 @@
   "options": [
     {
       "id": "breakpoints",
+      "ask": "preflight",
       "question": "Which breakpoints should be designed?",
       "type": "multi",
       "choices": [
-        {"value": "desktop", "label": "Desktop 1440", "size": [1440, 900]},
-        {"value": "laptop", "label": "Laptop 1280", "size": [1280, 800]},
-        {"value": "tablet", "label": "Tablet 768", "size": [768, 1024]},
-        {"value": "mobile", "label": "Mobile 375", "size": [375, 812]},
-        {"value": "wide", "label": "Wide 1920", "size": [1920, 1080]}
+        {
+          "value": "desktop",
+          "label": "Desktop 1440",
+          "size": [
+            1440,
+            900
+          ]
+        },
+        {
+          "value": "laptop",
+          "label": "Laptop 1280",
+          "size": [
+            1280,
+            800
+          ]
+        },
+        {
+          "value": "tablet",
+          "label": "Tablet 768",
+          "size": [
+            768,
+            1024
+          ]
+        },
+        {
+          "value": "mobile",
+          "label": "Mobile 375",
+          "size": [
+            375,
+            812
+          ]
+        },
+        {
+          "value": "wide",
+          "label": "Wide 1920",
+          "size": [
+            1920,
+            1080
+          ]
+        }
       ],
-      "default": ["desktop", "tablet", "mobile"],
+      "default": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
       "viewport": true
     },
     {
       "id": "conversion_goal",
+      "ask": "brief",
       "question": "What is the ONE primary action (and its CTA label)?",
       "type": "text",
       "default": "Start free trial"
     },
     {
       "id": "sections",
+      "ask": "brief",
       "question": "Which sections should the page have?",
       "type": "multi",
       "choices": [
-        {"value": "hero", "label": "Hero"},
-        {"value": "logos", "label": "Logo strip / proof"},
-        {"value": "problem", "label": "Problem to solution"},
-        {"value": "benefits", "label": "Benefits"},
-        {"value": "how", "label": "How it works"},
-        {"value": "testimonials", "label": "Testimonials / case study"},
-        {"value": "pricing", "label": "Pricing"},
-        {"value": "faq", "label": "FAQ"},
-        {"value": "final_cta", "label": "Final CTA"},
-        {"value": "footer", "label": "Footer"}
+        {
+          "value": "hero",
+          "label": "Hero"
+        },
+        {
+          "value": "logos",
+          "label": "Logo strip / proof"
+        },
+        {
+          "value": "problem",
+          "label": "Problem to solution"
+        },
+        {
+          "value": "benefits",
+          "label": "Benefits"
+        },
+        {
+          "value": "how",
+          "label": "How it works"
+        },
+        {
+          "value": "testimonials",
+          "label": "Testimonials / case study"
+        },
+        {
+          "value": "pricing",
+          "label": "Pricing"
+        },
+        {
+          "value": "faq",
+          "label": "FAQ"
+        },
+        {
+          "value": "final_cta",
+          "label": "Final CTA"
+        },
+        {
+          "value": "footer",
+          "label": "Footer"
+        }
       ],
-      "default": ["hero", "logos", "benefits", "how", "testimonials", "faq", "final_cta", "footer"]
+      "default": [
+        "hero",
+        "logos",
+        "benefits",
+        "how",
+        "testimonials",
+        "faq",
+        "final_cta",
+        "footer"
+      ]
     },
     {
       "id": "layout_type",
+      "ask": "brief",
       "question": "Page layout type?",
       "type": "single",
       "choices": [
-        {"value": "classic", "label": "Classic hero plus sections"},
-        {"value": "long", "label": "Long-form story"},
-        {"value": "minimal", "label": "Minimal conversion page"},
-        {"value": "comparison", "label": "Comparison page"}
+        {
+          "value": "classic",
+          "label": "Classic hero plus sections"
+        },
+        {
+          "value": "long",
+          "label": "Long-form story"
+        },
+        {
+          "value": "minimal",
+          "label": "Minimal conversion page"
+        },
+        {
+          "value": "comparison",
+          "label": "Comparison page"
+        }
       ],
       "default": "classic"
     },
     {
       "id": "multi_page",
+      "ask": "brief",
       "question": "Single page, or a small site with extra pages?",
       "type": "single",
-      "choices": [{"value": "single", "label": "Single page"}, {"value": "site", "label": "Small site (home, pricing, about, contact)"}],
+      "choices": [
+        {
+          "value": "single",
+          "label": "Single page"
+        },
+        {
+          "value": "site",
+          "label": "Small site (home, pricing, about, contact)"
+        }
+      ],
       "default": "single"
     }
   ],
   "preview_screen": "The hero section: headline, subheadline, primary CTA, one proof signal and the hero visual, at the primary breakpoint.",
-  "required_screens": ["Mobile navigation open (menu)", "404 page"],
-  "required_states": ["Form validation errors on any form", "Form success confirmation", "Navigation hover and focus", "Mobile menu open", "Cookie consent where required"],
+  "required_screens": [
+    "Mobile navigation open (menu)",
+    "404 page"
+  ],
+  "required_states": [
+    "Form validation errors on any form",
+    "Form success confirmation",
+    "Navigation hover and focus",
+    "Mobile menu open",
+    "Cookie consent where required"
+  ],
   "design_guidance": [
     "One offer, one audience, one primary action. No competing CTAs above the fold.",
     "Write real copy: specific outcomes with organic numbers, no lorem ipsum, no invented logo walls.",
@@ -71,7 +184,14 @@
     "Repeat the primary CTA at the end of the page."
   ],
   "auditor": {
-    "references": ["_shared/references/landing-page.md", "_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/grounding.md", "_shared/references/polish.md", "_shared/references/forms.md"],
+    "references": [
+      "_shared/references/landing-page.md",
+      "_shared/references/interface-quality.md",
+      "_shared/references/visual-critique.md",
+      "_shared/references/grounding.md",
+      "_shared/references/polish.md",
+      "_shared/references/forms.md"
+    ],
     "checks": [
       "There is exactly one primary CTA above the fold, and its label is a verb plus what the visitor gets.",
       "Above the fold shows a headline, subheadline, CTA, a proof signal and a hero visual at every chosen breakpoint.",

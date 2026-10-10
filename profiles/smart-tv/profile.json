@@ -5,67 +5,149 @@
   "options": [
     {
       "id": "tv_platform",
+      "ask": "brief",
       "question": "Which TV platform?",
       "type": "single",
       "choices": [
-        {"value": "android-tv", "label": "Android TV / Google TV"},
-        {"value": "tvos", "label": "Apple tvOS"},
-        {"value": "tizen", "label": "Samsung Tizen"},
-        {"value": "webos", "label": "LG webOS"},
-        {"value": "fire-tv", "label": "Amazon Fire TV"},
-        {"value": "generic", "label": "Generic / multiple"}
+        {
+          "value": "android-tv",
+          "label": "Android TV / Google TV"
+        },
+        {
+          "value": "tvos",
+          "label": "Apple tvOS"
+        },
+        {
+          "value": "tizen",
+          "label": "Samsung Tizen"
+        },
+        {
+          "value": "webos",
+          "label": "LG webOS"
+        },
+        {
+          "value": "fire-tv",
+          "label": "Amazon Fire TV"
+        },
+        {
+          "value": "generic",
+          "label": "Generic / multiple"
+        }
       ],
       "default": "generic"
     },
     {
       "id": "resolution",
+      "ask": "preflight",
       "question": "Design canvas?",
       "type": "single",
       "choices": [
-        {"value": "1080p", "label": "1920x1080 (1080p)", "size": [1920, 1080]},
-        {"value": "4k", "label": "3840x2160 (4K)", "size": [3840, 2160]}
+        {
+          "value": "1080p",
+          "label": "1920x1080 (1080p)",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "value": "4k",
+          "label": "3840x2160 (4K)",
+          "size": [
+            3840,
+            2160
+          ]
+        }
       ],
       "default": "1080p",
       "viewport": true
     },
     {
       "id": "input",
+      "ask": "brief",
       "question": "Input methods?",
       "type": "multi",
       "choices": [
-        {"value": "dpad", "label": "D-pad remote"},
-        {"value": "voice", "label": "Voice"},
-        {"value": "controller", "label": "Game controller"},
-        {"value": "pointer", "label": "Pointer remote (air mouse)"}
+        {
+          "value": "dpad",
+          "label": "D-pad remote"
+        },
+        {
+          "value": "voice",
+          "label": "Voice"
+        },
+        {
+          "value": "controller",
+          "label": "Game controller"
+        },
+        {
+          "value": "pointer",
+          "label": "Pointer remote (air mouse)"
+        }
       ],
-      "default": ["dpad"]
+      "default": [
+        "dpad"
+      ]
     },
     {
       "id": "content_type",
+      "ask": "brief",
       "question": "Content type?",
       "type": "single",
       "choices": [
-        {"value": "video", "label": "Video browse and playback"},
-        {"value": "app", "label": "App or dashboard"},
-        {"value": "signage", "label": "Digital signage / information display"}
+        {
+          "value": "video",
+          "label": "Video browse and playback"
+        },
+        {
+          "value": "app",
+          "label": "App or dashboard"
+        },
+        {
+          "value": "signage",
+          "label": "Digital signage / information display"
+        }
       ],
       "default": "video"
     },
     {
       "id": "setting",
+      "ask": "brief",
       "question": "Viewing setting?",
       "type": "single",
       "choices": [
-        {"value": "living-room", "label": "Living room (about 3 m)"},
-        {"value": "meeting", "label": "Meeting room"},
-        {"value": "public", "label": "Public display (bright, far)"}
+        {
+          "value": "living-room",
+          "label": "Living room (about 3 m)"
+        },
+        {
+          "value": "meeting",
+          "label": "Meeting room"
+        },
+        {
+          "value": "public",
+          "label": "Public display (bright, far)"
+        }
       ],
       "default": "living-room"
     }
   ],
   "preview_screen": "The home screen: a hero or featured item, two content rows, and the focused item clearly highlighted, inside the overscan safe zone.",
-  "required_screens": ["Home", "Detail view for an item", "Search with on-screen keyboard (and voice prompt if voice is chosen)", "Playback controls (video content)", "Settings"],
-  "required_states": ["Focus state on every focusable element", "Focus moving between rows and columns", "Loading content rows", "No network", "Error with a button to retry", "Playback paused / buffering (video content)"],
+  "required_screens": [
+    "Home",
+    "Detail view for an item",
+    "Search with on-screen keyboard (and voice prompt if voice is chosen)",
+    "Playback controls (video content)",
+    "Settings"
+  ],
+  "required_states": [
+    "Focus state on every focusable element",
+    "Focus moving between rows and columns",
+    "Loading content rows",
+    "No network",
+    "Error with a button to retry",
+    "Playback paused / buffering (video content)"
+  ],
   "design_guidance": [
     "Keep all content inside an overscan safe zone; a margin of about 5% on each edge is a common working default. Confirm against the chosen platform's guidelines.",
     "Everything is operated by focus. Design a clear, high-contrast focus state (scale, outline or glow) for every focusable element; there is no cursor and no hover.",
@@ -74,7 +156,12 @@
     "Avoid long text entry; offer voice, suggestions or a QR hand-off to the phone."
   ],
   "auditor": {
-    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/grounding.md", "_shared/references/states-and-feedback.md"],
+    "references": [
+      "_shared/references/interface-quality.md",
+      "_shared/references/visual-critique.md",
+      "_shared/references/grounding.md",
+      "_shared/references/states-and-feedback.md"
+    ],
     "checks": [
       "No content or control sits in the overscan margin.",
       "Every focusable element has a distinct focus state visible from a distance, with at least 3:1 contrast against its surroundings.",

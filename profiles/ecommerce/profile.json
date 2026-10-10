@@ -5,55 +5,138 @@
   "options": [
     {
       "id": "breakpoints",
+      "ask": "preflight",
       "question": "Which breakpoints should be designed?",
       "type": "multi",
       "choices": [
-        {"value": "mobile", "label": "Mobile 375", "size": [375, 812]},
-        {"value": "desktop", "label": "Desktop 1440", "size": [1440, 900]},
-        {"value": "tablet", "label": "Tablet 768", "size": [768, 1024]}
+        {
+          "value": "mobile",
+          "label": "Mobile 375",
+          "size": [
+            375,
+            812
+          ]
+        },
+        {
+          "value": "desktop",
+          "label": "Desktop 1440",
+          "size": [
+            1440,
+            900
+          ]
+        },
+        {
+          "value": "tablet",
+          "label": "Tablet 768",
+          "size": [
+            768,
+            1024
+          ]
+        }
       ],
-      "default": ["mobile", "desktop"],
+      "default": [
+        "mobile",
+        "desktop"
+      ],
       "viewport": true
     },
     {
       "id": "pages",
+      "ask": "brief",
       "question": "Which pages are needed?",
       "type": "multi",
       "choices": [
-        {"value": "home", "label": "Home"},
-        {"value": "listing", "label": "Category / search results"},
-        {"value": "product", "label": "Product detail"},
-        {"value": "cart", "label": "Cart"},
-        {"value": "checkout", "label": "Checkout"},
-        {"value": "confirmation", "label": "Order confirmation"},
-        {"value": "account", "label": "Account and orders"}
+        {
+          "value": "home",
+          "label": "Home"
+        },
+        {
+          "value": "listing",
+          "label": "Category / search results"
+        },
+        {
+          "value": "product",
+          "label": "Product detail"
+        },
+        {
+          "value": "cart",
+          "label": "Cart"
+        },
+        {
+          "value": "checkout",
+          "label": "Checkout"
+        },
+        {
+          "value": "confirmation",
+          "label": "Order confirmation"
+        },
+        {
+          "value": "account",
+          "label": "Account and orders"
+        }
       ],
-      "default": ["listing", "product", "cart", "checkout", "confirmation"]
+      "default": [
+        "listing",
+        "product",
+        "cart",
+        "checkout",
+        "confirmation"
+      ]
     },
     {
       "id": "guest_checkout",
+      "ask": "brief",
       "question": "Is guest checkout allowed?",
       "type": "single",
-      "choices": [{"value": "yes", "label": "Yes"}, {"value": "no", "label": "No, account required"}],
+      "choices": [
+        {
+          "value": "yes",
+          "label": "Yes"
+        },
+        {
+          "value": "no",
+          "label": "No, account required"
+        }
+      ],
       "default": "yes"
     },
     {
       "id": "payments",
+      "ask": "brief",
       "question": "Payment methods to show?",
       "type": "text",
       "default": "Card, Apple Pay / Google Pay"
     }
   ],
   "preview_screen": "A product detail page: gallery, title, price, variant selector and the add-to-cart button, with realistic product content.",
-  "required_screens": ["Cart (empty)", "Order confirmation"],
-  "required_states": ["Variant out of stock", "Add to cart confirmation", "Cart with a discount code applied or rejected", "Checkout field errors", "Payment failed with retry", "Shipping options loading", "Empty search results"],
+  "required_screens": [
+    "Cart (empty)",
+    "Order confirmation"
+  ],
+  "required_states": [
+    "Variant out of stock",
+    "Add to cart confirmation",
+    "Cart with a discount code applied or rejected",
+    "Checkout field errors",
+    "Payment failed with retry",
+    "Shipping options loading",
+    "Empty search results"
+  ],
   "design_guidance": [
     "Show price, stock and shipping cost as early as possible; no surprises at the last step.",
     "Keep checkout short and linear; show progress and an order summary at every step.",
     "Primary purchase actions sit in thumb reach on mobile and stay visible while scrolling."
   ],
   "auditor": {
-    "references": ["_shared/references/interface-quality.md", "_shared/references/landing-page.md", "_shared/references/visual-critique.md", "_shared/references/polish.md", "_shared/references/states-and-feedback.md", "_shared/references/forms.md", "_shared/references/localization.md"],
+    "references": [
+      "_shared/references/interface-quality.md",
+      "_shared/references/landing-page.md",
+      "_shared/references/visual-critique.md",
+      "_shared/references/polish.md",
+      "_shared/references/states-and-feedback.md",
+      "_shared/references/forms.md",
+      "_shared/references/localization.md"
+    ],
     "checks": [
       "Price, variant, stock status and delivery estimate are visible on the product page without scrolling at the primary viewport.",
       "Every checkout step shows progress, an order summary and a way back that doesn't lose entered data.",

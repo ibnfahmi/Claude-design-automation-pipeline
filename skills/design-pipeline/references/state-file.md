@@ -64,6 +64,8 @@ Written to the client project folder (the session's working directory) after eve
 }
 ```
 
+`scope.options` holds the **confirmed Scope settings** from the spec (read from the brief, inferred, or defaulted), saved after the user confirms the spec. Screen sizes are saved earlier, under `scope.viewports`, from the preflight clicks.
+
 ## `design-manifest.json`
 
 Written by the Orchestrator after every design round from the Design Agent's ARTBOARDS list. It is the map from every artboard to the brief, used by the Coverage Agent and the Handoff Agent.

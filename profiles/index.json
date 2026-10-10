@@ -18,5 +18,43 @@
     "smart-tv",
     "kiosk"
   ],
-  "other": "Free-text platform with no profile. Ask for the viewport size and any constraints, and use the web-app profile's checks."
+  "other": "Free-text platform with no profile. Ask for the viewport size and any constraints, and use the web-app profile's checks.",
+  "families": [
+    {
+      "label": "Websites and web apps",
+      "platforms": [
+        "web-app",
+        "dashboard",
+        "landing-page",
+        "ecommerce"
+      ]
+    },
+    {
+      "label": "Mobile, tablet, desktop and extensions",
+      "platforms": [
+        "mobile-app",
+        "tablet-app",
+        "desktop-app",
+        "browser-extension"
+      ]
+    },
+    {
+      "label": "Content and marketing",
+      "platforms": [
+        "email",
+        "presentation-deck",
+        "social-media",
+        "docs-help-center"
+      ]
+    },
+    {
+      "label": "Public screens, systems and flows",
+      "platforms": [
+        "smart-tv",
+        "kiosk",
+        "design-system-library",
+        "flow"
+      ]
+    }
+  ]
 }

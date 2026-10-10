@@ -5,34 +5,96 @@
   "options": [
     {
       "id": "formats",
+      "ask": "preflight",
       "question": "Which formats?",
       "type": "multi",
       "choices": [
-        {"value": "square", "label": "Square post 1:1 (1080x1080)", "size": [1080, 1080]},
-        {"value": "portrait", "label": "Portrait post 4:5 (1080x1350)", "size": [1080, 1350]},
-        {"value": "story", "label": "Story / Reel / short video cover 9:16 (1080x1920)", "size": [1080, 1920]},
-        {"value": "landscape", "label": "Landscape link post 1.91:1 (1200x628)", "size": [1200, 628]},
-        {"value": "banner", "label": "Profile banner (1500x500)", "size": [1500, 500]}
+        {
+          "value": "square",
+          "label": "Square post 1:1 (1080x1080)",
+          "size": [
+            1080,
+            1080
+          ]
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait post 4:5 (1080x1350)",
+          "size": [
+            1080,
+            1350
+          ]
+        },
+        {
+          "value": "story",
+          "label": "Story / Reel / short video cover 9:16 (1080x1920)",
+          "size": [
+            1080,
+            1920
+          ]
+        },
+        {
+          "value": "landscape",
+          "label": "Landscape link post 1.91:1 (1200x628)",
+          "size": [
+            1200,
+            628
+          ]
+        },
+        {
+          "value": "banner",
+          "label": "Profile banner (1500x500)",
+          "size": [
+            1500,
+            500
+          ]
+        }
       ],
-      "default": ["square", "story"],
+      "default": [
+        "square",
+        "story"
+      ],
       "viewport": true
     },
     {
       "id": "platforms",
+      "ask": "brief",
       "question": "Which social platforms?",
       "type": "multi",
       "choices": [
-        {"value": "instagram", "label": "Instagram"},
-        {"value": "linkedin", "label": "LinkedIn"},
-        {"value": "x", "label": "X"},
-        {"value": "facebook", "label": "Facebook"},
-        {"value": "tiktok", "label": "TikTok"},
-        {"value": "youtube", "label": "YouTube"}
+        {
+          "value": "instagram",
+          "label": "Instagram"
+        },
+        {
+          "value": "linkedin",
+          "label": "LinkedIn"
+        },
+        {
+          "value": "x",
+          "label": "X"
+        },
+        {
+          "value": "facebook",
+          "label": "Facebook"
+        },
+        {
+          "value": "tiktok",
+          "label": "TikTok"
+        },
+        {
+          "value": "youtube",
+          "label": "YouTube"
+        }
       ],
-      "default": ["instagram", "linkedin"]
+      "default": [
+        "instagram",
+        "linkedin"
+      ]
     },
     {
       "id": "asset_count",
+      "ask": "brief",
       "question": "How many assets (or a carousel)?",
       "type": "text",
       "default": "3"
@@ -47,7 +109,10 @@
     "Verify each platform's current size and safe-area rules before final export."
   ],
   "auditor": {
-    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md"],
+    "references": [
+      "_shared/references/interface-quality.md",
+      "_shared/references/visual-critique.md"
+    ],
     "checks": [
       "Key text and logo sit inside safe areas for each format, clear of platform UI overlays.",
       "The message is readable at thumbnail size.",

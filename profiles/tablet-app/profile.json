@@ -5,48 +5,124 @@
   "options": [
     {
       "id": "device_frames",
+      "ask": "preflight",
       "question": "Which tablet frames?",
       "type": "multi",
       "choices": [
-        {"value": "ipad", "label": "iPad 11-inch (834x1194)", "size": [834, 1194]},
-        {"value": "ipad-pro-13", "label": "iPad Pro 13-inch (1032x1376)", "size": [1032, 1376]},
-        {"value": "android-tablet", "label": "Android tablet (800x1280)", "size": [800, 1280]}
+        {
+          "value": "ipad",
+          "label": "iPad 11-inch (834x1194)",
+          "size": [
+            834,
+            1194
+          ]
+        },
+        {
+          "value": "ipad-pro-13",
+          "label": "iPad Pro 13-inch (1032x1376)",
+          "size": [
+            1032,
+            1376
+          ]
+        },
+        {
+          "value": "android-tablet",
+          "label": "Android tablet (800x1280)",
+          "size": [
+            800,
+            1280
+          ]
+        }
       ],
-      "default": ["ipad"],
+      "default": [
+        "ipad"
+      ],
       "viewport": true
     },
     {
       "id": "orientation",
+      "ask": "brief",
       "question": "Orientation?",
       "type": "single",
-      "choices": [{"value": "portrait", "label": "Portrait only"}, {"value": "landscape", "label": "Landscape only"}, {"value": "both", "label": "Both"}],
+      "choices": [
+        {
+          "value": "portrait",
+          "label": "Portrait only"
+        },
+        {
+          "value": "landscape",
+          "label": "Landscape only"
+        },
+        {
+          "value": "both",
+          "label": "Both"
+        }
+      ],
       "default": "both"
     },
     {
       "id": "split_view",
+      "ask": "brief",
       "question": "Does it need split view or multitasking widths?",
       "type": "single",
-      "choices": [{"value": "no", "label": "No"}, {"value": "yes", "label": "Yes, design the narrow width"}],
+      "choices": [
+        {
+          "value": "no",
+          "label": "No"
+        },
+        {
+          "value": "yes",
+          "label": "Yes, design the narrow width"
+        }
+      ],
       "default": "no"
     },
     {
       "id": "input",
+      "ask": "brief",
       "question": "Main input methods?",
       "type": "multi",
-      "choices": [{"value": "touch", "label": "Touch"}, {"value": "pencil", "label": "Stylus / Apple Pencil"}, {"value": "keyboard", "label": "Keyboard / trackpad"}],
-      "default": ["touch"]
+      "choices": [
+        {
+          "value": "touch",
+          "label": "Touch"
+        },
+        {
+          "value": "pencil",
+          "label": "Stylus / Apple Pencil"
+        },
+        {
+          "value": "keyboard",
+          "label": "Keyboard / trackpad"
+        }
+      ],
+      "default": [
+        "touch"
+      ]
     }
   ],
   "preview_screen": "The main screen in the first chosen frame and orientation, using the extra width (sidebar, split panes or a multi-column layout).",
   "required_screens": [],
-  "required_states": ["Keyboard open", "Portrait and landscape versions if both are chosen", "Narrow split-view width if chosen", "Empty, loading and error for data screens"],
+  "required_states": [
+    "Keyboard open",
+    "Portrait and landscape versions if both are chosen",
+    "Narrow split-view width if chosen",
+    "Empty, loading and error for data screens"
+  ],
   "design_guidance": [
     "Use the extra width: sidebars, split panes or multi-column layouts, and not a stretched phone layout.",
     "Touch targets stay at least 44x44; with keyboard or trackpad, also design hover and focus.",
     "Controls reachable by thumbs at the screen edges for hand-held use."
   ],
   "auditor": {
-    "references": ["_shared/references/mobile.md", "_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/polish.md", "_shared/references/states-and-feedback.md", "_shared/references/forms.md"],
+    "references": [
+      "_shared/references/mobile.md",
+      "_shared/references/interface-quality.md",
+      "_shared/references/visual-critique.md",
+      "_shared/references/polish.md",
+      "_shared/references/states-and-feedback.md",
+      "_shared/references/forms.md"
+    ],
     "checks": [
       "The layout uses the available width and is not a scaled-up phone layout.",
       "Both orientations are designed when chosen, and no content is clipped when the device rotates.",

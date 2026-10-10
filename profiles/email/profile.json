@@ -5,53 +5,116 @@
   "options": [
     {
       "id": "width",
+      "ask": "preflight",
       "question": "Email width?",
       "type": "single",
       "choices": [
-        {"value": "600", "label": "600px desktop (standard)", "size": [600, 1000]},
-        {"value": "mobile", "label": "Mobile 375", "size": [375, 812]}
+        {
+          "value": "600",
+          "label": "600px desktop (standard)",
+          "size": [
+            600,
+            1000
+          ]
+        },
+        {
+          "value": "mobile",
+          "label": "Mobile 375",
+          "size": [
+            375,
+            812
+          ]
+        }
       ],
       "default": "600",
       "viewport": true
     },
     {
       "id": "email_types",
+      "ask": "brief",
       "question": "Which emails?",
       "type": "multi",
       "choices": [
-        {"value": "welcome", "label": "Welcome / onboarding"},
-        {"value": "receipt", "label": "Receipt / order confirmation"},
-        {"value": "reset", "label": "Password reset / verification"},
-        {"value": "notification", "label": "Notification / digest"},
-        {"value": "newsletter", "label": "Newsletter / campaign"}
+        {
+          "value": "welcome",
+          "label": "Welcome / onboarding"
+        },
+        {
+          "value": "receipt",
+          "label": "Receipt / order confirmation"
+        },
+        {
+          "value": "reset",
+          "label": "Password reset / verification"
+        },
+        {
+          "value": "notification",
+          "label": "Notification / digest"
+        },
+        {
+          "value": "newsletter",
+          "label": "Newsletter / campaign"
+        }
       ],
-      "default": ["welcome", "receipt", "reset"]
+      "default": [
+        "welcome",
+        "receipt",
+        "reset"
+      ]
     },
     {
       "id": "dark_mode",
+      "ask": "brief",
       "question": "Design the dark-mode version?",
       "type": "single",
-      "choices": [{"value": "yes", "label": "Yes"}, {"value": "no", "label": "No"}],
+      "choices": [
+        {
+          "value": "yes",
+          "label": "Yes"
+        },
+        {
+          "value": "no",
+          "label": "No"
+        }
+      ],
       "default": "yes"
     },
     {
       "id": "images_off",
+      "ask": "brief",
       "question": "Show how it looks with images blocked?",
       "type": "single",
-      "choices": [{"value": "yes", "label": "Yes"}, {"value": "no", "label": "No"}],
+      "choices": [
+        {
+          "value": "yes",
+          "label": "Yes"
+        },
+        {
+          "value": "no",
+          "label": "No"
+        }
+      ],
       "default": "yes"
     }
   ],
   "preview_screen": "The first email in the list at 600px: header with logo, headline, body copy and the primary button.",
   "required_screens": [],
-  "required_states": ["Dark mode", "Images blocked (alt text and background colours carry the message)", "Mobile single-column"],
+  "required_states": [
+    "Dark mode",
+    "Images blocked (alt text and background colours carry the message)",
+    "Mobile single-column"
+  ],
   "design_guidance": [
     "Single column, table-friendly layouts that email clients can render; no reliance on complex CSS.",
     "Bulletproof buttons: a coloured background with text, not an image.",
     "Put the primary action and the key information above the fold, and include a plain-text-friendly footer with unsubscribe and address."
   ],
   "auditor": {
-    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/dark-mode.md"],
+    "references": [
+      "_shared/references/interface-quality.md",
+      "_shared/references/visual-critique.md",
+      "_shared/references/dark-mode.md"
+    ],
     "checks": [
       "The main message and primary action survive with images blocked.",
       "Text is at least 14px (16px preferred) and meets AA contrast in both light and dark.",

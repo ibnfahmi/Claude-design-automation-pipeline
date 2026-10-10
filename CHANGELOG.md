@@ -2,6 +2,14 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.4.4] - 2026-10-10
+
+### Changed
+- **Preflight questions are clickable.** Platform scope is now two short click-to-choose steps (product family, then platforms) and screen sizes are one question ("use the recommended sizes", or pick for each platform). No more lists to type numbers into.
+- **Profiles are automatic rules.** Choosing a platform applies its required screens and states, design guidance, audit checks and reference files without any further questions. Preflight asks only the **screen sizes**.
+- **Content settings come from the brief.** Sections, primary CTA, pages, chart types, roles, languages, hardware, dark mode and similar settings are read from the brief or BRD by the Brief Agent, shown in a new **Scope settings** table in the spec (marked brief, inferred or default) for you to correct, and saved to the state file when you confirm the spec.
+- Profile options now carry `ask`: `preflight` (a clickable question), `brief` (read from the source) or `auto` (single choice). `profiles/index.json` groups the platforms into four families for the first click.
+
 ## [0.4.3] - 2026-10-10
 
 ### Added

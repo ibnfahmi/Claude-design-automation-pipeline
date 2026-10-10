@@ -5,48 +5,127 @@
   "options": [
     {
       "id": "os",
+      "ask": "brief",
       "question": "Which operating systems?",
       "type": "multi",
-      "choices": [{"value": "windows", "label": "Windows"}, {"value": "macos", "label": "macOS"}, {"value": "linux", "label": "Linux"}],
-      "default": ["windows", "macos"]
+      "choices": [
+        {
+          "value": "windows",
+          "label": "Windows"
+        },
+        {
+          "value": "macos",
+          "label": "macOS"
+        },
+        {
+          "value": "linux",
+          "label": "Linux"
+        }
+      ],
+      "default": [
+        "windows",
+        "macos"
+      ]
     },
     {
       "id": "window_sizes",
+      "ask": "preflight",
       "question": "Which window sizes?",
       "type": "multi",
       "choices": [
-        {"value": "standard", "label": "Standard window 1280x800", "size": [1280, 800]},
-        {"value": "small", "label": "Minimum window 960x640", "size": [960, 640]},
-        {"value": "large", "label": "Maximised 1920x1080", "size": [1920, 1080]}
+        {
+          "value": "standard",
+          "label": "Standard window 1280x800",
+          "size": [
+            1280,
+            800
+          ]
+        },
+        {
+          "value": "small",
+          "label": "Minimum window 960x640",
+          "size": [
+            960,
+            640
+          ]
+        },
+        {
+          "value": "large",
+          "label": "Maximised 1920x1080",
+          "size": [
+            1920,
+            1080
+          ]
+        }
       ],
-      "default": ["standard", "small"],
+      "default": [
+        "standard",
+        "small"
+      ],
       "viewport": true
     },
     {
       "id": "menus",
+      "ask": "brief",
       "question": "Native menu bar and keyboard shortcuts?",
       "type": "single",
-      "choices": [{"value": "yes", "label": "Yes, include them"}, {"value": "no", "label": "No"}],
+      "choices": [
+        {
+          "value": "yes",
+          "label": "Yes, include them"
+        },
+        {
+          "value": "no",
+          "label": "No"
+        }
+      ],
       "default": "yes"
     },
     {
       "id": "dark_mode",
+      "ask": "brief",
       "question": "Is a dark theme needed?",
       "type": "single",
-      "choices": [{"value": "no", "label": "Light only"}, {"value": "yes", "label": "Light and dark"}],
+      "choices": [
+        {
+          "value": "no",
+          "label": "Light only"
+        },
+        {
+          "value": "yes",
+          "label": "Light and dark"
+        }
+      ],
       "default": "yes"
     }
   ],
   "preview_screen": "The main window with title bar, toolbar or sidebar, and the primary working area.",
-  "required_screens": ["Preferences / settings window", "About dialog"],
-  "required_states": ["Window at the minimum size", "Context menu open", "Dialog with confirm and cancel", "Unsaved changes prompt", "Drag and drop target", "Offline or sync error"],
+  "required_screens": [
+    "Preferences / settings window",
+    "About dialog"
+  ],
+  "required_states": [
+    "Window at the minimum size",
+    "Context menu open",
+    "Dialog with confirm and cancel",
+    "Unsaved changes prompt",
+    "Drag and drop target",
+    "Offline or sync error"
+  ],
   "design_guidance": [
     "Follow each chosen operating system's window controls and title bar placement.",
     "Every important action has a keyboard shortcut shown in menus and tooltips.",
     "Show dense, efficient layouts; hover and focus states matter because the pointer is the main input."
   ],
   "auditor": {
-    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/polish.md", "_shared/references/states-and-feedback.md", "_shared/references/forms.md", "_shared/references/dark-mode.md"],
+    "references": [
+      "_shared/references/interface-quality.md",
+      "_shared/references/visual-critique.md",
+      "_shared/references/polish.md",
+      "_shared/references/states-and-feedback.md",
+      "_shared/references/forms.md",
+      "_shared/references/dark-mode.md"
+    ],
     "checks": [
       "The minimum window size is designed and no primary action is clipped at it.",
       "Window controls and title bar follow the conventions of each chosen operating system.",

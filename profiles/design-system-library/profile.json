@@ -5,58 +5,139 @@
   "options": [
     {
       "id": "foundations",
+      "ask": "brief",
       "question": "Which foundations?",
       "type": "multi",
       "choices": [
-        {"value": "colour", "label": "Colour (with roles and themes)"},
-        {"value": "type", "label": "Typography"},
-        {"value": "spacing", "label": "Spacing and layout grid"},
-        {"value": "radius-shadow", "label": "Radius and elevation"},
-        {"value": "icons", "label": "Icons"},
-        {"value": "motion", "label": "Motion"}
+        {
+          "value": "colour",
+          "label": "Colour (with roles and themes)"
+        },
+        {
+          "value": "type",
+          "label": "Typography"
+        },
+        {
+          "value": "spacing",
+          "label": "Spacing and layout grid"
+        },
+        {
+          "value": "radius-shadow",
+          "label": "Radius and elevation"
+        },
+        {
+          "value": "icons",
+          "label": "Icons"
+        },
+        {
+          "value": "motion",
+          "label": "Motion"
+        }
       ],
-      "default": ["colour", "type", "spacing", "radius-shadow"]
+      "default": [
+        "colour",
+        "type",
+        "spacing",
+        "radius-shadow"
+      ]
     },
     {
       "id": "components",
+      "ask": "brief",
       "question": "Which components to document?",
       "type": "multi",
       "choices": [
-        {"value": "buttons", "label": "Buttons"},
-        {"value": "inputs", "label": "Inputs and form controls"},
-        {"value": "navigation", "label": "Navigation (tabs, menus, breadcrumbs)"},
-        {"value": "feedback", "label": "Feedback (toast, alert, dialog)"},
-        {"value": "data", "label": "Data display (table, card, list, badge)"},
-        {"value": "overlays", "label": "Overlays (modal, drawer, popover, tooltip)"}
+        {
+          "value": "buttons",
+          "label": "Buttons"
+        },
+        {
+          "value": "inputs",
+          "label": "Inputs and form controls"
+        },
+        {
+          "value": "navigation",
+          "label": "Navigation (tabs, menus, breadcrumbs)"
+        },
+        {
+          "value": "feedback",
+          "label": "Feedback (toast, alert, dialog)"
+        },
+        {
+          "value": "data",
+          "label": "Data display (table, card, list, badge)"
+        },
+        {
+          "value": "overlays",
+          "label": "Overlays (modal, drawer, popover, tooltip)"
+        }
       ],
-      "default": ["buttons", "inputs", "navigation", "feedback", "data"]
+      "default": [
+        "buttons",
+        "inputs",
+        "navigation",
+        "feedback",
+        "data"
+      ]
     },
     {
       "id": "themes",
+      "ask": "brief",
       "question": "Themes?",
       "type": "single",
-      "choices": [{"value": "light", "label": "Light"}, {"value": "both", "label": "Light and dark"}],
+      "choices": [
+        {
+          "value": "light",
+          "label": "Light"
+        },
+        {
+          "value": "both",
+          "label": "Light and dark"
+        }
+      ],
       "default": "both"
     },
     {
       "id": "viewport",
+      "ask": "auto",
       "question": "Documentation canvas width?",
       "type": "single",
-      "choices": [{"value": "doc", "label": "1440 documentation canvas", "size": [1440, 1024]}],
+      "choices": [
+        {
+          "value": "doc",
+          "label": "1440 documentation canvas",
+          "size": [
+            1440,
+            1024
+          ]
+        }
+      ],
       "default": "doc",
       "viewport": true
     }
   ],
   "preview_screen": "A style tile: colour swatches with roles, the type scale, and one button, input and card in the proposed look.",
-  "required_screens": ["Foundations overview", "One documentation page per component"],
-  "required_states": ["Every component in default, hover, focus, active, disabled, loading and error where relevant", "Every component in every theme", "Every component at each size variant"],
+  "required_screens": [
+    "Foundations overview",
+    "One documentation page per component"
+  ],
+  "required_states": [
+    "Every component in default, hover, focus, active, disabled, loading and error where relevant",
+    "Every component in every theme",
+    "Every component at each size variant"
+  ],
   "design_guidance": [
     "Document each component's variants, states, sizes, and when to use or avoid it.",
     "Name tokens by role (text-primary, border-subtle) and not by value.",
     "Show real contrast ratios for every text and background pairing."
   ],
   "auditor": {
-    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/polish.md", "_shared/references/dark-mode.md"],
+    "references": [
+      "_shared/references/interface-quality.md",
+      "_shared/references/visual-critique.md",
+      "_shared/references/polish.md",
+      "_shared/references/dark-mode.md"
+    ],
     "checks": [
       "Every component shows all its states, sizes and themes, and no state is described without being shown.",
       "Every text and background pairing lists its contrast ratio and meets WCAG AA, or is flagged.",

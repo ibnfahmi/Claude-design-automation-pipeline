@@ -44,7 +44,7 @@ Look for `design-pipeline-state.json` in the current folder (format in `referenc
 
 ## Stage 1 — Preflight
 
-Run every check in `references/preflight.md`, in its order: Figma and Claude Design, then the **starting point** (brief, or an existing canvas), the **platform scope** and each platform's options, and the **design direction** (with the quick style preview before any slow design-system build). If a required check fails, stop, report what's missing and how to fix it, and wait. When the user says "retry", run the checks again.
+Run every check in `references/preflight.md`, in its order: Figma and Claude Design, then the **starting point** (brief, or an existing canvas), the **platform scope** and **screen sizes** (all clickable choices), and the **design direction** (with the quick style preview before any slow design-system build). If a required check fails, stop, report what's missing and how to fix it, and wait. When the user says "retry", run the checks again.
 
 Do not ask for the brief until the checks pass and the scope and direction are chosen. Record all results in the state file.
 
@@ -53,10 +53,10 @@ If a full Design System build was started, it runs **in the background** (see pr
 ## Stage 2 — Brief
 
 1. Ask the user for the source: a pasted brief, or file paths for a BRD or other documents. For the canvas starting point, use the canvas link from preflight instead. Accept it however rough. Save the source verbatim to `brief-source.md` (for documents, list their paths at the top). The Coverage Agent compares the design against this file.
-2. Start `brief-agent` with the source, the platform scope (with each platform's `required_screens` and `required_states`) and the mode (`brief`, or `canvas` for the reverse mode).
+2. Start `brief-agent` with the source, the platform scope (the chosen screen sizes; each platform's `required_screens` and `required_states`; and each platform's `ask: "brief"` options with their choices and defaults) and the mode (`brief`, or `canvas` for the reverse mode). Platform profiles are rules that apply automatically; the Brief Agent reads the content-level settings (sections, CTA, pages, chart types, languages and so on) from the source.
 3. If it returns **questions**, put them to the user, then send the answers back to the **same** agent (SendMessage with its agent ID) and repeat until it returns a spec.
-4. Show the user the spec, especially the **Requirements** and **Interactions and states** tables, and ask for confirmation or edits. Apply edits by resuming the same agent. Requirement IDs stay stable across edits.
-5. Save the confirmed spec to `design-spec.md` and update the state file (`stage: "stories"`, or `"design"` when stories are skipped).
+4. Show the user the spec, especially the **Scope settings**, **Requirements** and **Interactions and states** tables, and ask for confirmation or edits. Settings read from the brief and ones that fell back to a default are labelled, so the user can correct any of them. Apply edits by resuming the same agent. Requirement IDs stay stable across edits.
+5. Save the confirmed spec to `design-spec.md`, copy its confirmed **Scope settings** into `scope.options` in the state file, and update the state file (`stage: "stories"`, or `"design"` when stories are skipped).
 
 ## Stage 2b — User stories (skipped with `--skip-stories`)
 
