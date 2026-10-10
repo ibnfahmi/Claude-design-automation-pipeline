@@ -31,6 +31,10 @@ Stakeholders in a review come from every industry and every level of tech knowle
 
 **Other stacks** — build a static, relative-path, classic-script output if the stack can; test it as below; if it can't, say so in the report rather than claim a share file.
 
+## Publishing as a review page
+
+The single-file `share/index.html` is also what gets published as the private review page (`review-page.md`). Keep it within the Artifact limits: under 16 MB, no external scripts (everything inlined), stylesheets and fonts only from Google Fonts if not embedded.
+
 ## The file-open test (required)
 
 The Auditor opens `share/index.html` through `file://` (navigate to `file:///…/share/index.html` in the built-in browser; if the browser can't open local files, say so and report the share build as "not verified"). For each viewport it tests:

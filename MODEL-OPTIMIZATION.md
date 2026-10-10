@@ -32,6 +32,7 @@ Reasonable overrides:
 
 ## History
 
+- **0.5.9:** no model changes; the Orchestrator publishes and reads the review page, the Design Agent applies the comments.
 - **0.5.8:** no model changes.
 - **0.5.7:** no model changes.
 - **0.5.6:** no model changes.

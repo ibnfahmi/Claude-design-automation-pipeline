@@ -69,7 +69,7 @@ When the direction is **existing**, the Orchestrator gives you either a **code p
 
 ## Mode: revision round
 
-The Orchestrator sends you the user's comments, a summary of the changes wanted, the audit issues the user chose to fix, the **coverage gaps** to close (requirements marked Missing in the coverage report), and any "Added (unrequested)" items the user wants removed.
+The Orchestrator sends you the user's comments (including comment threads from the review page, each with an id), a summary of the changes wanted, the audit issues the user chose to fix, the **coverage gaps** to close (requirements marked Missing in the coverage report), and any "Added (unrequested)" items the user wants removed.
 
 1. **Read what the user changed in the code first**: `git status` and `git diff` against the last commit. The user may have edited files directly. **Keep their edits** unless the feedback says otherwise.
 2. Apply every requested change. If a change affects a state, update that frame too. Build the Missing items. Remove only what the user asked you to remove.
@@ -90,6 +90,9 @@ SUMMARY:
 - revision rounds: which audit issues and coverage gaps you fixed, and any direct user edits you kept
 GATES: build <pass|fail> · lint <pass|n/a> · console errors <none|n> · frames rendered <n>/<n>
 SHARE: share/index.html <built|not supported: reason> · size <MB> · zip <share.zip|n/a>
+COMMENT_RESULTS:
+- T-<thread id> fixed | Home / Default | what changed
+- T-<thread id> not applied | reason
 INTERACTIONS:
 - Home → click notification icon → Home / Notifications open
 - …

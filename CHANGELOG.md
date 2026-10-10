@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.5.9] - 2026-10-10
+
+### Added
+- **Comment on the design, and Claude applies it.** The output is still code, but after the first build the pipeline offers to publish the `share/` build as a **private review page** (a claude.ai Artifact). You select what should change and leave a comment on the page, send the thread to Claude, and in the review step the pipeline reads the comments, applies them to the code in a revision round, republishes to the same link, and replies to and resolves the threads it fixed. The page can be shared from claude.ai so teammates can comment too. Declining keeps review local. New reference `references/review-page.md`; the Design Agent now returns a `COMMENT_RESULTS` block.
+
 ## [0.5.8] - 2026-10-10
 
 ### Added

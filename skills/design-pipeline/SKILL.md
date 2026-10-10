@@ -110,24 +110,29 @@ When both return, save a summary of each in the state file (`audits` and `covera
 
 ## Stage 4 — Review loop
 
+Before handing over the round, handle the **review page** as `references/review-page.md` describes: on the first round ask whether to publish a private review page with comments (skip if `review_page` is already set or the stack has no share build), and after every later round republish it to the same URL.
+
 Give the user:
 - the running app (the preview opens in the built-in browser pane; give the address too, so they can open it in their own browser), the gallery at `/frames`, and the journeys at `/journeys`
+- the **review page** link, if one is published, with how to comment on it (select what to change, leave a comment, send the thread to Claude)
 - the interaction list
 - the **audit** result: pass/fail, interactions passed, platform checks passed, counts by severity, and the critical and major issues in one line each (full report: `audit-round-<n>.md`)
 - the **coverage** result: *Done / Missing / Added* counts, each Missing requirement and each "Added (unrequested)" item in one line (full report: `coverage-round-<n>.md`)
-- this instruction: *"Try the app and tell me what to change, or edit the code in `code/` yourself. When you're done, reply 'done' here (or run `/design-pipeline` in a new session to resume), or say 'approved' to finish. Tell me which audit issues to fix (for example 'fix all critical and major'). By default, the critical audit issues and every missing **must** requirement go into the next round. For each unrequested addition, tell me to keep it (I'll add it to the spec) or remove it."*
+- this instruction: *"Try the app and tell me what to change, comment on the review page, or edit the code in `code/` yourself. When you're done, reply 'done' here (or run `/design-pipeline` in a new session to resume), or say 'approved' to finish. Tell me which audit issues to fix (for example 'fix all critical and major'). By default, the critical audit issues and every missing **must** requirement go into the next round. For each unrequested addition, tell me to keep it (I'll add it to the spec) or remove it."*
 
 Set `stage: "review"` in the state file and **end your turn**. Do not poll.
 
 When the user returns (by replying here, or by running `/design-pipeline` and choosing to resume):
 
 1. Read what changed in the code since the last commit (`git status`, `git diff` in `code/`), so you see any direct edits, and pass them on.
-2. Take anything the user typed in this session into account.
+2. Take anything the user typed in this session into account. If a review page is published, **read its comment threads** and add them as change requests (`references/review-page.md`, "Reading and applying comments").
 3. Decide:
    - **Explicit approval** ("approved", "ship it", or equivalent) and no unresolved change requests:
      - If the latest audit has **critical** issues that weren't fixed, or the latest coverage report has **must** requirements still Missing, list them and ask once: *"Approve anyway, or fix these first?"* Approve only on an explicit "approve anyway".
      - Then set `approved: true`, go to Stage 5.
-   - **Anything else** — feedback, edits, "looks good but…" → it's a change request. Summarise the changes back to the user in a few bullets, including the audit issues and coverage gaps to fix, and what to do with each unrequested addition. A kept addition is added to the spec as a new requirement (resume the Brief Agent; new `R-` ID at the end) and, if the new item changes a flow, to the journeys if they exist (resume the Journey Agent). Then resume the Design Agent (SendMessage to `design_agent_id`) with the feedback, those audit issues, the coverage gaps, the removals, the note "keep the user's direct code edits", and the round number. If the agent can't be resumed (for example a new session), start a fresh `design-agent` with the spec, the design direction, the current `code/` project, and the feedback. Then run Stage 3b again and repeat Stage 4.
+   - **Anything else** — feedback, edits, "looks good but…" → it's a change request. Summarise the changes back to the user in a few bullets, including the audit issues and coverage gaps to fix, and what to do with each unrequested addition. A kept addition is added to the spec as a new requirement (resume the Brief Agent; new `R-` ID at the end) and, if the new item changes a flow, to the journeys if they exist (resume the Journey Agent). Then resume the Design Agent (SendMessage to `design_agent_id`) with the feedback, the review-page comments (thread id and text each), those audit issues, the coverage gaps, the removals, the note "keep the user's direct code edits", and the round number. If the agent can't be resumed (for example a new session), start a fresh `design-agent` with the spec, the design direction, the current `code/` project, and the feedback. Then run Stage 3b again and repeat Stage 4.
+
+After a revision round returns, republish the review page and reply to and resolve the threads it fixed (`review-page.md`) before going back to Stage 3b.
 
 If feedback is ambiguous, ask the user rather than guessing.
 
@@ -147,6 +152,7 @@ Set `stage: "done"`. Give the user:
 - the path to the code project (`code/`), how to run it (`npm install`, `npm run dev`), and the git history of the rounds
 - **the file to send to reviewers:** `share/index.html` (or `share.zip` for the plain HTML stack, to unzip then open), with its test result. If the stack cannot make one (Next.js, some others), say so plainly and offer a static export or a hosted link; never claim a share file works unless the file-open test passed
 - a short summary: platforms built, frames built, journeys walkable, the final audit result and the final coverage result (Done / Missing / Added)
+- the review page link, if one was published (it stays private unless they share it)
 - the Figma file link, if one was exported
 - anything that needs a manual touch (for example mock data that needs a real backend, placeholder content marked as needing real data)
 
