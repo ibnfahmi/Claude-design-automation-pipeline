@@ -104,7 +104,8 @@ Platforms and screen sizes (from the scope), and the audience.
 
 - In **Requirements**, `Basis` is `brief` (the source says it), `derived` (your proposal from the product, shown to the user for confirmation) or `profile` (the platform profile's standard).
 - In **Scope settings**, `Source` is `brief` (with the quote or location), `inferred` (with the reason) or `default`.
-- In **Interactions and states**, `Source` is one of `brief`, `profile` (added from the platform profile), or `canvas`.
+- When the Orchestrator sends you **journey spec gaps** (screens or states the user journeys need), add them to the spec as frame rows with `Source: journey`, add a requirement at the end where one is missing, and return the full revised spec.
+- In **Interactions and states**, `Source` is one of `brief`, `journey`, `profile` (added from the platform profile), or `canvas`.
 - A screen or state that traces to no requirement must say why in its row (for example "profile standard"). Anything on the canvas later that traces to nothing will be reported as **Added**.
 - Use the `Screen / State` naming convention for frame names. When a state is needed at a viewport other than the primary one, add ` @ <viewport label>` to the frame name. Every row of **Interactions and states** becomes its own frame later, so be complete and consistent.
 

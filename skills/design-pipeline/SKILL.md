@@ -1,6 +1,6 @@
 ---
 name: design-pipeline
-description: Run the design automation pipeline — take a raw design brief (or an existing canvas) through platform scope, a structured spec with numbered requirements, user stories for review, a Claude Design draft that is audited for usability and checked for coverage against the brief, and a client-ready Figma file with every interaction state exported. Use when the user runs /design-pipeline (optionally with --skip-stories), asks to start a new design from a brief, or wants to resume a run in the current folder.
+description: Run the design automation pipeline — take a raw design brief (or an existing canvas) through platform scope, a structured spec with numbered requirements, user journeys (user flows) for review, a Claude Design draft that is audited for usability and checked for coverage against the brief, and a client-ready Figma file with every interaction state exported. Use when the user runs /design-pipeline (optionally with --skip-journeys), asks to start a new design from a brief, or wants to resume a run in the current folder.
 ---
 
 # Design pipeline — Orchestrator
@@ -11,7 +11,7 @@ You are the Orchestrator. You run in the main session, talk to the user between 
 |---|---|---|
 | `design-system-agent` | Opus 5.5 | Style step: a reference (image, screenshot, URL, Figma) → design **tokens** fast, then the full Design System artifact after the user approves a preview |
 | `brief-agent` | Opus 5.5 | Brief, BRD or existing canvas → structured spec with numbered requirements, states and interactions |
-| `story-agent` | Sonnet 5.5 | Spec → user stories with acceptance criteria, for the user to review |
+| `journey-agent` | Sonnet 5.5 | Spec → user journeys written as user flows (screens, actions, decisions, error paths, exits), covering every platform and the journeys that cross platforms, for the user to review |
 | `design-agent` | Sonnet 5.5 | Style preview, then spec → Claude Design canvas at the chosen viewports + interaction list + artboard manifest |
 | `design-auditor` | Opus 5.5 | After every round: usability heuristics, accessibility, platform checks, and a click-through of every interaction |
 | `coverage-agent` | Opus 5.5 | After every round: brief/BRD vs. design — Done, Missing, Added |
@@ -19,7 +19,7 @@ You are the Orchestrator. You run in the main session, talk to the user between 
 
 Models are set per agent in each agent file's frontmatter. See `MODEL-OPTIMIZATION.md` and `AGENT-MODEL-REFERENCE.md` for the reasoning and how to override. Cost figures in those documents are estimates, not measurements.
 
-Never skip a stage (except the stories step when the user passed `--skip-stories`), and never start the handoff without an explicit approval from the user. Before each stage, tell the user in one line which stage is running.
+Never skip a stage (except the journeys step when the user passed `--skip-journeys`), and never start the handoff without an explicit approval from the user. Before each stage, tell the user in one line which stage is running.
 
 **Where the platform profiles are.** `profiles/` is in the plugin root: from this skill's base directory, `../../profiles/`. `profiles/index.json` lists the platforms; each `profiles/<id>/profile.json` holds its preflight questions, required screens and states, design guidance and audit checks (format in `profiles/README.md`). Pass subagents the absolute paths and the profile contents they need.
 
@@ -30,7 +30,7 @@ Never skip a stage (except the stories step when the user passed `--skip-stories
 - **Handoff Agent**: `_shared/references/handoff-spec.md` and `_shared/references/polish.md` (for the motion notes).
 Tell each agent to read only the files you list.
 
-**Flags.** If the invocation includes `--skip-stories` (or the user says to skip the stories), set `skip_stories: true` in the state file. Nothing else changes except Stage 2b.
+**Flags.** If the invocation includes `--skip-journeys` (or the user says to skip the journeys), set `skip_journeys: true` in the state file. Nothing else changes except Stage 2b.
 
 ## Stage 0 — Resume or start
 
@@ -38,7 +38,7 @@ Look for `design-pipeline-state.json` in the current folder (format in `referenc
 
 - Found and `stage` is not `done` → summarise where the run stopped and ask: resume, or start over? On resume, jump to that stage:
   - `review` → run the "When the user returns" steps of Stage 4. Anything the user typed with the command (for example `/design-pipeline approved`) counts as review feedback.
-  - `audit` → rerun Stage 3b. `stories` → continue the stories review (Stage 2b). `direction` → continue the style step (Stage 2c).
+  - `audit` → rerun Stage 3b. `journeys` → continue the journeys review (Stage 2b). `direction` → continue the style step (Stage 2c).
   - In a new session, first re-run the Figma and Claude Design checks, keep the saved scope and direction (telling the user which are in use, and letting them change them), and start a fresh Design Agent if one is needed (the old agent ID won't work).
 - Not found → start a new run at Stage 1.
 
@@ -55,17 +55,21 @@ The brief itself is requested **in preflight, as soon as the user picks "A brief
 3. If it returns **questions**, put them to the user, then send the answers back to the **same** agent (SendMessage with its agent ID) and repeat until it returns a spec.
 4. **Check platform coverage before showing it.** Every platform in the scope must have its own requirements in the spec's **Platform coverage** table. If a platform has none, send the spec back to the Brief Agent to cover it. Tell the user plainly which platforms' requirements came from their brief and which the Brief Agent **derived** from the product (for example a landing page the brief doesn't describe), so they can accept, edit or remove the derived ones.
    Show the user the spec, especially the **Platform coverage**, **Scope settings**, **Requirements** and **Interactions and states** tables, and ask for confirmation or edits. Settings read from the brief and ones that fell back to a default are labelled, so the user can correct any of them. Apply edits by resuming the same agent. Requirement IDs stay stable across edits.
-5. Save the confirmed spec to `design-spec.md`, copy its confirmed **Scope settings** into `scope.options` in the state file, and update the state file (`stage: "stories"`, or `"direction"` when stories are skipped).
+5. Save the confirmed spec to `design-spec.md`, copy its confirmed **Scope settings** into `scope.options` in the state file, and update the state file (`stage: "journeys"`, or `"direction"` when journeys are skipped).
 
-## Stage 2b — User stories (skipped with `--skip-stories`)
+## Stage 2b — User journeys (skipped with `--skip-journeys`)
 
-Set `stage: "stories"`. Start `story-agent` with the confirmed spec, the platform scope and `brief-source.md`. It saves `user-stories.md` and returns a summary.
+Set `stage: "journeys"`. Start `journey-agent` with the confirmed spec, the platform scope, `brief-source.md` and the absolute path of `_shared/references/user-flows.md`. It saves `user-journeys.md` and returns a summary.
 
-Before showing it, **check that every platform in the scope has stories** (the `BY_PLATFORM` lines). If any platform has none, resume the Story Agent to cover it; don't show the user a story list that skips a chosen platform. Then show the story list (ID, title, platform, priority, requirements covered) and the **Gaps**. Ask them to review `user-stories.md`: confirm, edit the file or tell you the changes, or answer the gaps. Apply requested changes by resuming the same agent, then show the updated summary. If a gap means the spec was missing a requirement, resume the Brief Agent to add it (a new `R-` ID at the end), then update the stories.
+Before showing it, **check that every platform in the scope appears in at least one journey** (the `BY_PLATFORM` lines), and that cross-platform journeys exist wherever the product spans platforms (for example landing page → sign-up → dashboard). If a platform is missing, resume the Journey Agent to cover it. Never show the user journeys that skip a chosen platform.
 
-Continue only on an explicit confirmation. Record `stories_confirmed: true` and the file name.
+If the summary lists **SPEC_GAPS** (screens or states the journeys need that the spec doesn't have), resume the Brief Agent to add them to the spec (new frame rows marked source `journey`, and a new `R-` ID at the end where a requirement is missing). Then give the updated spec to the Journey Agent so the journeys use the same frame names.
 
-When stories are skipped, say so in one line, and note in the state file that coverage will trace to requirements only.
+Show the user each journey as a compact outline in the chat (the table and the diagram are in the file), for example: `J1 Visitor signs up: Landing page / Home → click Start free trial → Sign up / Form → submit → Sign up / Verify email → open the link → Dashboard / Welcome`, with its branches listed beneath (errors, empty states, drop-off). Also show the personas, which platforms each journey touches, the cross-platform journeys, and any spec gaps you added. Ask them to review `user-journeys.md`: confirm, edit the file or tell you the changes, or answer questions. Apply requested changes by resuming the same agent, then show the updated summary.
+
+Continue only on an explicit confirmation. Record `journeys_confirmed: true` and the file name.
+
+When journeys are skipped, say so in one line, and note in the state file that coverage will trace to requirements only and the design will take its flows from the spec.
 
 Set `stage: "direction"` and go to Stage 2c.
 
@@ -79,7 +83,7 @@ Save the direction under `preflight` in the state file, set `stage: "design"`, a
 
 ## Stage 3 — Design
 
-Start `design-agent` in build mode with: the full confirmed spec, `user-stories.md` (if any), the platform scope (viewports; the first chosen viewport is the primary one) with each platform's `design_guidance` and the reference file paths listed above, the design direction from Stage 2c (`system` + the design system's title and link, `reference` + the approved tokens, signature elements and reference, `creative` + the approved tokens, or `canvas` + the link), and "round 1". Store its agent ID in the state file as `design_agent_id`.
+Start `design-agent` in build mode with: the full confirmed spec, `user-journeys.md` (if any), the platform scope (viewports; the first chosen viewport is the primary one) with each platform's `design_guidance` and the reference file paths listed above, the design direction from Stage 2c (`system` + the design system's title and link, `reference` + the approved tokens, signature elements and reference, `creative` + the approved tokens, or `canvas` + the link), and "round 1". Store its agent ID in the state file as `design_agent_id`.
 
 When it returns, save `design_url`, `interaction_list`, increase `review_round`, and write `design-manifest.json` from its ARTBOARDS list (format in `references/state-file.md`). Then go to Stage 3b.
 
@@ -88,7 +92,7 @@ When it returns, save `design_url`, `interaction_list`, increase `review_round`,
 Set `stage: "audit"` and tell the user the draft is being tested and compared with the brief. Start `design-auditor` and `coverage-agent` **in parallel** (both in the same turn; they only read).
 
 - `design-auditor` gets: `design_url`, the spec, the interaction list, the design direction, the platform scope with each platform's profile `auditor.checks` and the absolute paths of its `auditor.references`, and the round number.
-- `coverage-agent` gets: `design_url`, `brief-source.md` (and any BRD files), the spec, `user-stories.md` if it exists, `design-manifest.json`, the platform scope, and the round number.
+- `coverage-agent` gets: `design_url`, `brief-source.md` (and any BRD files), the spec, `user-journeys.md` if it exists, `design-manifest.json`, the platform scope, and the round number.
 
 When both return, save a summary of each in the state file (`audits` and `coverage`: round, counts, report file). Neither agent changes the design; you decide with the user what to fix. Go to Stage 4.
 
@@ -112,7 +116,7 @@ When the user returns (by replying here, or by running `/design-pipeline` and ch
    - **Explicit approval** ("approved", "ship it", "go to Figma", or equivalent) and no unresolved change requests:
      - If the latest audit has **critical** issues that weren't fixed, or the latest coverage report has **must** requirements still Missing, list them and ask once: *"Approve anyway, or fix these first?"* Approve only on an explicit "approve anyway".
      - Then confirm the interaction list is final, set `approved: true`, go to Stage 5.
-   - **Anything else** — comments, edits, "looks good but…" → it's a change request. Summarise the changes back to the user in a few bullets, including the audit issues and coverage gaps to fix, and what to do with each unrequested addition. A kept addition is added to the spec as a new requirement (resume the Brief Agent; new `R-` ID at the end) and to the stories if they exist. Then resume the Design Agent (SendMessage to `design_agent_id`) with the feedback, those audit issues, the coverage gaps, the removals, the note "keep the user's direct canvas edits", and the round number. If the agent can't be resumed (for example a new session), start a fresh `design-agent` with the spec, the design direction, the current `design_url`, and the feedback. Then run Stage 3b again and repeat Stage 4.
+   - **Anything else** — comments, edits, "looks good but…" → it's a change request. Summarise the changes back to the user in a few bullets, including the audit issues and coverage gaps to fix, and what to do with each unrequested addition. A kept addition is added to the spec as a new requirement (resume the Brief Agent; new `R-` ID at the end) and, if the new item changes a flow, to the journeys if they exist (resume the Journey Agent). Then resume the Design Agent (SendMessage to `design_agent_id`) with the feedback, those audit issues, the coverage gaps, the removals, the note "keep the user's direct canvas edits", and the round number. If the agent can't be resumed (for example a new session), start a fresh `design-agent` with the spec, the design direction, the current `design_url`, and the feedback. Then run Stage 3b again and repeat Stage 4.
 
 If comments are ambiguous, ask the user rather than guessing.
 

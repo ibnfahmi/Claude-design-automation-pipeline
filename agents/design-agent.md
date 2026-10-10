@@ -55,8 +55,9 @@ CONTRAST_FLAGS: <pairs that fail AA, or none>
    - **one artboard per screen in the spec, at every chosen viewport**, named after the screen (add ` @ <viewport label>` to the name for every viewport except the primary one)
    - **one artboard per row of the spec's Interactions and states table**, named exactly as its frame name (`Screen / State`), placed next to its default screen. Design each state at the **primary viewport**; also design it at other viewports where the row says so, or where the state changes how the layout works at that size (a navigation menu, a bottom sheet, a filter drawer).
    - On platforms with device frames, draw the frame (status bar, safe areas) and keep content out of the unsafe zones.
-4. Make interactive states real, not described. For example, *Home / Notifications open* shows the full screen with the dropdown open and populated.
-5. Use realistic content, not lorem ipsum, placeholder brands or round fake numbers. Meet WCAG 2.1 AA contrast, and the platform guidance you were given.
+4. **Build the journeys.** If `user-journeys.md` exists, make sure **every journey step's `Screen / State` has an artboard with exactly that name**, and every branch and exit (error, empty, timeout, cancel) has its state, at every viewport chosen for that platform. The journeys are the flows the user reviewed and confirmed; the design must make each of them walkable. Where a journey step and the spec's frame list disagree, follow the journey and note it.
+5. Make interactive states real, not described. For example, *Home / Notifications open* shows the full screen with the dropdown open and populated.
+6. Use realistic content, not lorem ipsum, placeholder brands or round fake numbers. Meet WCAG 2.1 AA contrast, and the platform guidance you were given.
 
 ## Starting from a canvas
 
@@ -86,14 +87,14 @@ INTERACTIONS:
 - Home → click notification icon → Home / Notifications open
 - …
 ARTBOARDS:
-- Home | screen | viewport: Desktop 1440 | covers: R-1, R-4 | stories: US-1 | source: brief
-- Home @ Mobile 375 | screen | viewport: Mobile 375 | covers: R-1, R-4 | stories: US-1 | source: brief
-- Home / Notifications open | state | viewport: Desktop 1440 | covers: R-4 | stories: US-2 | source: brief
-- Home / Empty | state | viewport: Desktop 1440 | covers: – | stories: – | source: profile
+- Home | screen | viewport: Desktop 1440 | covers: R-1, R-4 | journeys: J1.1 | source: brief
+- Home @ Mobile 375 | screen | viewport: Mobile 375 | covers: R-1, R-4 | journeys: J1.1 | source: brief
+- Home / Notifications open | state | viewport: Desktop 1440 | covers: R-4 | journeys: J1.3 | source: brief
+- Home / Empty | state | viewport: Desktop 1440 | covers: – | journeys: – | source: profile
 NOTES:
 - anything you couldn't do, or assumed
 ```
 
 The **INTERACTIONS** list must include every state artboard on the canvas, one line each: starting screen → trigger → frame name. The Handoff Agent builds exactly this list in Figma.
 
-The **ARTBOARDS** list must include every artboard on the canvas, with the requirement IDs and story IDs it satisfies, taken from the spec (and `user-stories.md` if it exists). Use `–` where an artboard traces to nothing; the Coverage Agent will report it. Be accurate: the Coverage Agent checks these claims against the canvas.
+The **ARTBOARDS** list must include every artboard on the canvas, with the requirement IDs and journey steps it satisfies, taken from the spec (and `user-journeys.md` if it exists). Use `–` where an artboard traces to nothing; the Coverage Agent will report it. Be accurate: the Coverage Agent checks these claims against the canvas.

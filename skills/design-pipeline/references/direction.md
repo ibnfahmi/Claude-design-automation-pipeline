@@ -1,6 +1,6 @@
 # Style direction (Stage 2c)
 
-Every run asks how the project should be styled, because each client usually has its own look. This step runs **after the spec and the user stories are confirmed** (or right after the spec when stories are skipped), so the style preview can show the real product: the most important screen from the confirmed spec, with its real copy and key components. For the canvas starting point, skip this step (the canvas is the look).
+Every run asks how the project should be styled, because each client usually has its own look. This step runs **after the spec and the user journeys are confirmed** (or right after the spec when journeys are skipped), so the style preview can show the real product: the most important screen from the confirmed spec, with its real copy and key components. For the canvas starting point, skip this step (the canvas is the look).
 
 **Preview content.** Wherever a step below renders a style preview, give the Design Agent the confirmed spec's key screen: the first must-have screen, or the screen the main flow starts on, with its components and copy, at the primary platform's primary viewport. Use the platform's `preview_screen` only as a fallback when the spec has no suitable screen.
 

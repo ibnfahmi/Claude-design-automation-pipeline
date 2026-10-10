@@ -4,14 +4,14 @@
 
 A Claude Code plugin that takes a raw design brief (or an existing canvas) to a client-ready Figma file:
 
-**Preflight (brief, platforms, screen sizes) → Brief Agent → User stories (your review) → Style direction and preview → Design Agent (Claude Design) → Auditor + Coverage report ⇄ your review → Figma re-check → Handoff Agent (Figma)**
+**Preflight (brief, platforms, screen sizes) → Brief Agent → User journeys (your review) → Style direction and preview → Design Agent (Claude Design) → Auditor + Coverage report ⇄ your review → Figma re-check → Handoff Agent (Figma)**
 
 See *Design Automation Multi-Agent Blueprint v2* for the full design.
 
 
-## 🆕 v0.5.0 — Platforms, stories and coverage
+## 🆕 v0.5.1 — Platforms, journeys and coverage
 
-Click your platforms in preflight (web app, dashboard, landing page, mobile, tablet, TV, kiosk/ATM and 9 more) and the screen sizes; each platform's rules then apply automatically, and content details such as sections and CTA are read from your brief. See a quick **style preview** of your product before the slow design-system build, review **user stories** before design starts (`--skip-stories` to skip), and get a **Done / Missing / Added** coverage report against your brief or BRD after every round. `/design-continue` is removed: run `/design-pipeline` again to resume. See [CHANGELOG.md](CHANGELOG.md) for the full notes, [profiles/README.md](profiles/README.md) to add a platform, and [MODEL-OPTIMIZATION.md](MODEL-OPTIMIZATION.md) for the per-agent models.
+Click your platforms in preflight (web app, dashboard, landing page, mobile, tablet, TV, kiosk/ATM and 9 more) and the screen sizes; each platform's rules then apply automatically, and content details such as sections and CTA are read from your brief. See a quick **style preview** of your product before the slow design-system build, review **user journeys** (user flows for every platform and across platforms) before design starts (`--skip-journeys` to skip), and get a **Done / Missing / Added** coverage report against your brief or BRD after every round. `/design-continue` is removed: run `/design-pipeline` again to resume. See [CHANGELOG.md](CHANGELOG.md) for the full notes, [profiles/README.md](profiles/README.md) to add a platform, and [MODEL-OPTIMIZATION.md](MODEL-OPTIMIZATION.md) for the per-agent models.
 
 
 
@@ -32,7 +32,7 @@ skills/
 agents/
   design-system-agent.md reference (image, screenshot, URL, Figma) → tokens fast, then Design System artifact
   brief-agent.md         brief, BRD or canvas → spec with numbered requirements and interaction states
-  story-agent.md         spec → user stories with acceptance criteria, for your review
+  journey-agent.md       spec → user journeys as user flows (every platform, cross-platform paths), for your review
   design-agent.md        style preview; spec → Claude Design canvas at the chosen viewports
   design-auditor.md      usability heuristics, WCAG AA, platform checks and every interaction tested
   coverage-agent.md      brief/BRD vs design → Done, Missing, Added
@@ -103,7 +103,7 @@ Or just open the plugin and click install.
    - **the platforms** (one or several), and answer each platform's short questions (or take the defaults), such as device frames, breakpoints and navigation;
    - **the design direction**: a saved design system; a reference (image, screenshot, website URL or Figma file) with a quick style preview before the design system is built; or no design system, where the Design Agent chooses the look.
 4. Paste the brief (or point to the BRD files) and answer any questions. Confirm the numbered requirements.
-5. Review the **user stories** in `user-stories.md` (skip with `/design-pipeline --skip-stories`).
+5. Review the **user journeys** in `user-journeys.md`: flows with screens, decisions, error paths and exits, for every platform and across platforms (skip with `/design-pipeline --skip-journeys`).
 6. After each design round the Auditor tests the draft (Nielsen's heuristics, WCAG 2.1 AA, platform checks, a click-through of every interaction) and saves `audit-round-<n>.md`. The Coverage Agent compares the draft with your brief and saves `coverage-round-<n>.md` (Done / Missing / Added).
 7. Review the draft, the audit and the coverage report in Claude Design: edit the canvas, leave comments, and say which issues to fix and which unrequested additions to keep or remove.
 8. Reply **done** to send changes back, or say **approved** to build the Figma file. Unfixed critical audit issues and missing must-have requirements need an explicit "approve anyway".

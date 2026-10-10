@@ -6,7 +6,7 @@ A profile describes one kind of product (mobile app, dashboard, landing page, ki
 |---|---|
 | Orchestrator | `options` with `ask: "preflight"` (the screen-size questions) and `preview_screen` (what the style preview shows) |
 | Brief Agent | `options` with `ask: "brief"` (content-level settings it reads from the source), plus `required_screens` and `required_states` (added to the spec, marked `source: profile`) |
-| Story Agent | the scope, to write platform-specific stories and acceptance criteria |
+| Journey Agent | the scope, to write user flows for every platform and the journeys that cross platforms |
 | Design Agent | chosen viewports (artboard sizes), `design_guidance`, and the files in `auditor.references` plus `grounding.md`, read before building |
 | Design System Agent | `grounding.md`, for measuring tokens from a reference |
 | Handoff Agent | `handoff-spec.md` and `polish.md`, for annotations and motion notes |

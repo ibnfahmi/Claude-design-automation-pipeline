@@ -6,7 +6,7 @@ Quick reference for model assignments and when to override them. The reasoning i
 |---|---|---|---|
 | `design-system-agent` | Opus 5.5 | Style step (Stage 2c): `tokens` mode (fast), then `full` mode in the background after the style preview is approved | Sonnet for a simple reference, if you check the tokens |
 | `brief-agent` | Opus 5.5 | Stage 2, and when answers or edits come back | Keep Opus |
-| `story-agent` | Sonnet 5.5 | Stage 2b (skipped with `--skip-stories`) | Opus for large BRDs |
+| `journey-agent` | Sonnet 5.5 | Stage 2b (skipped with `--skip-journeys`) | Opus for large BRDs |
 | `design-agent` | Sonnet 5.5 | Style preview, round 1, every revision round | Opus for brand-critical work |
 | `design-auditor` | Opus 5.5 | After every design round | Keep Opus |
 | `coverage-agent` | Opus 5.5 | After every design round (parallel with the auditor) | Keep Opus |

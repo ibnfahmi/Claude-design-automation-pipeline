@@ -1,7 +1,7 @@
 {
   "name": "design-automation",
-  "version": "0.5.0",
-  "description": "Brief or existing canvas → platform scope → user stories → Claude Design → Figma pipeline. Sixteen platform profiles (web app, dashboard, landing page, mobile, TV, kiosk and more), a quick style preview before the design-system build, an audit and a Done/Missing/Added coverage report after every round, and state/interaction export to Figma.",
+  "version": "0.5.1",
+  "description": "Brief or existing canvas → platform scope → user journeys → Claude Design → Figma pipeline. Sixteen platform profiles (web app, dashboard, landing page, mobile, TV, kiosk and more), a quick style preview before the design-system build, an audit and a Done/Missing/Added coverage report after every round, and state/interaction export to Figma.",
   "author": {
     "name": "Ahmed Fahmi"
   }

@@ -2,6 +2,14 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.5.1] - 2026-10-10
+
+### Changed
+- **User stories are replaced by user journeys.** The Story Agent is now the **Journey Agent**. After the spec is confirmed, it writes `user-journeys.md` for you to review: one **user flow** per goal, with the persona and goal, the entry point, each step's platform, `Screen / State`, user action and system response, the decision points, the error paths and exits, and a Mermaid flow diagram. Every platform in the scope must appear in at least one journey, and journeys that cross platforms (landing page → sign-up → dashboard) are written explicitly with their hand-off points.
+- **Journeys feed the rest of the pipeline.** Journey screens and states use the same `Screen / State` names as the design frames. If a journey needs a screen or state the spec lacks, those spec gaps are added to the spec by the Brief Agent (marked `source: journey`) before you review. The Design Agent maps every artboard to the journey steps it satisfies, the Coverage Agent checks every journey step and every branch (error, empty, timeout, cancel) against the design and reports per journey, and the Handoff Agent wires the Figma prototype links in the order of the journeys' steps.
+- The review flag is now `--skip-journeys` (was `--skip-stories`), and the saved stage, files and state fields are renamed (`journeys`, `user-journeys.md`, `skip_journeys`, `journeys_file`, `journeys_confirmed`, `covers_journeys`).
+- New shared reference `profiles/_shared/references/user-flows.md`, distilled from Owl-Listener's `user-flow-diagram`, `journey-map` and `experience-map` skills.
+
 ## [0.5.0] - 2026-10-10
 
 ### Changed

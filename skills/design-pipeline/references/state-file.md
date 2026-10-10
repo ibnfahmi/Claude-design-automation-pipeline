@@ -7,7 +7,7 @@ Written to the client project folder (the session's working directory) after eve
   "project": "Acme onboarding app",
   "stage": "review",
   "updated_at": "2026-10-03T10:30:00Z",
-  "skip_stories": false,
+  "skip_journeys": false,
   "starting_point": "brief | canvas",
   "canvas_source": "link, only when starting_point is canvas",
   "preflight": {
@@ -44,8 +44,8 @@ Written to the client project folder (the session's working directory) after eve
   "spec_file": "design-spec.md",
   "requirements_count": 14,
   "platform_coverage": {"dashboard": {"brief": 12, "derived": 1, "profile": 4}, "landing-page": {"brief": 0, "derived": 6, "profile": 2}},
-  "stories_file": "user-stories.md or null",
-  "stories_confirmed": false,
+  "journeys_file": "user-journeys.md or null",
+  "journeys_confirmed": false,
   "design_agent_id": "agent id, valid only in the session that started it",
   "design_url": "https://claude.ai/artifact/…",
   "interaction_list": [
@@ -57,7 +57,7 @@ Written to the client project folder (the session's working directory) after eve
     {"round": 1, "result": "pass with issues", "interactions": "11/12", "platform_checks": "9/10", "critical": 0, "major": 2, "minor": 5, "report": "audit-round-1.md"}
   ],
   "coverage": [
-    {"round": 1, "requirements": {"done": 10, "partial": 1, "missing": 3, "total": 14}, "stories": "5/7", "added_profile": 4, "added_unrequested": 2, "report": "coverage-round-1.md"}
+    {"round": 1, "requirements": {"done": 10, "partial": 1, "missing": 3, "total": 14}, "journeys": "5/7", "added_profile": 4, "added_unrequested": 2, "report": "coverage-round-1.md"}
   ],
   "approved": false,
   "figma_destination": "new file | existing file URL",
@@ -83,7 +83,7 @@ Written by the Orchestrator after every design round from the Design Agent's ART
       "platform": "mobile-app",
       "viewport": "iPhone 16 (393x852)",
       "covers_requirements": ["R-4"],
-      "covers_stories": ["US-2"],
+      "covers_journeys": ["J1.2"],
       "source": "brief | profile | canvas",
       "code_file": null
     }
@@ -99,7 +99,7 @@ Written by the Orchestrator after every design round from the Design Agent's ART
 |---|---|---|
 | `preflight` | Checks, brief, platforms or screen sizes not finished | Stage 1 |
 | `brief` | Waiting for or building the spec | Stage 2 |
-| `stories` | Stories being written or reviewed | Stage 2b |
+| `journeys` | Journeys being written or reviewed | Stage 2b |
 | `direction` | Choosing the style direction or previewing it | Stage 2c |
 | `design` | Design Agent running | Stage 3 (restart the round) |
 | `audit` | Auditor and Coverage Agent running | Stage 3b (rerun both) |

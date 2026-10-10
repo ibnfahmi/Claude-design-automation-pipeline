@@ -5,7 +5,7 @@ Each agent runs on the Claude model that fits its task. The model is set in the 
 | Agent | Model | Why |
 |---|---|---|
 | `brief-agent` | Opus 5.5 | Turns rough briefs, BRDs and existing canvases into numbered requirements and finds the states nobody wrote down. Mistakes here carry into every later stage. |
-| `story-agent` | Sonnet 5.5 | Structured transformation from a confirmed spec into stories with acceptance criteria. The human reviews the output, so speed matters more than depth. |
+| `journey-agent` | Sonnet 5.5 | Structured transformation from a confirmed spec into user flows (screens, decisions, error paths) for every platform. The human reviews the output, so speed matters more than depth. |
 | `design-agent` | Sonnet 5.5 | Generates many artboards, runs the quick style preview, and handles repeated revision rounds. The spec is precise, so it can work quickly. |
 | `design-auditor` | Opus 5.5 | Measures contrast, applies heuristics and platform checks, and clicks through every interaction. A missed issue reaches the client. |
 | `coverage-agent` | Opus 5.5 | Compares the design with the original brief or BRD and decides what is Done, Missing or Added. It must read the source itself and judge whether an artboard really shows a requirement. |
@@ -16,7 +16,7 @@ Each agent runs on the Claude model that fits its task. The model is set in the 
 
 The Opus-tier models cost more per token than Sonnet-tier models, so putting the creative and structural stages on Sonnet lowers the cost of a run compared with using Opus for everything. **How much it saves has not been measured.** Earlier versions of these documents quoted dollar amounts and percentage savings; those were estimates, not measurements, and they have been removed. To see what a run really costs, check your usage after a project.
 
-Things that raise cost regardless of model: more design rounds, more platforms and viewports (more artboards), and running the audit and coverage agents every round. Things that lower it: `--skip-stories`, fewer viewports, and the lean "tokens only" design system.
+Things that raise cost regardless of model: more design rounds, more platforms and viewports (more artboards), and running the audit and coverage agents every round. Things that lower it: `--skip-journeys`, fewer viewports, and the lean "tokens only" design system.
 
 ## Overriding a model
 
@@ -26,11 +26,12 @@ Reasonable overrides:
 
 - **Design Agent → Opus** for brand-critical work where first-round quality matters more than speed.
 - **Handoff Agent → Opus** if Figma prototype links keep failing and you need stronger debugging.
-- **Story Agent → Opus** for large BRDs with many dependent requirements.
+- **Journey Agent → Opus** for large BRDs with many dependent requirements.
 - **Design System Agent → Sonnet** for a very simple reference when speed matters. Check the tokens it returns.
 - Keep the **Auditor** and **Coverage Agent** on Opus. Their output decides what gets fixed and what ships.
 
 ## History
 
 - **0.3.0:** replaced `model: inherit` with per-agent assignments.
+- **0.5.1:** the Story Agent became the Journey Agent (user flows instead of user stories).
 - **0.4.0:** added the Story Agent and Coverage Agent; the Design System Agent gained a fast `tokens` mode, and the Design Agent gained a `style preview` mode.
