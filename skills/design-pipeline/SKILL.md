@@ -23,6 +23,12 @@ Never skip a stage (except the stories step when the user passed `--skip-stories
 
 **Where the platform profiles are.** `profiles/` is in the plugin root: from this skill's base directory, `../../profiles/`. `profiles/index.json` lists the platforms; each `profiles/<id>/profile.json` holds its preflight questions, required screens and states, design guidance and audit checks (format in `profiles/README.md`). Pass subagents the absolute paths and the profile contents they need.
 
+**Reference files.** `profiles/_shared/references/` holds the shared guidance (interface quality, visual critique, landing page, mobile, grounding). Every agent that builds or tests a design reads it, not just the Auditor. Resolve these absolute paths once and hand them over as listed:
+- **Design Agent** (style preview, build and revision rounds): `_shared/references/grounding.md`, plus every file listed in `auditor.references` of each platform in the scope. These are the same thresholds the Auditor will test against, so the first draft is built to them.
+- **Design System Agent** (`tokens` and `full` modes): `_shared/references/grounding.md`.
+- **Auditor**: the files in `auditor.references` of each platform in the scope.
+Tell each agent to read only the files you list.
+
 **Flags.** If the invocation includes `--skip-stories` (or the user says to skip the stories), set `skip_stories: true` in the state file. Nothing else changes except Stage 2b.
 
 ## Stage 0 — Resume or start
@@ -65,7 +71,7 @@ Before Stage 3, if a background Design System build is still running, tell the u
 
 ## Stage 3 — Design
 
-Start `design-agent` in build mode with: the full confirmed spec, `user-stories.md` (if any), the platform scope (viewports; the first chosen viewport is the primary one) with each platform's `design_guidance`, the design direction from preflight (`system` + the design system's title and link, `reference` + the approved tokens and reference, `creative` + the approved tokens, or `canvas` + the link), and "round 1". Store its agent ID in the state file as `design_agent_id`.
+Start `design-agent` in build mode with: the full confirmed spec, `user-stories.md` (if any), the platform scope (viewports; the first chosen viewport is the primary one) with each platform's `design_guidance` and the reference file paths listed above, the design direction from preflight (`system` + the design system's title and link, `reference` + the approved tokens and reference, `creative` + the approved tokens, or `canvas` + the link), and "round 1". Store its agent ID in the state file as `design_agent_id`.
 
 When it returns, save `design_url`, `interaction_list`, increase `review_round`, and write `design-manifest.json` from its ARTBOARDS list (format in `references/state-file.md`). Then go to Stage 3b.
 

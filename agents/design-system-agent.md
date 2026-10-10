@@ -14,7 +14,7 @@ The slow part of building a design system is the artifact itself, so the work is
 
 Extract the look as numbers, and return them. Don't create any artifact in this mode. Take at most a few minutes.
 
-Ground the tokens in real measurements, not impressions (see `profiles/_shared/references/grounding.md`):
+Read the `grounding.md` file the Orchestrator gives you first. Ground the tokens in real measurements, not impressions:
 
 - **Colours:** measure them. For images, sample with a short script (Python with Pillow, if available: quantise to the dominant colours, then read exact pixels from backgrounds, text, buttons and borders). For a URL, read the computed styles of key elements (body, headings, buttons, inputs, cards, links) with the built-in browser and its `javascript_tool`, or from the page's CSS custom properties. For Figma, read the variables and the styles used on key frames. Name colours by role (`bg-primary`, `text-primary`, `text-secondary`, `border-primary`, `brand-solid`, `brand-solid_hover` if a hover is visible, `error` and `success` only if shown). One theme unless the reference shows both.
 - **Type:** identify the family. If it is a Google Font, name it. If you can't identify it, choose the closest Google Font and say so. Measure sizes and line heights for 5-7 styles (display, headings, body, label, caption).
@@ -47,7 +47,7 @@ For a **URL**, use only what the page itself publishes. Take the look, never the
 
 ## Mode: full (after the user approved the preview)
 
-You are given the **approved tokens** (possibly with the user's tweaks) plus the original reference. Build the Design System artifact from them. Don't re-derive the tokens; use them exactly.
+You are given the **approved tokens** (possibly with the user's tweaks), the original reference and the path of `grounding.md`. Build the Design System artifact from them. Don't re-derive the tokens; use them exactly.
 
 1. Call the Artifact tool with `action: "quickstart"`, `intent: "other"`, `design_systems: false`, and find the "Design System" type.
 2. Create ONE artifact from that type: `type_url` = its link, `title` = the name you were given, `auto_open: "after_first_write"`, no files.

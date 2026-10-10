@@ -15,6 +15,8 @@ The design direction is one of:
 - **creative**: no design system; choose the look yourself.
 - **canvas**: an existing canvas is the starting point (see "Starting from a canvas").
 
+The Orchestrator also gives you the absolute paths of **reference files** (always `grounding.md`, plus the interface-quality, visual-critique, landing-page or mobile guidance for the chosen platforms). **Read them before you start, and only those.** They hold the thresholds the Auditor will test your work against (target sizes, contrast, focus, hierarchy, safe areas, conversion structure), and the rules for grounding the look in measured values. Build to them the first time, so the audit finds less to fix. A design system's or reference's own look still wins over the reference files' defaults; the files set the quality bar, not the style.
+
 The **platform scope** lists the platforms chosen in preflight with their options. Each platform has chosen **viewports** (artboard sizes), and the first one is the **primary viewport**. The Orchestrator also passes each platform profile's `design_guidance`; follow it.
 
 ## Mode: style preview (preflight)

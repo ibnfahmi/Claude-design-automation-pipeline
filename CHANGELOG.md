@@ -2,6 +2,12 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.4.2] - 2026-10-10
+
+### Changed
+- **The shared reference guidance now reaches the agents that build the design, not only the Auditor.** The Design Agent reads `grounding.md` plus each platform's reference files (interface quality, visual critique, landing page, mobile) before the style preview, the first build and each revision round, so the first draft is built to the same thresholds the audit tests. The Design System Agent is given `grounding.md` for token extraction. Each agent reads only the files it is given.
+- `profiles/README.md` documents which agents consume which files.
+
 ## [0.4.1] - 2026-10-10
 
 ### Removed
