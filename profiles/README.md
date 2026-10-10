@@ -9,7 +9,8 @@ A profile describes one kind of product (mobile app, dashboard, landing page, ki
 | Story Agent | the scope, to write platform-specific stories and acceptance criteria |
 | Design Agent | chosen viewports (artboard sizes), `design_guidance`, and the files in `auditor.references` plus `grounding.md`, read before building |
 | Design System Agent | `grounding.md`, for measuring tokens from a reference |
-| Auditor | `auditor.checks` and `auditor.references` |
+| Handoff Agent | `handoff-spec.md` and `polish.md`, for annotations and motion notes |
+| Auditor | `auditor.checks` and `auditor.references` (including `polish.md`, which it applies as a minor-only polish pass) |
 | Coverage Agent | the chosen viewports, so "Missing" can say "checkout is not designed at 375" |
 
 ## Adding a platform

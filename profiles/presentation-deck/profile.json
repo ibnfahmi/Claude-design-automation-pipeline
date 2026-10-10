@@ -56,7 +56,7 @@
     "Reuse a small set of layouts consistently."
   ],
   "auditor": {
-    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md"],
+    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/data-viz.md"],
     "checks": [
       "Each slide has one clear point and an obvious entry point.",
       "Text size suits the chosen use (presented or read).",

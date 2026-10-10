@@ -23,10 +23,11 @@ Never skip a stage (except the stories step when the user passed `--skip-stories
 
 **Where the platform profiles are.** `profiles/` is in the plugin root: from this skill's base directory, `../../profiles/`. `profiles/index.json` lists the platforms; each `profiles/<id>/profile.json` holds its preflight questions, required screens and states, design guidance and audit checks (format in `profiles/README.md`). Pass subagents the absolute paths and the profile contents they need.
 
-**Reference files.** `profiles/_shared/references/` holds the shared guidance (interface quality, visual critique, landing page, mobile, grounding). Every agent that builds or tests a design reads it, not just the Auditor. Resolve these absolute paths once and hand them over as listed:
+**Reference files.** `profiles/_shared/references/` holds the shared guidance (interface quality, visual critique, polish, states and feedback, forms, data visualisation, dark mode, localisation, landing page, mobile, grounding, handoff). Every agent that builds or tests a design reads it, not just the Auditor. Resolve these absolute paths once and hand them over as listed:
 - **Design Agent** (style preview, build and revision rounds): `_shared/references/grounding.md`, plus every file listed in `auditor.references` of each platform in the scope. These are the same thresholds the Auditor will test against, so the first draft is built to them.
 - **Design System Agent** (`tokens` and `full` modes): `_shared/references/grounding.md`.
 - **Auditor**: the files in `auditor.references` of each platform in the scope.
+- **Handoff Agent**: `_shared/references/handoff-spec.md` and `_shared/references/polish.md` (for the motion notes).
 Tell each agent to read only the files you list.
 
 **Flags.** If the invocation includes `--skip-stories` (or the user says to skip the stories), set `skip_stories: true` in the state file. Nothing else changes except Stage 2b.
@@ -114,7 +115,7 @@ Re-run the Figma check from `references/preflight.md`. If it fails, ask the user
 
 ## Stage 6 — Handoff
 
-Set `stage: "handoff"`. Start `handoff-agent` with: `design_url`, the approved interaction list, `design-manifest.json`, the spec from `design-spec.md`, the platform scope, the client/project name, and the Figma destination (ask the user once: a new file, or an existing file URL/team).
+Set `stage: "handoff"`. Start `handoff-agent` with: `design_url`, the approved interaction list, `design-manifest.json`, the spec from `design-spec.md`, the platform scope, the absolute paths of `handoff-spec.md` and `polish.md`, the client/project name, and the Figma destination (ask the user once: a new file, or an existing file URL/team).
 
 When it returns, save `figma_url` and its notes (especially anything it couldn't do, such as prototype links).
 

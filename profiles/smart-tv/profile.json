@@ -74,7 +74,7 @@
     "Avoid long text entry; offer voice, suggestions or a QR hand-off to the phone."
   ],
   "auditor": {
-    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/grounding.md"],
+    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/grounding.md", "_shared/references/states-and-feedback.md"],
     "checks": [
       "No content or control sits in the overscan margin.",
       "Every focusable element has a distinct focus state visible from a distance, with at least 3:1 contrast against its surroundings.",

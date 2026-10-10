@@ -71,7 +71,7 @@
     "Repeat the primary CTA at the end of the page."
   ],
   "auditor": {
-    "references": ["_shared/references/landing-page.md", "_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/grounding.md"],
+    "references": ["_shared/references/landing-page.md", "_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/grounding.md", "_shared/references/polish.md", "_shared/references/forms.md"],
     "checks": [
       "There is exactly one primary CTA above the fold, and its label is a verb plus what the visitor gets.",
       "Above the fold shows a headline, subheadline, CTA, a proof signal and a hero visual at every chosen breakpoint.",

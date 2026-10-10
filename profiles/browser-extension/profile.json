@@ -41,7 +41,7 @@
     "Explain each permission the extension requests in plain language."
   ],
   "auditor": {
-    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md"],
+    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/polish.md", "_shared/references/states-and-feedback.md", "_shared/references/dark-mode.md"],
     "checks": [
       "Every surface is designed at its real size and nothing is clipped at it.",
       "Injected UI is shown over both a light and a dark sample page and stays legible.",

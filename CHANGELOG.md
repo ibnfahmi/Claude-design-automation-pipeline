@@ -2,6 +2,17 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.4.3] - 2026-10-10
+
+### Added
+- **Visual polish guidance** (`polish.md`, from `better-ui`): concentric radii, optical alignment, shadows versus borders, image outlines, icon stroke and outline/fill states, and motion values (press, stagger, exit, icon cross-fade). Applied by the Design Agent, tested by the Auditor as a **minor-only** polish pass (a state carried by motion alone is major), and written into the Figma file as developer **motion notes** by the Handoff Agent.
+- **Six more shared references**, distilled from designer-skills: `states-and-feedback.md` (errors, loading, feedback), `forms.md`, `data-viz.md`, `dark-mode.md`, `localization.md` (text expansion and RTL), and `handoff-spec.md` (what a developer needs next to each frame). Each is listed only in the platform profiles it applies to, so a platform reads only what is relevant (about 5-20 KB of reference per platform).
+- Where sources disagreed, the files pick one rule: validate a field on leaving it but never disable submit; error toasts persist while plain success toasts can auto-dismiss; stagger only infrequent entrances.
+
+### Changed
+- The Handoff Agent receives `handoff-spec.md` and `polish.md`, and adds motion notes and a fuller state list to its annotations.
+- `NOTICE.md` credits the added sources.
+
 ## [0.4.2] - 2026-10-10
 
 ### Changed

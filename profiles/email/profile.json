@@ -51,7 +51,7 @@
     "Put the primary action and the key information above the fold, and include a plain-text-friendly footer with unsubscribe and address."
   ],
   "auditor": {
-    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md"],
+    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/dark-mode.md"],
     "checks": [
       "The main message and primary action survive with images blocked.",
       "Text is at least 14px (16px preferred) and meets AA contrast in both light and dark.",

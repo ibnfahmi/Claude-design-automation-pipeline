@@ -65,6 +65,8 @@ For each platform in the scope, run every statement in its profile's `auditor.ch
 
 Then apply the hierarchy part of the visual critique reference to each screen: entry point, eye flow, weight, emphasis.
 
+If `polish.md` is among your references, finish with a **polish pass**: concentric radii, optical alignment, shadows versus borders, image outlines, icon stroke and outline/fill states, and the two-ways-for-one-detail check. Report polish findings as **minor**, with one exception: a state change carried by motion alone, with no static cue (colour, icon or label), is **major**. A deliberate, consistent convention that differs from the reference (or the design system's own value) is not a finding. Forms, error, loading and feedback states, chart rules, dark mode and localisation checks come from the matching reference files when they are listed; test the design against each listed file.
+
 ## Severity
 
 - **Critical:** blocks a task, breaks an interaction, missing required screen or state, or fails WCAG AA on primary content.

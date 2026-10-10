@@ -70,7 +70,7 @@
     "Each widget has its own title, time range and loading/error state."
   ],
   "auditor": {
-    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/grounding.md"],
+    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/grounding.md", "_shared/references/polish.md", "_shared/references/states-and-feedback.md", "_shared/references/data-viz.md", "_shared/references/dark-mode.md"],
     "checks": [
       "Every chart has a title, labelled axes or direct labels, units, and a legend or direct labels that don't rely on colour alone.",
       "Chart series colours stay distinguishable at 3:1 against the background and against each other, and still work for common colour-blindness.",

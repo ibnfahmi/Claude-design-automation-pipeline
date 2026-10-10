@@ -46,7 +46,7 @@
     "Show dense, efficient layouts; hover and focus states matter because the pointer is the main input."
   ],
   "auditor": {
-    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md"],
+    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/polish.md", "_shared/references/states-and-feedback.md", "_shared/references/forms.md", "_shared/references/dark-mode.md"],
     "checks": [
       "The minimum window size is designed and no primary action is clipped at it.",
       "Window controls and title bar follow the conventions of each chosen operating system.",

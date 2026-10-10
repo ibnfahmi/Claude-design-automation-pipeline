@@ -53,7 +53,7 @@
     "Show the current location in the navigation."
   ],
   "auditor": {
-    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md"],
+    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/polish.md", "_shared/references/states-and-feedback.md", "_shared/references/forms.md", "_shared/references/dark-mode.md", "_shared/references/localization.md"],
     "checks": [
       "The layout holds at every chosen breakpoint, and the navigation collapses deliberately at the smallest.",
       "Every list, table and form has empty, loading and error states.",

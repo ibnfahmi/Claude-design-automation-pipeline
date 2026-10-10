@@ -56,7 +56,7 @@
     "Show real contrast ratios for every text and background pairing."
   ],
   "auditor": {
-    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md"],
+    "references": ["_shared/references/interface-quality.md", "_shared/references/visual-critique.md", "_shared/references/polish.md", "_shared/references/dark-mode.md"],
     "checks": [
       "Every component shows all its states, sizes and themes, and no state is described without being shown.",
       "Every text and background pairing lists its contrast ratio and meets WCAG AA, or is flagged.",

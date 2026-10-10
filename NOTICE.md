@@ -5,11 +5,11 @@ Some guidance in `profiles/_shared/references/` is distilled and rewritten from 
 | Source | Author | Used for |
 |---|---|---|
 | [emilkowalski/skills](https://github.com/emilkowalski/skills) (`mobile-native`) | Emil Kowalski | `profiles/_shared/references/mobile.md` |
-| [jakubkrehel/skills](https://github.com/jakubkrehel/skills) (`better-accessibility`, `better-layout`, `better-typography`) | Jakub Krehel | `profiles/_shared/references/interface-quality.md`, `mobile.md` (hit areas) |
+| [jakubkrehel/skills](https://github.com/jakubkrehel/skills) (`better-accessibility`, `better-layout`, `better-typography`, `better-ui`) | Jakub Krehel | `profiles/_shared/references/interface-quality.md`, `mobile.md` (hit areas), `polish.md`, and the RTL and motion values in `localization.md`, `dark-mode.md` and `handoff-spec.md` |
 | [elayadesign/ai-design-skills](https://github.com/elayadesign/ai-design-skills) (`landing-page-design`) | Elaya | `profiles/_shared/references/landing-page.md` |
-| [Owl-Listener/designer-skills](https://github.com/Owl-Listener/designer-skills) (`visual-critique`, `design-ops`) | MC Dean | `profiles/_shared/references/visual-critique.md` |
+| [Owl-Listener/designer-skills](https://github.com/Owl-Listener/designer-skills) (`visual-critique`, `design-ops`, `error-handling-ux`, `loading-states`, `feedback-patterns`, `form-design`, `data-visualization`, `dark-mode-design`, `localization-design`, `handoff-spec`) | MC Dean | `visual-critique.md`, `states-and-feedback.md`, `forms.md`, `data-viz.md`, `dark-mode.md`, `localization.md`, `handoff-spec.md` |
 | [codeswithroh/tastemaker](https://github.com/codeswithroh/tastemaker) | codeswithroh | `profiles/_shared/references/grounding.md` |
-| [ConardLi/garden-skills](https://github.com/ConardLi/garden-skills) (`web-design-engineer`) | ConardLi | `profiles/_shared/references/grounding.md`, dashboard profile guidance |
+| [ConardLi/garden-skills](https://github.com/ConardLi/garden-skills) (`web-design-engineer`) | ConardLi | `profiles/_shared/references/grounding.md`, `data-viz.md`, dashboard profile guidance |
 
 [MengTo/Skills](https://github.com/MengTo/Skills) was reviewed and nothing was used: it focuses on 3D, video and image generation.
 
