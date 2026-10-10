@@ -2,7 +2,9 @@
 
 All notable changes to the design-automation plugin are documented here.
 
-## [0.6.0] - 2026-10-10
+## [0.5.2] - 2026-10-10
+
+_This release was published for a short time as 0.6.0 and renumbered 0.5.2 to follow the numbering rule (last digit 0 to 9, then the middle number goes up). The content is the same._
 
 ### Changed
 - **Code first. The Claude Design canvas is gone.** The pipeline's deliverable is a **working code project** in `code/` inside the client folder (its own local git repository, never pushed). The stack is chosen per project (see below); the reference layout is React + Vite + TypeScript + Tailwind CSS + React Router. Each platform declares a `code_target`: an app, a responsive prototype inside device or window frames, a real Manifest V3 extension project, HTML email templates, one route per social asset, slide components, or a fixed-size TV or kiosk stage with focus navigation and idle and reset behaviour.
