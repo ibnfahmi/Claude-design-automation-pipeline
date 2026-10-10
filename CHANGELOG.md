@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.5.8] - 2026-10-10
+
+### Added
+- **The session is always named after the project.** At the start of a run the pipeline renames the session to the project's name (from your message, the brief, the existing code project or the Figma file). If there is no name yet, it uses a unique placeholder such as `Untitled amber-fox-4821`, and replaces it with the real name once the spec names the project. In sessions without the rename tool it skips silently.
+
 ## [0.5.7] - 2026-10-10
 
 ### Changed

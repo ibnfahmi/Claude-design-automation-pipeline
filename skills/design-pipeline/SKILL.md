@@ -33,6 +33,11 @@ Tell each agent to read only the files you list.
 
 **Flags.** If the invocation includes `--skip-journeys` (or the user says to skip the journeys), set `skip_journeys: true` in the state file and don't ask the Stage 2b question. Nothing else changes except Stage 2b.
 
+**Session name.** Always name the session after the project, so runs are easy to tell apart in the session list. Rename it with the session-title tool (`set_session_title` with `session_id: "self"`; find it with ToolSearch if it is deferred). If the tool isn't available (for example in a terminal session), skip this silently and mention once that `/rename` does the same.
+- **Name known:** use the project name from the user's message, the brief, the existing code project's name or the Figma file's name, in a short readable form (for example `Acme onboarding app`).
+- **No name yet:** generate a unique placeholder from two random words and four random digits, such as `Untitled amber-fox-4821`. Never reuse one that is in the state file of another run in the same folder.
+- Rename at the start of Stage 1 (new run) or on resume, then **again once the Brief Agent returns a spec that names the project** (Stage 2, step 5), replacing a placeholder. Never rename again after that unless the user gives a different name. Save the title as `project` in the state file. If the user set the session title themselves, the app asks them to approve the change; if they decline, keep their title and stop trying.
+
 ## Stage 0 — Resume or start
 
 Look for `design-pipeline-state.json` in the current folder (format in `references/state-file.md`).
@@ -41,7 +46,7 @@ Look for `design-pipeline-state.json` in the current folder (format in `referenc
   - `review` → run the "When the user returns" steps of Stage 4. Anything the user typed with the command (for example `/design-pipeline approved`) counts as review feedback.
   - `audit` → rerun Stage 3b. `journeys` → continue the journeys review (Stage 2b). `direction` → continue the style step (Stage 2c).
   - In a new session, first re-run the tool check (Node, npm and Git), keep the saved scope and direction (telling the user which are in use, and letting them change them), restart the dev server with the preview tool, and start a fresh Design Agent if one is needed (the old agent ID won't work). The code in `code/` is the source of truth; read `git log` and `git status` to see where it stands.
-- Not found → start a new run at Stage 1.
+- Not found → name the session (see above) and start a new run at Stage 1.
 
 ## Stage 1 — Preflight
 
@@ -56,7 +61,7 @@ The brief itself is requested **in preflight, as soon as the user picks "A brief
 3. If it returns **questions**, put them to the user, then send the answers back to the **same** agent (SendMessage with its agent ID) and repeat until it returns a spec.
 4. **Check platform coverage before showing it.** Every platform in the scope must have its own requirements in the spec's **Platform coverage** table. If a platform has none, send the spec back to the Brief Agent to cover it. Tell the user plainly which platforms' requirements came from their brief and which the Brief Agent **derived** from the product (for example a landing page the brief doesn't describe), so they can accept, edit or remove the derived ones.
    Show the user the spec, especially the **Platform coverage**, **Scope settings**, **Requirements** and **Interactions and states** tables, and ask for confirmation or edits. Settings read from the brief and ones that fell back to a default are labelled, so the user can correct any of them. Apply edits by resuming the same agent. Requirement IDs stay stable across edits.
-5. Save the confirmed spec to `design-spec.md`, copy its confirmed **Scope settings** into `scope.options` in the state file, and update the state file (`stage: "journeys"`, or `"direction"` when journeys are skipped).
+5. If the session still has a placeholder name and the spec names the project, rename the session to that name. Save the confirmed spec to `design-spec.md`, copy its confirmed **Scope settings** into `scope.options` in the state file, and update the state file (`stage: "journeys"`, or `"direction"` when journeys are skipped).
 
 ## Stage 2b — User journeys (optional)
 
