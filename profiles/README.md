@@ -35,6 +35,7 @@ Add `profiles/<id>/profile.json` and list the `id` in `profiles/index.json`. No 
     }
   ],
   "preview_screen": "What the style preview should show for this platform.",
+  "derive_when_silent": "Optional. How the Brief Agent drafts this platform's requirements from the product when the brief doesn't describe it.",
   "required_screens": ["Screens every product of this type needs, added to the spec as source: profile"],
   "required_states": ["States every product of this type needs"],
   "design_guidance": ["Short rules the Design Agent follows"],

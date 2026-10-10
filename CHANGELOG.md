@@ -2,6 +2,18 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.4.11] - 2026-10-10
+
+### Fixed
+- **A chosen platform could be left out of the user stories.** When the brief described one platform (a signed-in dashboard) and said nothing about another (the product's landing page), the Brief Agent wrote requirements only for what the brief said, so the landing page had no requirements and the Story Agent had nothing to write stories from. Nothing checked that every chosen platform was covered.
+
+### Changed
+- **Every platform in the scope gets requirements.** Where the brief is silent about a platform, the Brief Agent now **derives** its requirements from the product itself (what it is, who it is for, its main features and flows), starting from each profile's new `derive_when_silent` hint (landing page, email, docs, deck, social). Each requirement carries its platform and a basis: `brief`, `derived` or `profile`, so you can see which are your brief's and which are the agent's proposal. If a platform has no brief-sourced requirements, it asks you before drafting them.
+- **A Platform coverage table** in the spec shows, per platform, how many requirements come from the brief, are derived, or come from the profile. The Orchestrator won't show you a spec that skips a chosen platform, and tells you which platforms' requirements were derived.
+- **Stories per platform.** The Story Agent writes stories for every platform (including visitor stories for a landing page and cross-platform journey stories such as landing page → sign-up → dashboard), groups them by platform, marks their basis, and reports stories per platform. The Orchestrator won't show a story list that skips a chosen platform.
+- **Flows can cross platforms.** The spec's flows now include journeys from one platform to another.
+- The Coverage report lists results per platform, so a platform with nothing designed shows up as Missing.
+
 ## [0.4.10] - 2026-10-10
 
 ### Changed

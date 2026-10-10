@@ -101,6 +101,7 @@
     }
   ],
   "preview_screen": "One post in the first chosen format with headline, brand mark and visual.",
+  "derive_when_silent": "When the brief doesn't describe the posts, derive a small set from the product: a launch announcement, a key-feature highlight, and a customer-benefit post, in the chosen formats.",
   "required_screens": [],
   "required_states": [],
   "design_guidance": [

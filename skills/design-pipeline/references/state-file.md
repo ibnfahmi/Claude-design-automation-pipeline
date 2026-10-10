@@ -43,6 +43,7 @@ Written to the client project folder (the session's working directory) after eve
   "brief_source_file": "brief-source.md",
   "spec_file": "design-spec.md",
   "requirements_count": 14,
+  "platform_coverage": {"dashboard": {"brief": 12, "derived": 1, "profile": 4}, "landing-page": {"brief": 0, "derived": 6, "profile": 2}},
   "stories_file": "user-stories.md or null",
   "stories_confirmed": false,
   "design_agent_id": "agent id, valid only in the session that started it",

@@ -32,6 +32,7 @@ Source: <brief / BRD file names>  ·  Spec: design-spec.md  ·  Stories: <user-s
 
 ## Summary
 Requirements: <done> done · <partial> partial · <missing> missing   ·   Added: <profile> standard · <unrequested> unrequested
+By platform: <platform> <done>/<total> · <platform> <done>/<total> (every platform in the scope; a platform with nothing designed is listed as Missing)
 Stories: <done>/<total> fully covered (or "skipped")
 
 ## Done

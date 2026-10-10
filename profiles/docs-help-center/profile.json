@@ -112,6 +112,7 @@
     }
   ],
   "preview_screen": "The help center home: search, popular topics, and category cards.",
+  "derive_when_silent": "When the brief doesn't describe help content, derive a help-center structure from the product's features and flows: getting started, one article group per main feature, account and billing, troubleshooting, and contact support.",
   "required_screens": [
     "Home with search",
     "Category page",
