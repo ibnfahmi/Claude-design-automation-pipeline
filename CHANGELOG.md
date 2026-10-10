@@ -2,6 +2,18 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.4.5] - 2026-10-10
+
+### Fixed
+- **A website reference produced a preview with only its colours.** The reference step measured colours, type, spacing and radii, so a site with an animated illustrated hero and a distinctive button came out as "the same colours on a generic page". On a site that opens with a long preloader it could also measure the loader instead of the real page.
+
+### Changed
+- **The reference step now captures signature elements**, not only tokens: the hero's composition, the primary and secondary button and navigation styles (including hover and pressed states and any inner icon tile), and what moves. It uses screenshots of the loaded page at desktop and mobile widths.
+- **It waits for the real page.** For a website, the Design System Agent waits for the preloader to finish (up to about 60 seconds) before measuring, and says so when the page never finishes loading.
+- **The style preview carries them over.** The preview recreates the hero composition, shows the button and navigation with their hover states, and animates what moves (CSS keyframes and transitions, with a reduced-motion fallback). WebGL, video and 3D scenes can only be approximated, and the preview says which parts were approximated or left out in a "Carried over" panel. The artwork is redrawn in the same style, never copied.
+- **You are told what was captured before you approve.** The approve step lists what the preview carries over and what it could only approximate.
+- The signature elements are saved with the approved tokens (`preflight.preview.signature`) and passed to the Design Agent for the build, and `grounding.md` explains why colours and type are not the whole look.
+
 ## [0.4.4] - 2026-10-10
 
 ### Changed

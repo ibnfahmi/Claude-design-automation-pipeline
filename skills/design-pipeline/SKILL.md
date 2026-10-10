@@ -72,7 +72,7 @@ Before Stage 3, if a background Design System build is still running, tell the u
 
 ## Stage 3 — Design
 
-Start `design-agent` in build mode with: the full confirmed spec, `user-stories.md` (if any), the platform scope (viewports; the first chosen viewport is the primary one) with each platform's `design_guidance` and the reference file paths listed above, the design direction from preflight (`system` + the design system's title and link, `reference` + the approved tokens and reference, `creative` + the approved tokens, or `canvas` + the link), and "round 1". Store its agent ID in the state file as `design_agent_id`.
+Start `design-agent` in build mode with: the full confirmed spec, `user-stories.md` (if any), the platform scope (viewports; the first chosen viewport is the primary one) with each platform's `design_guidance` and the reference file paths listed above, the design direction from preflight (`system` + the design system's title and link, `reference` + the approved tokens, signature elements and reference, `creative` + the approved tokens, or `canvas` + the link), and "round 1". Store its agent ID in the state file as `design_agent_id`.
 
 When it returns, save `design_url`, `interaction_list`, increase `review_round`, and write `design-manifest.json` from its ARTBOARDS list (format in `references/state-file.md`). Then go to Stage 3b.
 

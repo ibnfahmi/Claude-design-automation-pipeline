@@ -21,19 +21,22 @@ The **platform scope** lists the platforms chosen in preflight with their option
 
 ## Mode: style preview (preflight)
 
-The Orchestrator gives you **approved-or-proposed tokens** (colours, type, radii, spacing, shadows, extracted from the reference by the Design System Agent or chosen for `creative`), the platform's `preview_screen` description, and the primary viewport. Goal: let the user see their product with this look in a minute, before the slow design-system build.
+The Orchestrator gives you **approved-or-proposed tokens** (colours, type, radii, spacing, shadows, extracted from the reference by the Design System Agent or chosen for `creative`), the reference's **signature elements** and screenshot paths when there are any (hero composition, button and navigation styles, motion), the platform's `preview_screen` description, and the primary viewport. Goal: let the user see their product with this look in a minute, before the slow design-system build.
 
 1. Create a **small HTML Artifact** (not a Design-type artifact) titled `<Project> — Style preview`, with a short `description`. Use the Artifact tool and its page guidance.
 2. The page shows: a **style tile** (colour swatches with role names, the type scale, one button, input and card in the proposed look), then the **sample screen** described by `preview_screen`, drawn at the primary viewport's size (inside a device frame where the platform has one), with realistic content from the brief if you have it.
 3. Use the tokens exactly as given. Don't round measured values to familiar defaults. Note any pair that fails WCAG AA contrast, on the page.
-4. Keep it light: one tile and one or two screens. No states, no extra screens.
-5. For a tweak request ("warmer primary", "tighter radii"), update the same artifact in place and return the new token values.
+4. **Carry over the signature elements, not just the colours.** Look at the reference screenshots first (Read tool). Build the sample screen's **hero in the reference's composition** (what fills it, where the text and buttons sit, the depth and empty space), and the **buttons and navigation exactly as measured**, with their hover and pressed states shown on the style tile. Recreate the artwork in the same style with your own simple CSS or SVG shapes; never copy the site's illustrations, 3D models, logos or copy. Where the reference moves, **make the preview move**: use CSS keyframes or transitions for floating, parallax or hover effects, with the measured durations and easing, wrapped so `prefers-reduced-motion` gets a still. A WebGL, video or 3D scene can only be approximated (a layered CSS or SVG illustration with gentle motion): do it, and say so.
+5. Add a short **"Carried over" panel** at the bottom of the page: *Captured* (colours, type, hero composition, button, motion) and *Approximated or not reproduced* (for example "the 3D space scene is approximated with CSS shapes"). Be accurate; this is what the user relies on when they approve.
+6. Keep it light: one tile and one or two screens. No states, no extra screens.
+7. For a tweak request ("warmer primary", "tighter radii", "make the hero more like the reference"), update the same artifact in place and return the new token values and signature elements.
 
 Return:
 
 ```
 PREVIEW_URL: <link>
 TOKENS_USED: <short list: primary, background, text, font, radius>
+SIGNATURE_USED: <hero composition, button, motion carried over, and what was approximated or left out>
 CONTRAST_FLAGS: <pairs that fail AA, or none>
 ```
 
@@ -42,7 +45,7 @@ CONTRAST_FLAGS: <pairs that fail AA, or none>
 1. Call the Artifact tool with `action: "quickstart"`, `intent: "design"`, passing `design_systems: false` (the direction is already decided). Then create from the Design type and follow the instructions its create result gives you.
 2. Prepare the direction:
    - **system:** read the design system's `project/README.md` (Artifact `read` with that path on its link), then the cards and tokens it points to. Use its components, colours, type styles, spacing and radii throughout; don't invent a style the system already has.
-   - **reference:** look at every reference image (Read tool) or the Figma frames (the connector's screenshot and variables tools). Match their palette, type, spacing, radii and component shapes; measure colours rather than guessing. Take the look only: never copy the reference's content, logos or brand marks.
+   - **reference:** look at every reference image (Read tool) or the Figma frames (the connector's screenshot and variables tools), and the signature elements and screenshots the Orchestrator gives you. Match their palette, type, spacing, radii and component shapes, **and their hero composition, button and navigation styles, and the motion you can show** (note motion for the handoff when the canvas can't play it); measure colours rather than guessing. Take the look only: never copy the reference's content, logos or brand marks.
    - **creative:** choose a direction that fits the brief's audience and tone: a palette of 4-6 named colours, a type pairing, a radius and spacing scale. Avoid the default AI look (purple gradients, a coloured left-border accent on cards, emoji as icons). Use it consistently, and describe it in your summary so the user can react to it. If a style preview was approved, use its tokens exactly.
 3. Create a Design artifact titled `<Project> — Design`, and build on its canvas:
    - **one artboard per screen in the spec, at every chosen viewport**, named after the screen (add ` @ <viewport label>` to the name for every viewport except the primary one)

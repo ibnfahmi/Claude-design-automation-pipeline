@@ -12,7 +12,9 @@ The slow part of building a design system is the artifact itself, so the work is
 
 ## Mode: tokens (fast, no artifact)
 
-Extract the look as numbers, and return them. Don't create any artifact in this mode. Take at most a few minutes.
+Extract the look, and return it as numbers **and signature elements**. Don't create any artifact in this mode. Take at most a few minutes (a slow-loading site may take longer; see "Reading a website").
+
+Colours and type alone don't make a look. A reference also has **signature elements**: the way the hero is composed, how the primary button and navigation are built, and what moves. If you return only a palette, the preview comes out as "the same colours on a generic page". Capture both.
 
 Read the `grounding.md` file the Orchestrator gives you first. Ground the tokens in real measurements, not impressions:
 
@@ -21,6 +23,17 @@ Read the `grounding.md` file the Orchestrator gives you first. Ground the tokens
 - **Spacing and radii:** measure the repeated gaps and corner radii. Snap only to what the reference shows (keep 6px if it's 6px).
 - **Shadows:** only if clearly visible; describe what you measured.
 - **Contrast:** compute the ratio of every text and background pair. Keep a failing pair from the source, but flag it.
+
+### Reading a website
+
+1. **Wait for the real page, not the loader.** Many sites open on a preloader (a logo, a progress bar, floating shapes) for 10 to 40 seconds while heavy assets (WebGL, 3D models, fonts) load. Measuring that screen gives the loader's colours, not the site's. Open the URL in the built-in browser, then wait and re-check until the loader is gone: the main heading and the primary button are visible, and network activity has settled. Allow up to about 60 seconds. If it never finishes, say so and report that nothing below was measured from the real page.
+2. **Take screenshots** of the loaded page: the first screen at about 1440 wide, the same at about 390 wide, and one or two scroll positions. Save them in the current folder (for example `reference-shots/`), and look at them. These are your evidence for composition and motion; computed styles can't show a WebGL scene.
+3. **Hero composition.** Describe what fills the first screen: a full-bleed illustration, photo, video, WebGL or canvas scene, gradient, or plain background; where the heading, subheading and buttons sit; how much is empty; the depth layers.
+4. **Components.** Measure the primary and secondary buttons and the navigation, including **hover and pressed** states where you can trigger them: shape and radius, fill, text colour, border, shadow or glow, padding, any inner icon or arrow tile, and the transition. Measure the nav links and any pill or outline button there.
+5. **Motion.** List what moves and how: running CSS or Web Animations (`document.getAnimations()`), a canvas or WebGL scene (a canvas element, or scripts such as three, theatre, gsap, lottie, rive, spline), video, scroll or hover effects, and the page-load sequence. Note durations and easing where the page reveals them.
+6. Classify each signature element for the preview: **reproducible** (plain CSS, SVG or a static image), **approximate** (WebGL, video, 3D: it can only be suggested with a still or a CSS-animated approximation), or **not reproducible** (give the reason). Be honest. Never present an approximation as the real thing.
+
+Take the look only: never copy the site's artwork, illustrations, logos, 3D models, copy or brand marks. Describe them so they can be re-drawn in the same style.
 
 Return:
 
@@ -39,6 +52,14 @@ spacing: 4, 8, 12, 16, 24, 32, 48
 radii: 6, 8, 12
 shadows: sm = 0 1px 2px rgba(16,24,40,.05) | none seen
 contrast_flags: <pairs below 4.5:1, or none>
+SIGNATURE (websites and screenshots; omit for Figma):
+  loaded_page: yes | no (reason) | waited <n>s past a loader
+  screenshots: reference-shots/desktop.png, reference-shots/mobile.png
+  hero: <composition in 2-3 sentences: what fills it, where the text and buttons sit, depth layers>
+  primary_button: <shape, fill, text, border/shadow, inner icon tile, hover, transition>
+  secondary_button / nav: <same>
+  motion: <what moves and how, with durations where known>
+  reproducibility: hero = approximate (WebGL scene) | motion = reproducible (CSS float) | ...
 NOT_EXTRACTED:
 - one line each (other themes, exact fonts, components, logos)
 ```

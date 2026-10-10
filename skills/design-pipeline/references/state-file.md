@@ -24,7 +24,8 @@ Written to the client project folder (the session's working directory) after eve
     "preview": {
       "url": "https://claude.ai/artifact/… or null",
       "approved": true,
-      "tokens": {"colours": {}, "type": {}, "spacing": [], "radii": [], "shadows": {}}
+      "tokens": {"colours": {}, "type": {}, "spacing": [], "radii": [], "shadows": {}},
+      "signature": {"hero": "", "primary_button": "", "motion": "", "screenshots": [], "reproducibility": ""}
     }
   },
   "scope": {
