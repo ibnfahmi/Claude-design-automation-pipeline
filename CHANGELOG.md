@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.6.8] - 2026-10-11
+
+### Added
+- **MotionSites in the reference links.** The "A website URL" reference choice now also lists MotionSites (https://motionsites.ai/) next to Awwwards, Behance and Muzli, and the Design System Agent treats it like the other showcase sites: a listing page is not the reference, so it follows through to one project or site.
+
 ## [0.6.7] - 2026-10-11
 
 ### Fixed
