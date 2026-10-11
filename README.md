@@ -19,6 +19,8 @@ Release notes are in [CHANGELOG.md](CHANGELOG.md). To add a platform, see [profi
   marketplace.json       lets the team install it from this repo
 skills/
   design-pipeline/       /design-pipeline — the Orchestrator
+  design-journeys/       /design-journeys — create user journeys on demand
+  design-audit/          /design-audit — audit a running app or project on demand
     SKILL.md
     references/
       preflight.md       tool checks, starting point and brief, platform scope and screen sizes

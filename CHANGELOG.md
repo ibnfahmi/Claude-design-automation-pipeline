@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.6.4] - 2026-10-11
+
+### Added
+- **Two skills to use by hand, outside the pipeline.** `/design-journeys` creates, redoes or extends user journeys for a brief, spec or existing project (it can write the spec first if there is none), checks every platform is covered, and saves `user-journeys.md` for review. `/design-audit` runs the Auditor on any running app, URL or code folder (from the pipeline or not), at the chosen screen sizes, with a choice of full or narrowed checks, saves `audit-round-<n>.md`, and can then fix the critical and major issues on request. Both read and update `design-pipeline-state.json` when it exists, without changing its stage.
+
 ## [0.6.3] - 2026-10-11
 
 ### Added
