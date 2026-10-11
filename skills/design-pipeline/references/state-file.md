@@ -8,6 +8,7 @@ Written to the client project folder (the session's working directory) after eve
   "stage": "review",
   "updated_at": "2026-10-03T10:30:00Z",
   "skip_journeys": false,
+  "skip_audit": false,
   "starting_point": "brief | code | figma",
   "existing_source": "folder path or Figma link, only when starting_point is code or figma",
   "preflight": {

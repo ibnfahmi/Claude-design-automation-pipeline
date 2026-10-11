@@ -19,7 +19,7 @@ The deliverable is a **working code project** (`code/` in the client folder), no
 
 Models are set per agent in each agent file's frontmatter. See `MODEL-OPTIMIZATION.md` and `AGENT-MODEL-REFERENCE.md` for the reasoning and how to override. Cost figures in those documents are estimates, not measurements.
 
-Never skip a stage (except the user journeys step, which is optional: see Stage 2b), and never run the final stages without an explicit approval from the user. Before each stage, tell the user in one line which stage is running.
+Never skip a stage (except the user journeys step and the audit, which are optional: see Stage 2b), and never run the final stages without an explicit approval from the user. Before each stage, tell the user in one line which stage is running.
 
 **Where the platform profiles are.** `profiles/` is in the plugin root: from this skill's base directory, `../../profiles/`. `profiles/index.json` lists the platforms; each `profiles/<id>/profile.json` holds its preflight questions, required screens and states, design guidance, `code_target` (what the platform is built as) and audit checks (format in `profiles/README.md`). Pass subagents the absolute paths and the profile contents they need.
 
@@ -31,7 +31,7 @@ Never skip a stage (except the user journeys step, which is optional: see Stage 
 - **Handoff Agent**: `_shared/references/handoff-spec.md` and `_shared/references/polish.md`.
 Tell each agent to read only the files you list.
 
-**Flags.** If the invocation includes `--skip-journeys` (or the user says to skip the journeys), set `skip_journeys: true` in the state file and don't ask the Stage 2b question. Nothing else changes except Stage 2b.
+**Flags.** If the invocation includes `--skip-journeys` (or the user says to skip the journeys), set `skip_journeys: true`; if it includes `--skip-audit`, set `skip_audit: true`. Each flag removes its question from the Stage 2b question. Nothing else changes except Stage 2b and Stage 3b.
 
 **Session name.** Always name the session after the project, so runs are easy to tell apart in the session list. Rename it with the session-title tool (`set_session_title` with `session_id: "self"`; find it with ToolSearch if it is deferred). If the tool isn't available (for example in a terminal session), skip this silently and mention once that `/rename` does the same.
 - **Name known:** use the project name from the user's message, the brief, the existing code project's name or the Figma file's name, in a short readable form (for example `Acme onboarding app`).
@@ -63,13 +63,20 @@ The brief itself is requested **in preflight, as soon as the user picks "A brief
    Show the user the spec, especially the **Platform coverage**, **Scope settings**, **Requirements** and **Interactions and states** tables, and ask for confirmation or edits. Settings read from the brief and ones that fell back to a default are labelled, so the user can correct any of them. Apply edits by resuming the same agent. Requirement IDs stay stable across edits.
 5. If the session still has a placeholder name and the spec names the project, rename the session to that name. Save the confirmed spec to `design-spec.md`, copy its confirmed **Scope settings** into `scope.options` in the state file, and update the state file (`stage: "journeys"`, or `"direction"` when journeys are skipped).
 
-## Stage 2b — User journeys (optional)
+## Stage 2b — Optional steps, then user journeys
 
-The journeys step is **optional, and the user decides each time**. Unless `skip_journeys` is already `true` (from the `--skip-journeys` flag or an earlier answer on a resumed run), ask with AskUserQuestion once the spec is confirmed: *"Write user journeys for you to review before design starts?"* (header: `Journeys`), with two options:
-1. **Yes, write the journeys (Recommended)** — "Step-by-step flows for every platform, with error paths and exits. You review them first, and the coverage report checks the app against every step."
-2. **No, skip them** — "Go straight to the style step. The app takes its flows from the spec, and coverage is checked against the requirements only. Faster, with less to review."
+Two steps are **optional, and the user decides for each project**: the user journeys and the audit. Both can use a lot of tokens, so say so. Once the spec is confirmed, ask both in **one** AskUserQuestion call (skip a question whose flag was passed or whose answer is already saved):
 
-Save the answer as `skip_journeys` in the state file. On **No**, jump to the last paragraph of this stage. On **Yes**, continue:
+1. *"Write user journeys for you to review before design starts?"* (header: `Journeys`)
+   - **Yes, write the journeys (Recommended)** — "Step-by-step flows for every platform, with error paths and exits. You review them first, and the coverage report checks the app against every step. May use a large number of tokens on big products."
+   - **No, skip them** — "Go straight to the style step. The app takes its flows from the spec, and coverage is checked against the requirements only. Saves tokens, with less to review."
+2. *"Run the audit after each build round?"* (header: `Audit`)
+   - **Yes, audit every round (Recommended)** — "Tests the running app at every screen size: usability, accessibility, clicking through every interaction, and code checks. Catches problems early, but may use a large number of tokens each round."
+   - **No, skip the audit** — "No automated testing between rounds; you review the app yourself. The coverage report against your brief still runs, and you can ask for an audit at any time. Saves a lot of tokens."
+
+Save the answers as `skip_journeys` and `skip_audit` in the state file.
+
+On a journeys **No**, jump to the last paragraph of this stage. On **Yes**, continue:
 
 Set `stage: "journeys"`. Start `journey-agent` with the confirmed spec, the platform scope, `brief-source.md` and the absolute path of `_shared/references/user-flows.md`. It saves `user-journeys.md` and returns a summary.
 
@@ -101,12 +108,14 @@ When it returns, save `dev_url`, `share_status` from its SHARE line, `interactio
 
 ## Stage 3b — Audit and coverage (every round)
 
-Set `stage: "audit"` and tell the user the app is being tested and compared with the brief. Make sure the dev server is running (the preview tool, name `design-app`). Start `design-auditor` and `coverage-agent` **in parallel** (both in the same turn; they only read).
+Set `stage: "audit"` and tell the user the app is being compared with the brief (and tested, unless `skip_audit` is true).
+
+**If `skip_audit` is true:** start only `coverage-agent` (below), do not start `design-auditor`, and have the Design Agent open `share/index.html` through `file://` and report the file-open result in its SHARE line (the Auditor would normally do this). Say in one line that the audit is off and that the user can ask for it any time ("run the audit"), in which case run the full Stage 3b once for the current build. Everything below that mentions the audit applies only when it ran. Make sure the dev server is running (the preview tool, name `design-app`). Start `design-auditor` (unless skipped) and `coverage-agent` **in parallel** (both in the same turn; they only read).
 
 - `design-auditor` gets: `dev_url`, `code/`, the spec, the interaction list, the design direction, the platform scope with each platform's profile `auditor.checks` and the absolute paths of its `auditor.references`, and the round number.
 - `coverage-agent` gets: `dev_url`, `code/`, `brief-source.md` (and any BRD files), the spec, `user-journeys.md` if it exists, `design-manifest.json`, the platform scope, and the round number.
 
-When both return, save a summary of each in the state file (`audits` and `coverage`: round, counts, report file). Neither agent changes the code; you decide with the user what to fix. Go to Stage 4.
+When they return, save a summary of each in the state file (`audits` and `coverage`: round, counts, report file). Neither agent changes the code; you decide with the user what to fix. Go to Stage 4.
 
 ## Stage 4 — Review loop
 
@@ -116,9 +125,9 @@ Give the user:
 - the running app (the preview opens in the built-in browser pane; give the address too, so they can open it in their own browser), the gallery at `/frames`, and the journeys at `/journeys`
 - the **review page** link, if one is published, with how to comment on it (select what to change, leave a comment, send the thread to Claude: it is applied to the code automatically, no need to say 'done')
 - the interaction list
-- the **audit** result: pass/fail, interactions passed, platform checks passed, counts by severity, and the critical and major issues in one line each (full report: `audit-round-<n>.md`)
+- the **audit** result (only if it ran; otherwise say it is off and can be run on request): pass/fail, interactions passed, platform checks passed, counts by severity, and the critical and major issues in one line each (full report: `audit-round-<n>.md`)
 - the **coverage** result: *Done / Missing / Added* counts, each Missing requirement and each "Added (unrequested)" item in one line (full report: `coverage-round-<n>.md`)
-- this instruction: *"Try the app and tell me what to change, comment on the review page, or edit the code in `code/` yourself. When you're done, reply 'done' here (or run `/design-pipeline` in a new session to resume), or say 'approved' to finish. Tell me which audit issues to fix (for example 'fix all critical and major'). By default, the critical audit issues and every missing **must** requirement go into the next round. For each unrequested addition, tell me to keep it (I'll add it to the spec) or remove it."*
+- this instruction: *"Try the app and tell me what to change, comment on the review page, or edit the code in `code/` yourself. Say 'run the audit' for a full test of the current build. When you're done, reply 'done' here (or run `/design-pipeline` in a new session to resume), or say 'approved' to finish. Tell me which audit issues to fix (for example 'fix all critical and major'). By default, the critical audit issues and every missing **must** requirement go into the next round. For each unrequested addition, tell me to keep it (I'll add it to the spec) or remove it."*
 
 Set `stage: "review"` in the state file and **end your turn**. Do not poll.
 
@@ -128,7 +137,7 @@ When the user returns (by replying here, or by running `/design-pipeline` and ch
 2. Take anything the user typed in this session into account. If a review page is published, read any open comment threads once and handle them (`references/review-page.md`); comments sent to Claude are normally handled the moment they arrive.
 3. Decide:
    - **Explicit approval** ("approved", "ship it", or equivalent) and no unresolved change requests:
-     - If the latest audit has **critical** issues that weren't fixed, or the latest coverage report has **must** requirements still Missing, list them and ask once: *"Approve anyway, or fix these first?"* Approve only on an explicit "approve anyway".
+     - If the latest audit (if one ran) has **critical** issues that weren't fixed, or the latest coverage report has **must** requirements still Missing, list them and ask once: *"Approve anyway, or fix these first?"* Approve only on an explicit "approve anyway".
      - Then set `approved: true`, go to Stage 5.
    - **Anything else** — feedback, edits, "looks good but…" → it's a change request. Summarise the changes back to the user in a few bullets, including the audit issues and coverage gaps to fix, and what to do with each unrequested addition. A kept addition is added to the spec as a new requirement (resume the Brief Agent; new `R-` ID at the end) and, if the new item changes a flow, to the journeys if they exist (resume the Journey Agent). Then resume the Design Agent (SendMessage to `design_agent_id`) with the feedback,  those audit issues, the coverage gaps, the removals, the note "keep the user's direct code edits", and the round number. If the agent can't be resumed (for example a new session), start a fresh `design-agent` with the spec, the design direction, the current `code/` project, and the feedback. Then run Stage 3b again and repeat Stage 4.
 
@@ -151,7 +160,7 @@ On yes: run the Figma connector check (call its `whoami`; if it isn't connected,
 Set `stage: "done"`. Give the user:
 - the path to the code project (`code/`), how to run it (`npm install`, `npm run dev`), and the git history of the rounds
 - **the file to send to reviewers:** `share/index.html` (or `share.zip` for the plain HTML stack, to unzip then open), with its test result. If the stack cannot make one (Next.js, some others), say so plainly and offer a static export or a hosted link; never claim a share file works unless the file-open test passed
-- a short summary: platforms built, frames built, journeys walkable, the final audit result and the final coverage result (Done / Missing / Added)
+- a short summary: platforms built, frames built, journeys walkable, the final audit result (or "audit skipped") and the final coverage result (Done / Missing / Added)
 - the review page link, if one was published (it stays private unless they share it)
 - the Figma file link, if one was exported
 - anything that needs a manual touch (for example mock data that needs a real backend, placeholder content marked as needing real data)

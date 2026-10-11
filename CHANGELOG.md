@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.6.1] - 2026-10-11
+
+### Changed
+- **The audit is optional.** After you confirm the spec, one question now asks about both optional steps, each with a short note that it might use a large number of tokens: write user journeys (yes/no), and run the audit after each round (yes/no). Skipping the audit leaves the coverage report against your brief running every round; you can say "run the audit" at any time for a full test of the current build. `--skip-audit` skips the question. When the audit is off, the Design Agent runs the share file-open test.
+
 ## [0.6.0] - 2026-10-10
 
 ### Changed
