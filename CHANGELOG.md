@@ -2,6 +2,15 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.6.6] - 2026-10-11
+
+### Added
+- **Optional stress test with worst-case data.** On request ("stress test it", or the new option in `/design-audit`), the Design Agent adds dev-only worst-case fixtures next to the demo data and a `?data=worst` switch, and the Auditor tests every data-driven screen against realistic worst cases (long hyphenated names, 60-character emails, one-letter and emoji names, empty lists, exactly one item, 1,000 rows, missing fields) at the component's real width, 320px, 200% zoom, dark mode and RTL. Each break comes with its failure signature, cause and fix. Never part of the default round; the switch never ships in `share/`. New reference `stress-test.md`, distilled from Emil Kowalski's `break-ui`.
+- **More UI checks in the audit.** `ui-defects.md` gains a component-feel section (pressed feedback, no `scale(0)` entrances, popovers growing from their trigger, hover gated to real hover devices, only `transform` and `opacity` animated, faster exits, reduced motion) and reflow at 200% zoom plus a keyboard-trap check.
+
+### Fixed
+- The `/design-audit` question now offers four options at most, as the question tool allows; the narrower audits moved under Other.
+
 ## [0.6.5] - 2026-10-11
 
 ### Added

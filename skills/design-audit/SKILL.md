@@ -21,15 +21,21 @@ Tell the user in one line what you found and will test.
 
 - Use `scope` from the state file when there is one. Otherwise ask which platform(s) this is, by clicking: AskUserQuestion with the families from `profiles/index.json`, then the platforms. For each chosen platform, ask its viewports from `profiles/<platform>/profile.json` (the option marked `viewport: true`: first four `choices`, others via Other). Skip a question the user already answered in their message.
 - The **primary viewport** is the first chosen one.
-- Collect the reference files: `../../profiles/_shared/references/code-conventions.md`, `share-build.md`, `ui-defects.md`, and every file listed in `auditor.references` of each chosen platform, as absolute paths.
+- Collect the reference files: `../../profiles/_shared/references/code-conventions.md`, `share-build.md`, `ui-defects.md`, `stress-test.md` (only for the stress test), and every file listed in `auditor.references` of each chosen platform, as absolute paths.
 
 ## 3. What the audit covers
 
-Ask once with AskUserQuestion (header `Audit`, multi-select, skip if the user already said): **Full audit (Recommended)** — usability, accessibility, visual UI defects, platform checks, interactions, code checks; or narrow it to **UI defects only** (overflow, overlap, alignment, broken images, responsive breakage and more), **Accessibility only**, **Interactions only** (click-through of every trigger), **Code checks only**. If a spec or a manifest exists, the Auditor also checks required screens and states; if not, it audits what it finds by crawling the app's navigation.
+Ask once with AskUserQuestion (header `Audit`, skip if the user already said), up to four options:
+1. **Full audit (Recommended)** — usability, accessibility, visual UI defects, platform checks, interactions, code checks.
+2. **UI defects only** — overflow, overlap, alignment, broken images, responsive breakage and component feel; the cheapest pass.
+3. **Stress test (worst-case data)** — long names, 60-character emails, empty lists, exactly one item, 1,000 rows, RTL and 200% zoom. Uses more tokens; adds dev-only worst-case fixtures to the project first (`stress-test.md`).
+4. **Other** — the user types it: accessibility only, interactions only, code checks only, or a combination.
+
+If a spec or a manifest exists, the Auditor also checks required screens and states; if not, it audits what it finds by crawling the app's navigation.
 
 ## 4. Run it
 
-Start `design-automation:design-auditor` with: the address, the code folder, the manifest and spec if any, the interaction list if any (or "discover them"), the design direction if known (else "none"), the platform scope with each platform's `auditor.checks` and the absolute reference paths, the chosen narrowing, and the round number (the next `audit-round-<n>.md` in the folder). It saves `audit-round-<n>.md` and returns its summary.
+Start `design-automation:design-auditor` with: the address, the code folder, the manifest and spec if any, the interaction list if any (or "discover them"), the design direction if known (else "none"), the platform scope with each platform's `auditor.checks` and the absolute reference paths, the chosen narrowing (`stress: true` for the stress test, after the Design Agent has added the worst-case fixtures: resume it in stress-fixtures mode, or edit the project's fixtures yourself outside the pipeline), and the round number (the next `audit-round-<n>.md` in the folder). It saves `audit-round-<n>.md` and returns its summary.
 
 Show the user: the result (pass / pass with issues / fail), interactions passed, platform checks passed, counts by severity, and the **critical and major issues one line each** with the screen and the recommended fix. Point to the full report file. If the app has a `share/` build, the file-open test result is included.
 

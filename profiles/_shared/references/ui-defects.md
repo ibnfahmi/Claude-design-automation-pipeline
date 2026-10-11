@@ -61,6 +61,22 @@ Usability and accessibility are covered elsewhere. This file is the **visual bug
 **Load and motion glitches**
 - Flash of unstyled or unthemed content, content that jumps as fonts or images load, animations that never settle or loop without purpose, transitions that stutter or cut, scroll that jerks, double scrollbars.
 
+**Component feel (interaction polish)**
+Distilled from Emil Kowalski's design-engineering guidance (see `NOTICE.md`). Check in the rendered app and in the CSS; report as minor unless noted.
+- **Pressable elements react on press:** buttons and other pressable controls have a pressed state (a subtle `scale(0.95–0.98)` on `:active` with a short transition, or an equivalent). A control with no pressed feedback feels dead.
+- **Nothing enters from `scale(0)`:** entrances start from about `scale(0.9–0.95)` combined with opacity, not from nothing.
+- **Popovers, menus and tooltips grow from their trigger** (`transform-origin` at the trigger side), not from the centre. Modals are the exception and stay centred.
+- **Hover effects only where hover exists:** hover styling and hover-only reveals are gated behind `@media (hover: hover) and (pointer: fine)`; nothing important is reachable only by hover.
+- **Tooltips:** delay before the first one; the next tooltip next to it opens at once without the entrance animation.
+- **Only `transform` and `opacity` move** in animations; layout properties (`width`, `height`, `top`, `left`, `margin`) are not animated, and `transition: all` is not used. Rapidly triggered UI uses transitions (which retarget) rather than keyframes (which restart).
+- **Exits are faster than enters** for system responses (about 200ms out against 300ms or more in); deliberate, user-driven actions may be slower on press and quick on release.
+- **Staggered lists** use a short stagger (about 30–80ms per item), not everything at once and not a slow cascade.
+- **Reduced motion:** with `prefers-reduced-motion: reduce`, movement and position animation is removed or replaced by a fade; opacity and colour changes that aid understanding stay. Large movement that ignores the setting is **major**.
+
+**Reflow and zoom**
+- At **200% browser zoom** (or a 400% equivalent at 320px width) content reflows without horizontal scrolling or loss of function, and nothing overlaps; fixed heights and `px` font sizes that clip enlarged text are findings (major).
+- No keyboard trap: Tab can leave every component, and Escape closes dialogs and menus. A trap is **critical**.
+
 ## Severity
 
 - **Critical:** content unreadable, hidden or unreachable; a control that can't be used because it is covered or off-screen; blank or broken primary screen.

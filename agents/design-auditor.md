@@ -72,6 +72,10 @@ If `polish.md` is among your references, finish with a **polish pass**: concentr
 
 Hunt for things that look wrong or broken in the rendered UI, following `ui-defects.md` (the Orchestrator gives you its path with your other references): overflow and clipping, overlap and stacking, alignment and spacing, typography, colours and surfaces, images and media, component consistency, responsive breakage, RTL and localisation problems, placeholder content, and load or motion glitches. Test every frame at **every chosen viewport plus 320, 768 and 1280**, run its measurement script with `javascript_tool` on each, confirm each hit on a screenshot, and look at a screenshot of every frame at the primary viewport for what a script can't see (alignment, rhythm, balance, consistency between screens). Report each as `[severity] UI: <Screen / State> @ <width> — <what and where> → <fix>`, with the severities defined in that file. A defect only on one of the extra widths (320, 768, 1280) is still a finding if it breaks the layout, but one level lower when that width is not among the chosen viewports.
 
+## 6c. Stress test (only when the Orchestrator says `stress: true`)
+
+Follow `stress-test.md`. The Design Agent has already added dev-only worst-case fixtures and a `?data=worst` switch (also a small segmented control, Demo data / Worst case); open the data-driven frames (lists, tables, cards, profile headers, forms, anything that shows data) with the worst-case data at the component's real container width, at 320px, at the widest layout, at 200% zoom, and in dark mode and RTL when the product has them. Compare against the demo data. Report each break with its signature, cause and fix as in that file, and map Broken, Ugly and Fragile to critical, major and minor. Don't change anything. Stay within the data-driven frames; a stress test of static screens is wasted tokens.
+
 ## 7. Code checks
 
 Read `code-quality.md` and test the project against it:
@@ -98,6 +102,7 @@ RESULT: pass | pass with issues | fail      (fail = any critical issue)
 INTERACTIONS: <passed>/<total> passed
 SHARE: <pass | pass with issues | fail | not verified | not supported>
 COUNTS: critical <n> · major <n> · minor <n>
+STRESS: <not run | n breaks: broken <n> · ugly <n> · fragile <n>, across <n> frames>
 UI_DEFECTS: <n> across <n> frames (overflow <n> · overlap <n> · alignment <n> · type <n> · images <n> · components <n> · responsive <n> · content <n> · other <n>)
 PLATFORM_CHECKS: <passed>/<total> passed across <platforms>
 ISSUES:

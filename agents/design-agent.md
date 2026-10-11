@@ -87,6 +87,12 @@ The project in `code/` already contains the earlier phases. The Orchestrator giv
 3. Record `feature` and `phase` on every new frame. Don't rebuild or restyle earlier frames unless a new feature needs a change there (say which).
 4. Run the quality gates, rebuild `share/`, check the new and touched frames in the browser, and commit `Phase <n>: <summary>`. Return the usual output block, with FRAMES listing only the new or changed frames.
 
+## Mode: stress fixtures (only when the user asked for a stress test)
+
+The Orchestrator asks for this once, before the Auditor's stress pass. Read `stress-test.md`. For every data-driven frame (lists, tables, cards, profile headers, forms, anything that renders data), add a **worst-case fixture** next to the demo data, shaped exactly like it and entering through the same fixtures file or mock, built from the project's real limits (form `maxLength`, mock API limits) and the plausible values in that file. Spread the failures across the first rows of each list. Add the extra cases that aren't one dataset: empty, exactly one item, and a realistic maximum.
+
+Add the switch `?data=worst` (read where the fixture is chosen) and a small plain segmented control, **Demo data / Worst case**, fixed at the bottom centre of the review routes. It is **dev-only**: leave it out of `share/`, the review page and any production build. Don't change the components themselves, and keep the worst-case fixtures afterwards as a regression test. Commit `Stress fixtures` and return the usual output block with the list of frames that now have worst-case data.
+
 ## Mode: revision round
 
 The Orchestrator sends you the user's comments (including comment threads from the review page, each with an id), a summary of the changes wanted, the audit issues the user chose to fix, the **coverage gaps** to close (requirements marked Missing in the coverage report), and any "Added (unrequested)" items the user wants removed.
