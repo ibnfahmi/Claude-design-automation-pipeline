@@ -68,6 +68,10 @@ Then apply the hierarchy part of the visual critique reference to each screen: e
 
 If `polish.md` is among your references, finish with a **polish pass**: concentric radii, optical alignment, shadows versus borders, image outlines, icon stroke and outline/fill states, and the two-ways-for-one-detail check. Report polish findings as **minor**, with one exception: a state change carried by motion alone, with no static cue (colour, icon or label), is **major**. A deliberate, consistent convention that differs from the reference (or the design system's own value) is not a finding. Forms, error, loading and feedback states, chart rules, dark mode and localisation checks come from the matching reference files when they are listed; test the design against each listed file.
 
+## 6b. UI defects (visual bugs)
+
+Hunt for things that look wrong or broken in the rendered UI, following `ui-defects.md` (the Orchestrator gives you its path with your other references): overflow and clipping, overlap and stacking, alignment and spacing, typography, colours and surfaces, images and media, component consistency, responsive breakage, RTL and localisation problems, placeholder content, and load or motion glitches. Test every frame at **every chosen viewport plus 320, 768 and 1280**, run its measurement script with `javascript_tool` on each, confirm each hit on a screenshot, and look at a screenshot of every frame at the primary viewport for what a script can't see (alignment, rhythm, balance, consistency between screens). Report each as `[severity] UI: <Screen / State> @ <width> — <what and where> → <fix>`, with the severities defined in that file. A defect only on one of the extra widths (320, 768, 1280) is still a finding if it breaks the layout, but one level lower when that width is not among the chosen viewports.
+
 ## 7. Code checks
 
 Read `code-quality.md` and test the project against it:
@@ -94,6 +98,7 @@ RESULT: pass | pass with issues | fail      (fail = any critical issue)
 INTERACTIONS: <passed>/<total> passed
 SHARE: <pass | pass with issues | fail | not verified | not supported>
 COUNTS: critical <n> · major <n> · minor <n>
+UI_DEFECTS: <n> across <n> frames (overflow <n> · overlap <n> · alignment <n> · type <n> · images <n> · components <n> · responsive <n> · content <n> · other <n>)
 PLATFORM_CHECKS: <passed>/<total> passed across <platforms>
 ISSUES:
 - [critical] <Screen / State> — <what's wrong> (heuristic or WCAG criterion) → <recommended fix>

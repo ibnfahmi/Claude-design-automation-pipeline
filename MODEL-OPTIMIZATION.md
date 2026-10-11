@@ -32,6 +32,7 @@ Reasonable overrides:
 
 ## History
 
+- **0.6.5:** no model changes; the Auditor (Opus 5.5) gets a UI-defects pass.
 - **0.6.4:** no model changes; the two new skills reuse the Journey Agent (Sonnet 5.5) and the Auditor (Opus 5.5).
 - **0.6.3:** no model changes; the Design Agent gets an add-phase mode.
 - **0.6.2:** no model changes; the Design Agent gets a convert mode.

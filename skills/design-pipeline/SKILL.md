@@ -26,7 +26,7 @@ Never skip a stage (except the user journeys step and the audit, which are optio
 **Reference files.** `profiles/_shared/references/` holds the shared guidance. Resolve these absolute paths once and hand them over as listed:
 - **Design Agent** (all modes): `_shared/references/code-conventions.md`, `_shared/references/share-build.md`, `_shared/references/code-quality.md`, `_shared/references/grounding.md`, plus every file listed in `auditor.references` of each platform in the scope. These are the same thresholds the Auditor will test against, so the first build meets them. In `style preview` mode, when the reference's `rendering` is `webgl` (or the brief asks for a 3D hero), also give it `_shared/references/webgl-3d.md`.
 - **Design System Agent** (`tokens` and `full` modes): `_shared/references/grounding.md`.
-- **Auditor**: `_shared/references/code-conventions.md`, `_shared/references/share-build.md` and the files in `auditor.references` of each platform in the scope (which include `code-quality.md`).
+- **Auditor**: `_shared/references/code-conventions.md`, `_shared/references/share-build.md`, `_shared/references/ui-defects.md` and the files in `auditor.references` of each platform in the scope (which include `code-quality.md`).
 - **Coverage Agent**: `_shared/references/user-flows.md` and `_shared/references/code-conventions.md`.
 - **Handoff Agent**: `_shared/references/handoff-spec.md` and `_shared/references/polish.md`.
 Tell each agent to read only the files you list.

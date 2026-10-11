@@ -1,6 +1,6 @@
 ---
 name: design-audit
-description: Manually audit a running app or code project, on demand, outside the full design pipeline. Tests it at every chosen screen size for usability, accessibility, platform checks and code quality, clicks through every interaction and journey, and saves a severity-ranked audit report. Use when the user runs /design-audit, or asks to audit, test or review a design, site or app they already have (built by the pipeline or not).
+description: Manually audit a running app or code project, on demand, outside the full design pipeline. Tests it at every chosen screen size for usability, accessibility, visual UI defects, platform checks and code quality, clicks through every interaction and journey, and saves a severity-ranked audit report. Use when the user runs /design-audit, or asks to audit, test or review a design, site or app they already have (built by the pipeline or not).
 ---
 
 # Design audit: the Auditor on demand
@@ -21,11 +21,11 @@ Tell the user in one line what you found and will test.
 
 - Use `scope` from the state file when there is one. Otherwise ask which platform(s) this is, by clicking: AskUserQuestion with the families from `profiles/index.json`, then the platforms. For each chosen platform, ask its viewports from `profiles/<platform>/profile.json` (the option marked `viewport: true`: first four `choices`, others via Other). Skip a question the user already answered in their message.
 - The **primary viewport** is the first chosen one.
-- Collect the reference files: `../../profiles/_shared/references/code-conventions.md`, `share-build.md`, and every file listed in `auditor.references` of each chosen platform, as absolute paths.
+- Collect the reference files: `../../profiles/_shared/references/code-conventions.md`, `share-build.md`, `ui-defects.md`, and every file listed in `auditor.references` of each chosen platform, as absolute paths.
 
 ## 3. What the audit covers
 
-Ask once with AskUserQuestion (header `Audit`, multi-select, skip if the user already said): **Full audit (Recommended)** — usability, accessibility, platform checks, interactions, code checks; or narrow it to **Accessibility only**, **Interactions only** (click-through of every trigger), **Code checks only**. If a spec or a manifest exists, the Auditor also checks required screens and states; if not, it audits what it finds by crawling the app's navigation.
+Ask once with AskUserQuestion (header `Audit`, multi-select, skip if the user already said): **Full audit (Recommended)** — usability, accessibility, visual UI defects, platform checks, interactions, code checks; or narrow it to **UI defects only** (overflow, overlap, alignment, broken images, responsive breakage and more), **Accessibility only**, **Interactions only** (click-through of every trigger), **Code checks only**. If a spec or a manifest exists, the Auditor also checks required screens and states; if not, it audits what it finds by crawling the app's navigation.
 
 ## 4. Run it
 

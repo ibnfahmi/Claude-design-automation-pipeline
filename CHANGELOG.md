@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.6.5] - 2026-10-11
+
+### Added
+- **The Auditor now hunts for UI defects.** A new section in the audit and a new reference, `ui-defects.md`, cover what looks wrong in the rendered UI: overflow and clipping, overlap and stacking, alignment and spacing, typography, colours and surfaces, images and media, component consistency, responsive breakage, RTL and localisation problems, placeholder text (`lorem ipsum`, `undefined`, `NaN`), and load or motion glitches. Each frame is tested at every chosen viewport plus 320, 768 and 1280, with a measurement script for the candidates and screenshots to confirm them and to judge what a script can't. The report gets a `UI_DEFECTS` count by category. `/design-audit` can run it alone ("UI defects only").
+
 ## [0.6.4] - 2026-10-11
 
 ### Added
