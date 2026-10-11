@@ -7,6 +7,9 @@ Written to the client project folder (the session's working directory) after eve
   "project": "Acme onboarding app",
   "stage": "review",
   "updated_at": "2026-10-03T10:30:00Z",
+  "phased": false,
+  "current_phase": 1,
+  "phases": [{"n": 1, "features": ["F-0", "F-1", "F-3"], "status": "planned | building | done"}],
   "skip_journeys": false,
   "skip_audit": false,
   "starting_point": "brief | code | figma",
@@ -92,7 +95,7 @@ Written by the Orchestrator after every build round from the Design Agent's FRAM
       "viewport": "iPhone 16 (393x852)",
       "route": "/frames/home--notifications-open",
       "code_file": "src/platforms/mobile-app/pages/Home.tsx",
-      "covers_requirements": ["R-4"],
+      "feature": "F-1", "phase": 1, "covers_requirements": ["R-4"],
       "covers_journeys": ["J1.2"],
       "source": "brief | profile | journey | existing"
     }
@@ -111,6 +114,7 @@ Written by the Orchestrator after every build round from the Design Agent's FRAM
 | `design` | Design Agent building | Stage 3 (restart the round) |
 | `audit` | Auditor and Coverage Agent running | Stage 3b (rerun both) |
 | `review` | Waiting for the user's review | Stage 4, step "When the user returns" |
+| `phase_done` | A phase is built and approved; features remain | Show the next phase's feature selection (`phases.md`) |
 | `handoff` | Approved; optional Figma export started | Stage 6 |
 | `done` | Code (and optional Figma file) delivered | Offer to start a new run |
 

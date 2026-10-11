@@ -77,6 +77,14 @@ Platforms and screen sizes (from the scope), and the audience.
 | R-1 | Dashboard | Users can reset their password by email | brief | "…reset password…" §2.1 | must |
 | R-9 | Landing page | The hero states the product's main value and its primary action leads to sign-up | derived | the product's main flow (R-1, R-2) | must |
 
+## Features
+| ID | Feature | What it is (one line) | Requirements | Size | Depends on | Core |
+|---|---|---|---|---|---|---|
+| F-0 | Foundation | Design tokens, app shell, navigation, base components, sign-in shell | R-20, R-21 | M | none | |
+| F-1 | Password reset | Reset by email, from request to new password | R-1, R-2 | S | F-0 | yes |
+
+(Group every requirement into exactly one feature. A feature is a major product capability a user would name, not a screen. Aim for 6 to 14 features, with `F-0 Foundation` always first; Size is S, M or L for the relative build effort; Core marks the feature that carries the main end-to-end flow. The Orchestrator uses this table to offer a phased build for large projects.)
+
 ## Platform coverage
 | Platform | From the brief | Derived | From the profile | Total |
 |---|---|---|---|---|

@@ -78,6 +78,15 @@ The Orchestrator gives you the target stack and the finished HTML project in `co
 
 Return the usual output block with `CODE_DIR: code-<stack>/` and a FRAMES list that matches the manifest one to one.
 
+## Mode: add phase (phased builds, Phase 2 and later)
+
+The project in `code/` already contains the earlier phases. The Orchestrator gives you the features of the new phase (and the ones still deferred), the spec and the journeys for the new features.
+
+1. Read the existing project first (`git log`, `git status`, the design system, the component folder, the frame registry). **Keep the design language, tokens, components and conventions**; reuse components, don't duplicate them. Keep the user's direct edits (`git diff`).
+2. Build only the new features' screens, states and interactions, with real behaviour and mock data, plus their frames in the registry, the gallery and `/journeys`. Turn the **Planned** navigation entries for these features into the real ones; leave entries for features that are still deferred as visibly disabled Planned entries.
+3. Record `feature` and `phase` on every new frame. Don't rebuild or restyle earlier frames unless a new feature needs a change there (say which).
+4. Run the quality gates, rebuild `share/`, check the new and touched frames in the browser, and commit `Phase <n>: <summary>`. Return the usual output block, with FRAMES listing only the new or changed frames.
+
 ## Mode: revision round
 
 The Orchestrator sends you the user's comments (including comment threads from the review page, each with an id), a summary of the changes wanted, the audit issues the user chose to fix, the **coverage gaps** to close (requirements marked Missing in the coverage report), and any "Added (unrequested)" items the user wants removed.

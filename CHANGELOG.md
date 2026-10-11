@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.6.3] - 2026-10-11
+
+### Added
+- **Build large projects in phases.** The spec now lists the product's major features (`F-0 Foundation`, `F-1`…). For a large project (6 or more features, 30 or more requirements, or 25 or more frames) the pipeline asks whether to build in phases and lets you pick the features of Phase 1 with clickable choices, recommending the smallest working end-to-end slice. Only the chosen features get journeys, build, audit and coverage; unbuilt features show as disabled "Planned" navigation entries and count as "Deferred (later phase)", not Missing. When you approve a phase and write "continue" (or "continue building", "next phase", or anything with that meaning), the pipeline lists the remaining features for Phase 2, and so on until everything is built. New reference `references/phases.md`; the Design Agent has a new add-phase mode that extends the same project.
+
 ## [0.6.2] - 2026-10-11
 
 ### Changed

@@ -44,6 +44,7 @@ Look for `design-pipeline-state.json` in the current folder (format in `referenc
 
 - Found and `stage` is not `done` → summarise where the run stopped and ask: resume, or start over? On resume, jump to that stage:
   - `review` → run the "When the user returns" steps of Stage 4. Anything the user typed with the command (for example `/design-pipeline approved`) counts as review feedback.
+  - `phase_done` → a phase is finished and features remain: show the next phase's feature selection (`references/phases.md`).
   - `audit` → rerun Stage 3b. `journeys` → continue the journeys review (Stage 2b). `direction` → continue the style step (Stage 2c).
   - In a new session, first re-run the tool check (Node, npm and Git), keep the saved scope and direction (telling the user which are in use, and letting them change them), restart the dev server with the preview tool, and start a fresh Design Agent if one is needed (the old agent ID won't work). The code in `code/` is the source of truth; read `git log` and `git status` to see where it stands.
 - Not found → name the session (see above) and start a new run at Stage 1.
@@ -61,7 +62,11 @@ The brief itself is requested **in preflight, as soon as the user picks "A brief
 3. If it returns **questions**, put them to the user, then send the answers back to the **same** agent (SendMessage with its agent ID) and repeat until it returns a spec.
 4. **Check platform coverage before showing it.** Every platform in the scope must have its own requirements in the spec's **Platform coverage** table. If a platform has none, send the spec back to the Brief Agent to cover it. Tell the user plainly which platforms' requirements came from their brief and which the Brief Agent **derived** from the product (for example a landing page the brief doesn't describe), so they can accept, edit or remove the derived ones.
    Show the user the spec, especially the **Platform coverage**, **Scope settings**, **Requirements** and **Interactions and states** tables, and ask for confirmation or edits. Settings read from the brief and ones that fell back to a default are labelled, so the user can correct any of them. Apply edits by resuming the same agent. Requirement IDs stay stable across edits.
-5. If the session still has a placeholder name and the spec names the project, rename the session to that name. Save the confirmed spec to `design-spec.md`, copy its confirmed **Scope settings** into `scope.options` in the state file, and update the state file (`stage: "journeys"`, or `"direction"` when journeys are skipped).
+5. If the session still has a placeholder name and the spec names the project, rename the session to that name. Save the confirmed spec to `design-spec.md`, copy its confirmed **Scope settings** into `scope.options` in the state file, and update the state file, then go to Stage 2a (phases), which leads on to Stage 2b (`stage: "journeys"`, or `"direction"` when journeys are skipped).
+
+## Stage 2a — Phases (large projects)
+
+Right after the spec is confirmed, follow `references/phases.md`: if the project is large (6 or more features, 30 or more requirements, or 25 or more frames), offer to build it in phases and let the user pick the major features for Phase 1 with clickable choices. Smaller projects skip this and build everything in one phase. Everything after this point (journeys, build, audit, coverage, review page) covers **the chosen phase's features only**; the spec stays complete.
 
 ## Stage 2b — Optional steps, then user journeys
 
@@ -78,7 +83,7 @@ Save the answers as `skip_journeys` and `skip_audit` in the state file.
 
 On a journeys **No**, jump to the last paragraph of this stage. On **Yes**, continue:
 
-Set `stage: "journeys"`. Start `journey-agent` with the confirmed spec, the platform scope, `brief-source.md` and the absolute path of `_shared/references/user-flows.md`. It saves `user-journeys.md` and returns a summary.
+Set `stage: "journeys"`. Start `journey-agent` with the confirmed spec (and, when the build is phased, the features of the current phase: journeys cover only those, `phases.md`), the platform scope, `brief-source.md` and the absolute path of `_shared/references/user-flows.md`. It saves `user-journeys.md` and returns a summary.
 
 Before showing it, **check that every platform in the scope appears in at least one journey** (the `BY_PLATFORM` lines), and that cross-platform journeys exist wherever the product spans platforms (for example landing page → sign-up → dashboard). If a platform is missing, resume the Journey Agent to cover it. Never show the user journeys that skip a chosen platform.
 
@@ -102,7 +107,7 @@ Save the direction under `preflight` in the state file, set `stage: "design"`, a
 
 ## Stage 3 — Build
 
-Start `design-agent` in build mode with: the full confirmed spec, `user-journeys.md` (if any), the `stack` (`html-css-js` unless the project is existing code or a platform has a fixed target), the platform scope (viewports; the first chosen viewport is the primary one) with each platform's `design_guidance` and `code_target` and the reference file paths listed above, the design direction from Stage 2c (`system` + the design system folder, `reference` + the approved tokens, signature elements and reference, `creative` + the approved tokens, or `existing` + the code folder or Figma link), and "round 1". Store its agent ID in the state file as `design_agent_id`.
+Start `design-agent` in build mode (for Phase 2 and later, in **add phase** mode on the existing `code/`) with: the full confirmed spec, the features of the current phase (`current_phase` in the state file) and which features are deferred, `user-journeys.md` (if any), the `stack` (`html-css-js` unless the project is existing code or a platform has a fixed target), the platform scope (viewports; the first chosen viewport is the primary one) with each platform's `design_guidance` and `code_target` and the reference file paths listed above, the design direction from Stage 2c (`system` + the design system folder, `reference` + the approved tokens, signature elements and reference, `creative` + the approved tokens, or `existing` + the code folder or Figma link), and "round 1". Store its agent ID in the state file as `design_agent_id`.
 
 When it returns, save `dev_url`, `share_status` from its SHARE line, `interaction_list`, increase `review_round`, and write `design-manifest.json` from its FRAMES list (format in `references/state-file.md`). If its `GATES` line shows a failing build, send it back to fix that before auditing. Then go to Stage 3b.
 
@@ -112,8 +117,8 @@ Set `stage: "audit"` and tell the user the app is being compared with the brief 
 
 **If `skip_audit` is true:** start only `coverage-agent` (below), do not start `design-auditor`, and have the Design Agent open `share/index.html` through `file://` and report the file-open result in its SHARE line (the Auditor would normally do this). Say in one line that the audit is off and that the user can ask for it any time ("run the audit"), in which case run the full Stage 3b once for the current build. Everything below that mentions the audit applies only when it ran. Make sure the dev server is running (the preview tool, name `design-app`). Start `design-auditor` (unless skipped) and `coverage-agent` **in parallel** (both in the same turn; they only read).
 
-- `design-auditor` gets: `dev_url`, `code/`, the spec, the interaction list, the design direction, the platform scope with each platform's profile `auditor.checks` and the absolute paths of its `auditor.references`, and the round number.
-- `coverage-agent` gets: `dev_url`, `code/`, `brief-source.md` (and any BRD files), the spec, `user-journeys.md` if it exists, `design-manifest.json`, the platform scope, and the round number.
+- `design-auditor` gets: the built features (it tests the frames in `design-manifest.json`), `dev_url`, `code/`, the spec, the interaction list, the design direction, the platform scope with each platform's profile `auditor.checks` and the absolute paths of its `auditor.references`, and the round number.
+- `coverage-agent` gets: the current phase and its features, the **deferred** features and their requirement IDs (to report as Deferred, not Missing), `dev_url`, `code/`, `brief-source.md` (and any BRD files), the spec, `user-journeys.md` if it exists, `design-manifest.json`, the platform scope, and the round number.
 
 When they return, save a summary of each in the state file (`audits` and `coverage`: round, counts, report file). Neither agent changes the code; you decide with the user what to fix. Go to Stage 4.
 
@@ -136,9 +141,9 @@ When the user returns (by replying here, or by running `/design-pipeline` and ch
 1. Read what changed in the code since the last commit (`git status`, `git diff` in `code/`), so you see any direct edits, and pass them on.
 2. Take anything the user typed in this session into account. If a review page is published, read any open comment threads once and handle them (`references/review-page.md`); comments sent to Claude are normally handled the moment they arrive.
 3. Decide:
-   - **Explicit approval** ("approved", "ship it", or equivalent) and no unresolved change requests:
+   - **Explicit approval** ("approved", "ship it", or equivalent; in a phased build also "continue", "continue building", "next phase" or similar, which approves this phase and starts planning the next) and no unresolved change requests:
      - If the latest audit (if one ran) has **critical** issues that weren't fixed, or the latest coverage report has **must** requirements still Missing, list them and ask once: *"Approve anyway, or fix these first?"* Approve only on an explicit "approve anyway".
-     - Then set `approved: true`, go to Stage 5.
+     - Then set `approved: true`, go to Stage 5. In a phased build, after Stage 5 give the short phase summary and continue as `references/phases.md` says (to the next phase's selection when the user said "continue", otherwise set `stage: "phase_done"`).
    - **Anything else** — feedback, edits, "looks good but…" → it's a change request. Summarise the changes back to the user in a few bullets, including the audit issues and coverage gaps to fix, and what to do with each unrequested addition. A kept addition is added to the spec as a new requirement (resume the Brief Agent; new `R-` ID at the end) and, if the new item changes a flow, to the journeys if they exist (resume the Journey Agent). Then resume the Design Agent (SendMessage to `design_agent_id`) with the feedback,  those audit issues, the coverage gaps, the removals, the note "keep the user's direct code edits", and the round number. If the agent can't be resumed (for example a new session), start a fresh `design-agent` with the spec, the design direction, the current `code/` project, and the feedback. Then run Stage 3b again and repeat Stage 4.
 
 After a revision round returns, republish the review page (`review-page.md`) before going back to Stage 3b.
@@ -157,7 +162,7 @@ On yes: run the Figma connector check (call its `whoami`; if it isn't connected,
 
 ## Stage 7 — Deliver
 
-Set `stage: "done"`. Give the user:
+In a phased build this full delivery happens only after the last feature is built and approved (earlier phases end with the short summary in `references/phases.md`). Set `stage: "done"`. Give the user:
 - the path to the code project (`code/`), how to run it (`npm install`, `npm run dev`), and the git history of the rounds
 - **the file to send to reviewers:** `share/index.html` (or `share.zip` for the plain HTML stack, to unzip then open), with its test result. If the stack cannot make one (Next.js, some others), say so plainly and offer a static export or a hosted link; never claim a share file works unless the file-open test passed
 - a short summary: platforms built, frames built, journeys walkable, the final audit result (or "audit skipped") and the final coverage result (Done / Missing / Added)
