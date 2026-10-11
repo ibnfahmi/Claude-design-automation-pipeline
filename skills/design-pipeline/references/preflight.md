@@ -6,7 +6,6 @@ Run these in order at Stage 1.
 2. Starting point, and the brief itself (or the existing project)
 3. Platform scope (clickable)
 4. Screen sizes (clickable)
-5. Code stack (clickable, asked per project)
 
 The **style direction** (a saved design system, a reference, or no design system, with a quick preview) is not part of preflight. It is its own step, Stage 2c, after the spec and the user journeys are confirmed, so the preview can use the real product. See `direction.md`. The **Figma connector** is only needed for an optional export at the end (Stage 6), or when the user starts from, or takes a reference from, a Figma file; it is checked then.
 
@@ -79,20 +78,16 @@ Preflight asks only what the brief rarely says and that decides which frames get
 
 Save the result as `scope` in the state file (format in `state-file.md`). Pass each platform's `ask: "brief"` options, with their choices and defaults, to the Brief Agent.
 
-## 5. Code stack — ask per project, with clickable choices
+## Code stack: no question, plain HTML, CSS and JS
 
-The deliverable is code, and the right stack depends on the project, so **ask every time** (never assume a default). Skip the question when the starting point is an existing code project (keep its stack), or when every platform in the scope has a fixed target of its own (only emails, or only a browser extension: see each profile's `code_target`). When some platforms have fixed targets and others don't, the choice applies to the others.
+The default output is **plain HTML, CSS and JS** for every project: it opens by double-click, has nothing to install for reviewers, and needs no stack decision up front. Don't ask which stack to use. Save `stack: "html-css-js"` and its dev port (5173) in the state file.
 
-Ask with AskUserQuestion: *"Which stack should the code use?"* (header: `Code stack`), with a short note on when to use each:
+Exceptions, which are not choices:
+- **An existing code project** keeps its own stack.
+- Platforms with a fixed target (a browser extension, HTML emails, etc.) follow their profile's `code_target`.
+- If the user's own words already name a stack ("build it in React"), tell them the pipeline builds plain HTML first and converts on request, so they can convert at any point after the first build (see `convert.md`); don't change the default.
 
-1. **Plain HTML, CSS and JS (Recommended)** — "Best when many people with different tech levels will review the design: the result opens by double-click, offline, with nothing to install. Right for landing pages, marketing sites and small prototypes (up to about six screens). Gets harder to manage for apps with a lot of shared state."
-2. **React + Vite + Tailwind** — "Best for web apps, dashboards and interactive prototypes with lots of screens and state, and for work developers may take over. You also get a one-file `share/index.html` that opens by double-click, so reviewers still need nothing installed."
-3. **Next.js** — "Best when a real marketing site or SEO matters, or you want a landing page and a signed-in app together in one production-style project. It needs a server, so it can't promise a double-click file for reviewers."
-4. **Other** (type it) — "Any other stack you use, such as Vue, Svelte or Astro. Tell me the name and I'll follow its conventions; I'll say whether it can produce a double-click file."
-
-Whatever the choice, every project also gets a `share/` folder for reviewers (rules in `_shared/references/share-build.md`), except where the stack cannot make one: say so in the report line.
-
-If the user typed another stack, confirm it in one line, and note that the layout and quality gates in `code-conventions.md` apply in its equivalent form. Save `stack` in the state file (`react-vite-ts-tailwind`, `nextjs`, `html-css-js`, or `other: <name>`) and its dev port (Vite 5173, Next.js 3000, otherwise the stack's default).
+Other stacks (React + Vite + Tailwind, Next.js, anything else) happen **only when the user asks to convert** the finished project. Never offer them before there is a build to convert.
 
 ## Report
 
@@ -101,6 +96,5 @@ Show a short checklist, e.g.
 - ✅ Node 20.11, npm 10.2, Git 2.45
 - ✅ Starting point — brief
 - ✅ Scope — Mobile app (iPhone 16, iPhone SE), Landing page (Desktop 1440, Tablet 768, Mobile 375)
-- ✅ Code stack — Plain HTML, CSS and JS (double-click share file)
 
 Save the results under `preflight` and `scope` in the state file. The design direction is saved later, in Stage 2c.

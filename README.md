@@ -82,7 +82,7 @@ Or just open the plugin and click install.
 2. Run `/design-pipeline`. (Plugin skills may also show as `/design-automation:design-pipeline`.)
 3. Pass the Node check, then choose:
    - **where to start**: a brief or BRD, an existing code project, or a Figma file;
-   - **the platforms** (one or several), the **screen sizes** and the **code stack** (React + Vite + Tailwind, Next.js, plain HTML, or your own, each with a short note on when to use it), by clicking;
+   - **the platforms** (one or several), the **screen sizes** by clicking (the code is plain HTML, CSS and JS by default; ask for a conversion to React, Next.js or another stack whenever you want one);
    - then paste the brief (or point to the BRD files).
 4. Answer any questions, and confirm the numbered requirements.
 5. Review the **user journeys** in `user-journeys.md`: flows with screens, decisions, error paths and exits, for every platform and across platforms (optional: the pipeline asks whether you want them, or pass `/design-pipeline --skip-journeys` to skip the question). The audit after each round is optional too (`--skip-audit`); both can use a lot of tokens.

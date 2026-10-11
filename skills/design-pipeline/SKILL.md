@@ -50,7 +50,7 @@ Look for `design-pipeline-state.json` in the current folder (format in `referenc
 
 ## Stage 1 — Preflight
 
-Run every check in `references/preflight.md`, in its order: Node, npm and Git, then the **starting point** (a brief, an existing code project, or a Figma file), the **platform scope**, **screen sizes** and **code stack** (all clickable choices; the stack is asked per project, with a short note on when to use each). The style direction comes later, in Stage 2c. If a required check fails, stop, report what's missing and how to fix it, and wait. When the user says "retry", run the checks again.
+Run every check in `references/preflight.md`, in its order: Node, npm and Git, then the **starting point** (a brief, an existing code project, or a Figma file), the **platform scope**, and **screen sizes** (all clickable choices). There is no stack question: the output is plain HTML, CSS and JS by default, and other stacks only come from a conversion the user asks for later (`references/convert.md`). The style direction comes later, in Stage 2c. If a required check fails, stop, report what's missing and how to fix it, and wait. When the user says "retry", run the checks again.
 
 The brief itself is requested **in preflight, as soon as the user picks "A brief or BRD"** (check 2), right after the tool check passes, and before the platform questions, so those questions can use it. Record all results in the state file.
 
@@ -102,7 +102,7 @@ Save the direction under `preflight` in the state file, set `stage: "design"`, a
 
 ## Stage 3 — Build
 
-Start `design-agent` in build mode with: the full confirmed spec, `user-journeys.md` (if any), the chosen `stack`, the platform scope (viewports; the first chosen viewport is the primary one) with each platform's `design_guidance` and `code_target` and the reference file paths listed above, the design direction from Stage 2c (`system` + the design system folder, `reference` + the approved tokens, signature elements and reference, `creative` + the approved tokens, or `existing` + the code folder or Figma link), and "round 1". Store its agent ID in the state file as `design_agent_id`.
+Start `design-agent` in build mode with: the full confirmed spec, `user-journeys.md` (if any), the `stack` (`html-css-js` unless the project is existing code or a platform has a fixed target), the platform scope (viewports; the first chosen viewport is the primary one) with each platform's `design_guidance` and `code_target` and the reference file paths listed above, the design direction from Stage 2c (`system` + the design system folder, `reference` + the approved tokens, signature elements and reference, `creative` + the approved tokens, or `existing` + the code folder or Figma link), and "round 1". Store its agent ID in the state file as `design_agent_id`.
 
 When it returns, save `dev_url`, `share_status` from its SHARE line, `interaction_list`, increase `review_round`, and write `design-manifest.json` from its FRAMES list (format in `references/state-file.md`). If its `GATES` line shows a failing build, send it back to fix that before auditing. Then go to Stage 3b.
 
@@ -163,7 +163,12 @@ Set `stage: "done"`. Give the user:
 - a short summary: platforms built, frames built, journeys walkable, the final audit result (or "audit skipped") and the final coverage result (Done / Missing / Added)
 - the review page link, if one was published (it stays private unless they share it)
 - the Figma file link, if one was exported
+- one line: *"If developers will take this over, ask me to convert it to another stack."* (conversions follow `references/convert.md`)
 - anything that needs a manual touch (for example mock data that needs a real backend, placeholder content marked as needing real data)
+
+## On request — Convert to another stack
+
+If at any point after the first build the user asks to convert the project to another stack ("convert to React", "make it Next.js"), follow `references/convert.md`. Never convert on your own, and never ask about stacks before there is a build.
 
 ## Rules
 

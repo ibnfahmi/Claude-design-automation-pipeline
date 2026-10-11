@@ -2,6 +2,12 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.6.2] - 2026-10-11
+
+### Changed
+- **Plain HTML, CSS and JS is the default output, with no stack question.** The preflight stack question is gone. Every project is built as plain HTML, CSS and JS (an existing code project keeps its own stack).
+- **Other stacks only on request.** When you ask to convert ("convert it to React", "make it Next.js"), the Design Agent builds a new `code-<stack>/` project next to `code/` from the finished HTML project, and the result is compared with the original. `code/` is left untouched. The delivery summary ends with a one-line reminder that you can ask for a conversion. New reference `references/convert.md` has the when-to-use guide for React + Vite + Tailwind, Next.js and other stacks.
+
 ## [0.6.1] - 2026-10-11
 
 ### Changed

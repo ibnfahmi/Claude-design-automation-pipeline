@@ -8,14 +8,14 @@ The pipeline's deliverable is a **working code project**, not a canvas. The Desi
 - `design-manifest.json`, `design-spec.md`, the journeys and the reports stay in the client folder, next to `code/`.
 - `.claude/launch.json` in the client folder holds the dev-server entry so the app can be started with the preview tool (see "Running it").
 
-## Stack (asked per project)
+## Stack: plain HTML, CSS and JS by default
 
-The user picks the stack in preflight (`stack` in the state file; there is no assumed default). The layout, tokens, frames and quality gates below are written for React + Vite + TypeScript + Tailwind CSS + React Router; for the other stacks use the equivalent. Use current stable versions, follow each tool's current setup instructions, and check that `npm run build` passes before you hand the project over. Node 20 or newer.
+Every project is built as plain HTML, CSS and JS (`stack: html-css-js`), because it opens by double-click and every reviewer can use it. An existing code project keeps its own stack. Any other stack exists only as a **conversion the user asks for** (`convert.md`), built into a separate `code-<stack>/` folder. The rules in this file are written for the plain HTML stack first; the React layout further down applies to a converted React project, and other stacks use the equivalent. Use current stable versions, and check that the project loads cleanly (and, for a converted stack, that `npm run build` passes) before you hand it over. Node 20 or newer is needed for the preview server and for conversions.
 
 | Stack | Notes |
 |---|---|
-| `react-vite-ts-tailwind` | As described below. Dev port 5173 |
-| `nextjs` | App Router with TypeScript and Tailwind. Pages in `app/`, shared UI in `components/`, tokens in `app/tokens.css` imported by the root layout, client components where interaction is needed. The dev routes are `app/frames/[slug]/page.tsx`, `app/frames/page.tsx`, `app/journeys/page.tsx` and `app/style-preview/page.tsx` (the App Router treats folders that start with an underscore as private, so the dev routes have none). Dev port 3000 |
+| `react-vite-ts-tailwind` | Conversion target. As described below. Dev port 5173 |
+| `nextjs` (conversion target) | App Router with TypeScript and Tailwind. Pages in `app/`, shared UI in `components/`, tokens in `app/tokens.css` imported by the root layout, client components where interaction is needed. The dev routes are `app/frames/[slug]/page.tsx`, `app/frames/page.tsx`, `app/journeys/page.tsx` and `app/style-preview/page.tsx` (the App Router treats folders that start with an underscore as private, so the dev routes have none). Dev port 3000 |
 | `html-css-js` | A multi-page static site with **no build step and no bundler**, so it opens by double-click: `index.html` and one `.html` per page linked with relative paths, `styles/tokens.css` and plain CSS (no Tailwind), behaviour in classic `<script src>` files (no `type="module"`, no `fetch` of local files, data kept in a JS object), fonts in `fonts/` loaded by relative `@font-face`, `frames/<slug>.html` plus `frames/index.html` (the gallery), `journeys/index.html` and `style-preview.html`. For previewing, serve the folder with `npx --yes serve code -l 5173` (the `dev` script). The "build" gate is a check that every page loads and every relative link resolves. Dev port 5173 |
 | other (the user typed it) | Follow that stack's own conventions and give it the same pieces: tokens as CSS variables, a frame for every `Screen / State` reachable without manual steps, a frames gallery, a journeys index, and a build that passes |
 
@@ -25,7 +25,7 @@ The dev routes are `/frames`, `/frames/<slug>`, `/journeys` and `/style-preview`
 
 ## Targets by platform
 
-Each profile's `code_target` says which applies. "The chosen stack" means the stack above.
+Each profile's `code_target` says which applies. "The chosen stack" means the project's stack (plain HTML by default).
 
 | Platform | Built as |
 |---|---|
@@ -39,7 +39,7 @@ Each profile's `code_target` says which applies. "The chosen stack" means the st
 | Smart TV | A fixed 1920x1080 or 3840x2160 stage that scales to fit, with spatial (D-pad) focus navigation and a visible focus state |
 | Kiosk | A fixed-size stage at the machine's screen size, with idle, timeout-warning and reset behaviour built in |
 
-## Layout (React shown; other stacks use the equivalent)
+## Layout (React shown, for a converted project; the default plain HTML layout is in the stack table above)
 
 ```
 code/

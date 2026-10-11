@@ -32,6 +32,7 @@ Reasonable overrides:
 
 ## History
 
+- **0.6.2:** no model changes; the Design Agent gets a convert mode.
 - **0.6.1:** no model changes; the Auditor (Opus 5.5) only runs if the user keeps the audit on.
 - **0.6.0:** no model changes.
 - **0.5.9:** no model changes; the Orchestrator publishes and reads the review page, the Design Agent applies the comments.
