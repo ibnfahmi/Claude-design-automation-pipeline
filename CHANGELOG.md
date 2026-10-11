@@ -2,6 +2,12 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.6.7] - 2026-10-11
+
+### Fixed
+- **The platform profiles no longer ask for React.** Nine profiles (web app, dashboard, landing page, e-commerce, mobile, tablet, desktop, docs, flow) still described their output as a React or React + Vite project, which contradicted the plain HTML default set in 0.6.2 and could make the Design Agent build React. They now say "the project's stack (plain HTML, CSS and JS by default)", and the conventions file says the same.
+- **3D scenes in plain HTML projects.** `webgl-3d.md` told the Design Agent to install Three.js with npm, which a bundler-free page that opens from disk can't use. It now creates a one-off classic-script build (`scripts/vendor/three.js`) and checks the scene draws from a double-click; the npm route stays for converted React and Next.js projects.
+
 ## [0.6.6] - 2026-10-11
 
 ### Added

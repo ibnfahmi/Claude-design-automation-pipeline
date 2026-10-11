@@ -100,7 +100,7 @@
     }
   ],
   "preview_screen": "The main window with title bar, toolbar or sidebar, and the primary working area.",
-  "code_target": "React prototype inside a window frame per operating system, with menus and shortcuts. Not an Electron build unless asked.",
+  "code_target": "A prototype in the project's stack (plain HTML, CSS and JS by default) inside a window frame per operating system, with menus and shortcuts. Not an Electron build unless asked.",
   "required_screens": [
     "Preferences / settings window",
     "About dialog"

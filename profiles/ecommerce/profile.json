@@ -109,7 +109,7 @@
     }
   ],
   "preview_screen": "A product detail page: gallery, title, price, variant selector and the add-to-cart button, with realistic product content.",
-  "code_target": "React + Vite storefront: listing, product, cart and checkout flows with an in-memory cart and a mock catalogue.",
+  "code_target": "A storefront in the project's stack (plain HTML, CSS and JS by default): listing, product, cart and checkout flows with an in-memory cart and a mock catalogue.",
   "required_screens": [
     "Cart (empty)",
     "Order confirmation"

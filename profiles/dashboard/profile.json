@@ -152,7 +152,7 @@
     }
   ],
   "preview_screen": "The overview page: a KPI row, one main chart, and a table with realistic numbers and a filter bar.",
-  "code_target": "React + Vite app with a sidebar or top-nav shell, working filters, tables and charts (an accessible charting library or hand-built SVG), mock data.",
+  "code_target": "An app in the project's stack (plain HTML, CSS and JS by default) with a sidebar or top-nav shell, working filters, tables and charts (an accessible charting library or hand-built SVG), mock data.",
   "required_screens": [
     "Overview",
     "Detail view for a table row",

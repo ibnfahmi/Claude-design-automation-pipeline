@@ -166,7 +166,7 @@
     }
   ],
   "preview_screen": "The hero section: headline, subheadline, primary CTA, one proof signal and the hero visual, at the primary breakpoint.",
-  "code_target": "React + Vite site: the sections from the brief with real copy, working navigation, forms and the primary CTA flowing into sign-up.",
+  "code_target": "A site in the project's stack (plain HTML, CSS and JS by default): the sections from the brief with real copy, working navigation, forms and the primary CTA flowing into sign-up.",
   "derive_when_silent": "When the brief doesn't describe the landing page, derive it from the product: a hero with the product's main value proposition and one primary action that leads to the sign-up or sign-in the product requires; three to five benefits mapped to the product's must-have features; how it works from the main user flow; proof and risk-reversal placeholders marked as needing real data; an FAQ from the product's likely objections; a final CTA matching the top one; a footer with legal links.",
   "required_screens": [
     "Mobile navigation open (menu)",

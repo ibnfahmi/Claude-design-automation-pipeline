@@ -95,7 +95,7 @@
     }
   ],
   "preview_screen": "The first step of the flow with its progress indicator, one primary action and a back control.",
-  "code_target": "A React flow with working steps, validation, back navigation and a completion state.",
+  "code_target": "A flow in the project's stack (plain HTML, CSS and JS by default) with working steps, validation, back navigation and a completion state.",
   "required_screens": [
     "Success / completion screen"
   ],

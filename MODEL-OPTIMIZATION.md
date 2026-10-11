@@ -32,6 +32,7 @@ Reasonable overrides:
 
 ## History
 
+- **0.6.7:** no model changes.
 - **0.6.6:** no model changes; the stress test is on request only.
 - **0.6.5:** no model changes; the Auditor (Opus 5.5) gets a UI-defects pass.
 - **0.6.4:** no model changes; the two new skills reuse the Journey Agent (Sonnet 5.5) and the Auditor (Opus 5.5).

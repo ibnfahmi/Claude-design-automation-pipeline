@@ -144,7 +144,7 @@
     }
   ],
   "preview_screen": "The home screen inside the first chosen device frame, with status bar, primary content and navigation.",
-  "code_target": "Responsive React prototype inside device frames (status bar, safe areas, home indicator) with tab or stack navigation and touch interactions. A prototype, not native code.",
+  "code_target": "A responsive prototype in the project's stack (plain HTML, CSS and JS by default) inside device frames (status bar, safe areas, home indicator) with tab or stack navigation and touch interactions. A prototype, not native code.",
   "required_screens": [
     "Splash or launch",
     "Onboarding (if the brief implies first-run)",

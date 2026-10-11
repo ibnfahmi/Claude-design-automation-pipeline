@@ -25,7 +25,7 @@ The dev routes are `/frames`, `/frames/<slug>`, `/journeys` and `/style-preview`
 
 ## Targets by platform
 
-Each profile's `code_target` says which applies. "The chosen stack" means the project's stack (plain HTML by default).
+Each profile's `code_target` says what is built; the technology is always the project's own stack (plain HTML, CSS and JS by default). "The chosen stack" means the project's stack (plain HTML by default).
 
 | Platform | Built as |
 |---|---|

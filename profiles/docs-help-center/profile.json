@@ -112,7 +112,7 @@
     }
   ],
   "preview_screen": "The help center home: search, popular topics, and category cards.",
-  "code_target": "A React docs site with search, category and article routes, a table of contents and a no-results state.",
+  "code_target": "A docs site in the project's stack (plain HTML, CSS and JS by default) with search, category and article routes, a table of contents and a no-results state.",
   "derive_when_silent": "When the brief doesn't describe help content, derive a help-center structure from the product's features and flows: getting started, one article group per main feature, account and billing, troubleshooting, and contact support.",
   "required_screens": [
     "Home with search",

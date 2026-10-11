@@ -117,7 +117,7 @@
     }
   ],
   "preview_screen": "The main logged-in screen: navigation, a page title with its primary action, and one list or card group with realistic content.",
-  "code_target": "React + Vite app (default stack): routes for the product's screens, working forms, navigation and states.",
+  "code_target": "An app in the project's stack (plain HTML, CSS and JS by default): routes for the product's screens, working forms, navigation and states.",
   "required_screens": [
     "Sign in (if auth is yes)",
     "Settings or profile",

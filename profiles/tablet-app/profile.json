@@ -102,7 +102,7 @@
     }
   ],
   "preview_screen": "The main screen in the first chosen frame and orientation, using the extra width (sidebar, split panes or a multi-column layout).",
-  "code_target": "Responsive React prototype inside tablet frames, in both orientations if chosen.",
+  "code_target": "A responsive prototype in the project's stack (plain HTML, CSS and JS by default) inside tablet frames, in both orientations if chosen.",
   "required_screens": [],
   "required_states": [
     "Keyboard open",
