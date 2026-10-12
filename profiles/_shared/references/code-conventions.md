@@ -96,9 +96,13 @@ Every frame route accepts `?capture=1`, built into every project from the start 
 - when everything has settled (fonts ready, images decoded, animations finished), the script sets `document.documentElement.dataset.captureReady = "true"`.
 The normal page behaves as designed; capture mode only changes how it is shown.
 
-## Layout that converts cleanly to Figma
+## Layout that converts cleanly to Figma (and fonts that can be pinned)
 
-Build layouts so a design tool can read them as auto layout: use **flex and grid** for structure, not absolute positioning; avoid wrapper elements that add no layout or styling; use `transform` for effects only, never to position content; give repeated items one component with the same structure. Use **absolute positioning only for real overlays** (badges, decorative shapes, tooltips, sticky elements). All spacing (gap, padding, margin) comes from the spacing scale in `tokens.css` (`0, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96, 128` unless the design system defines another regular scale), never from one-off values like 10 or 46 px.
+Build layouts so a design tool can read them as auto layout: use **flex and grid** for structure, not absolute positioning; avoid wrapper elements that add no layout or styling; use `transform` for effects only, never to position content; give repeated items one component with the same structure. Give every layout container an **explicit size for each chosen screen size** (a `width` or `max-width` in px, with explicit `padding`), put the space between siblings in `gap` (never in margins between siblings), and keep content in the order it appears. Use **absolute positioning only for real overlays** (badges, decorative shapes, tooltips, sticky elements). All spacing (gap, padding, margin) comes from the spacing scale in `tokens.css` (`0, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96, 128` unless the design system defines another regular scale), never from one-off values like 10 or 46 px.
+
+## Fonts are explicit
+
+Declare every font family and every weight the design uses, once, in `tokens.css` (`--font-body`, `--font-heading`, `--font-mono`) and load them with `@font-face` or Google Fonts with each weight and style listed. Never rely on a generic or system stack as the **first** family (`system-ui`, `sans-serif`, `Arial` as an accident), because the Figma export must pin the exact font. Prefer fonts that exist in Figma (Google Fonts and other common families). Don't fake weights or styles (no font synthesis): use a real file for each weight. The export reads the used families and weights from the page and maps them to Figma fonts, so a font the page doesn't load is reported.
 
 ## Anchors for comments
 

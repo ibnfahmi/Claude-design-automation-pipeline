@@ -2,6 +2,17 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.8.0] - 2026-10-13
+
+### Changed
+- **The Figma export is now built from a measured spec, not captured.** The connector's capture tool produced nested wrappers, absolute positions, half-loaded elements and off-grid spacing, so the default path is now: extract a spec from the real page with Playwright, pin the fonts in Figma, build every frame natively with auto layout, and compare each screen with its screenshot. The capture tool stays only as a fallback.
+  - **Spec extraction at each frame's own size:** `extract-spec.mjs` opens every frame at **its own chosen viewport** (any width and height: 1440, 1920, 390, a kiosk or TV stage), in capture mode, after `document.fonts.ready`, images, scroll effects, finished animations and a stability check. It saves a full-page reference screenshot and a compact spec per frame: bounding boxes, flex and grid layout, padding and gaps, fonts, text and its mixed-style runs, colours, gradients, borders, radii, shadows, images and inline SVG, with `::before` and `::after` decorations measured as real nodes and pure wrappers flattened. It uses the Chrome or Edge already on the machine through `playwright-core`; the helper packages (`playwright-core`, `pngjs`, `pixelmatch`) are installed once into the plugin's tools folder after a consent question. Without them, the same extractor runs in the built-in browser.
+  - **Fonts pinned first:** the fonts found are mapped to exact Figma fonts (family and style) and loaded before any frame is built; a missing font is reported before the import, never substituted silently, and the font table goes on the Specs page.
+  - **Native build:** `figma-builder.js` (for `use_figma`, one section per call) turns flex into auto layout, grid into rows, keeps container sizes fixed, keeps absolute positioning only for real overlays, applies fonts, rich text, truncation, fills, gradients, borders, shadows and blurs, imports SVG, leaves images as placeholders that are filled through the upload route, snaps spacing to the scale and binds it to variables.
+  - **Compare and iterate:** `compare-shots.mjs` measures the difference between the page screenshot and the Figma frame and lists the worst regions; each screen gets up to three targeted fix passes (goal about 2% or less), and the final difference per screen is reported.
+- **The code is built for it.** Layout containers get explicit sizes per screen size, spacing goes in `gap`, absolute positioning is for overlays only, and fonts are declared explicitly (every family and weight in `tokens.css`, loaded with real files, no generic first family). The Auditor now reports layout built with absolute positioning or sibling margins, and unpinned or synthesised fonts.
+- **Tested here:** the extractor on a test page at 1440 and 390 wide (layout, fonts, runs, pseudo-elements, clamp, SVG, image, the page restored afterwards), the builder against a mock Figma API that enforces the sizing and font-loading rules (16 checks), and the compare script (identical images 0%, a shifted image reports its region). **Not tested:** the real Figma plugin API; the first export into a scratch file is the acceptance test.
+
 ## [0.7.9] - 2026-10-13
 
 ### Changed

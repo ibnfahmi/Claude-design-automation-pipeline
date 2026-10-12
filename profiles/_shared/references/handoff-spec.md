@@ -8,7 +8,7 @@ The Figma file is laid out as a **Cover** page with the applied thumbnail, a **S
 
 Every page has the background #272727 and the file has the standard cover thumbnail (`figma-thumbnail.md`).
 
-Captured frames show the **final state** of every animation, use real **auto layout**, and follow a **spacing scale and layout grids** (see `figma-capture.md`).
+Frames are **built from a measured spec** of the settled page and compared with its screenshot (`figma-capture.md`), and show the **final state** of every animation, use real **auto layout**, and follow a **spacing scale and layout grids** (see `figma-capture.md`).
 
 For each screen and component, the Figma file should let a developer find:
 

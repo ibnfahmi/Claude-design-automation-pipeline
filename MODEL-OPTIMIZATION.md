@@ -32,6 +32,7 @@ Reasonable overrides:
 
 ## History
 
+- **0.8.0:** no model changes; the export runs scripts instead of the capture tool, with several passes per screen.
 - **0.7.9:** no model changes.
 - **0.7.8:** no model changes; the export does more waiting and restructuring, so it takes longer.
 - **0.7.7:** no model changes; building one screen per type lowers build, audit and export tokens.
