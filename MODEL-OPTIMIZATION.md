@@ -32,6 +32,7 @@ Reasonable overrides:
 
 ## History
 
+- **0.7.6:** no model changes; the export draws flows and a thumbnail, so it uses more tokens.
 - **0.7.5:** no model changes; the Handoff Agent (Sonnet 5.5) builds more pages, so an export uses more tokens.
 - **0.7.4:** no model changes; the feedback script uses no model.
 - **0.7.3:** no model changes; documents are converted before the agents read them, which lowers input tokens.

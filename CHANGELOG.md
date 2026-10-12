@@ -2,6 +2,16 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.7.6] - 2026-10-12
+
+### Added
+- **A thumbnail for the Figma file.** The export creates a `Thumbnail` frame on a new `Cover` page (3:2, built from the project's own tokens: name, description, platforms, version, brand colours and a collage of three or four key screens) and **applies it as the file's thumbnail** with the Figma plugin API, or reports the one-step fallback ("Set as thumbnail") if that call isn't available.
+- **A Product Flows page with every flow, every case and every state.** An overview map of the features and how users move between them (including cross-platform paths), then one flow per user journey: each step is a scaled screen node with its label card and state pill, arrows carry the user's action, decisions are diamonds, and every branch is drawn with its own screens (errors, empty, loading, timeout, offline, cancel, session expiry, exits), coloured by kind. Each feature's flows end with a case matrix (screens by standard cases) linking to the frames. Steps with no frame are never invented: they appear as dashed `Not built` placeholders and are counted in the result.
+- **A completeness check before the export.** The pipeline compares the coverage report and manifest with the journeys first and offers to build missing flow steps and states before exporting (recommended), to export what exists, or, in a phased build, to wait until all phases are built.
+
+### Changed
+- Page order is now `Cover`, `Specs & Guidelines`, `Product Flows`, then one page per feature.
+
 ## [0.7.5] - 2026-10-12
 
 ### Changed
