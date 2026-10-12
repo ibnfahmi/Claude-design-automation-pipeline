@@ -21,6 +21,8 @@ skills/
   design-pipeline/       /design-pipeline — the Orchestrator
   design-journeys/       /design-journeys — create user journeys on demand
   design-audit/          /design-audit — audit a running app or project on demand
+  design-feedback/       /design-feedback — review, send or switch off the opt-in feedback notes
+hooks/                   feedback-detect.mjs — the local, opt-in script behind the feedback notes
     SKILL.md
     references/
       preflight.md       tool checks, starting point and brief, platform scope and screen sizes
@@ -42,6 +44,10 @@ NOTICE.md                attributions for the open-source guidance
 ```
 
 
+
+## 🔒 Feedback notes (optional, off until you say yes)
+
+The plugin can save a short note on **your computer only** when one of your messages during a design-pipeline run sounds confused, lost or frustrated, so you can send it to the maintainer. It is asked once, saves only a shortened and redacted copy of that message (no emails, links, paths or pasted briefs), and **nothing is ever sent unless you review the exact text and choose to send it**, with `/design-feedback`. Switch it off any time with `/design-feedback disable`.
 
 ## 🛠️ Requirements
 

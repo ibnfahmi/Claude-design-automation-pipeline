@@ -2,6 +2,15 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.7.4] - 2026-10-12
+
+### Added
+- **Opt-in feedback notes.** A small script (`hooks/feedback-detect.mjs`, run on each user message) saves a short note **on the user's computer only** when a message sounds confused, lost or frustrated ("I'm lost", "this doesn't make sense", "why is it asking this again?!", and Arabic phrases such as "مش فاهم"). It does nothing unless the user opted in, a design-pipeline run is active in the folder, and the message is short (pasted briefs, slash commands and ordinary messages are never touched). Notes keep the plugin version, the stage and round, the platforms, the kind of problem and the message cut to 300 characters with emails, links, paths, long numbers and key-like strings replaced. Tested on 16 cases (opt-in, English, Arabic, redaction, long pastes, slash commands, no pipeline folder), all as expected.
+- **`/design-feedback`** to turn the notes on or off, review and edit them, and send them: it builds a report, shows the whole text, and only then saves it to a file (the default) or, if the user chooses, opens a GitHub issue (public, so it says so) with the GitHub CLI. Nothing is ever sent automatically. `/design-pipeline` asks once per computer whether to turn the notes on.
+
+### Fixed
+- The plugin description still said "React by default"; it now says plain HTML, CSS and JS.
+
 ## [0.7.3] - 2026-10-12
 
 ### Added

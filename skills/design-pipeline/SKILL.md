@@ -49,7 +49,9 @@ Look for `design-pipeline-state.json` in the current folder (format in `referenc
   - `phase_done` → a phase is finished and features remain: show the next phase's feature selection (`references/phases.md`).
   - `audit` → rerun Stage 3b. `journeys` → continue the journeys review (Stage 2b). `direction` → continue the style step (Stage 2c).
   - In a new session, first re-run the tool check (Node, npm and Git), keep the saved scope and direction (telling the user which are in use, and letting them change them), restart the dev server with the preview tool, and start a fresh Design Agent if one is needed (the old agent ID won't work). The code in `code/` is the source of truth; read `git log` and `git status` to see where it stands.
-- Not found → name the session (see above) and start a new run at Stage 1.
+- Not found → name the session (see above), ask the **one-time feedback question** (below), and start a new run at Stage 1.
+
+**Feedback notes (once per computer).** If `~/.claude/design-automation/feedback-optin.json` doesn't exist, ask once with AskUserQuestion (header `Feedback notes`): *"Help improve the plugin? When a message of yours sounds confused or frustrated, a short note can be saved on this computer only. You review it with /design-feedback and nothing is ever sent without your say-so."* **Yes, save notes** / **No thanks**. Write `{"enabled": true, "since": "<time>"}` or `{"enabled": false, "asked": true}` there (create the folder). Never ask again, and never turn it on without a yes. `/design-feedback` shows what is saved and switches it on or off.
 
 ## Stage 1 — Preflight
 
