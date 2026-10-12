@@ -29,7 +29,7 @@ Never skip a stage (except the user journeys step and the audit, which are optio
 - **Design System Agent** (`tokens` and `full` modes): `_shared/references/grounding.md`, and for a website URL reference in `tokens` mode also `_shared/references/reference-capture.md`.
 - **Auditor**: `_shared/references/code-conventions.md`, `_shared/references/share-build.md`, `_shared/references/ui-defects.md`, `_shared/references/stress-test.md` (only for a stress test) and the files in `auditor.references` of each platform in the scope (which include `code-quality.md`).
 - **Coverage Agent**: `_shared/references/user-flows.md` and `_shared/references/code-conventions.md`.
-- **Handoff Agent**: `_shared/references/handoff-spec.md` and `_shared/references/polish.md`.
+- **Handoff Agent**: `_shared/references/handoff-spec.md`, `_shared/references/polish.md` and `_shared/references/figma-capture.md`.
 Tell each agent to read only the files you list.
 
 **Documents.** A brief, BRD or reference given as a Word, Excel, PowerPoint or PDF file is converted to markdown as `references/documents.md` describes (a local converter installed once with the user's consent, PDFs always cross-checked, nothing sent to a cloud service without an explicit yes).

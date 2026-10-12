@@ -88,6 +88,18 @@ Viewports come from the scope: the primary viewport for states, and every chosen
 - **Numbers and dates:** formatted with `Intl` for the active language; digits follow the language's convention.
 - `localization.md` has the text-expansion and right-to-left details.
 
+## Capture mode (so design tools get the final state)
+
+Every frame route accepts `?capture=1`, built into every project from the start (a small classic script, `scripts/capture-mode.js`, plus a few CSS rules). In capture mode the page shows its **final, settled state**, so the Figma export (and any screenshot) never catches a half-finished animation:
+- the `html` element gets `data-capture`; all CSS animations and transitions jump to their end state (`animation-duration: 0s; animation-delay: 0s; animation-fill-mode: forwards`, `transition: none`), and reveal-on-scroll items are already revealed (no leftover `opacity` or entrance `transform`);
+- counters show their final numbers; scroll-linked and "active step" effects show their resting state (for example every step of a progress timeline fully drawn, not dimmed); carousels and marquees stop at the first position; sticky and fixed headers are in their top state; lazy images load eagerly; videos show their poster frame; a WebGL scene shows one settled frame; cookie banners and dev toggles are hidden;
+- when everything has settled (fonts ready, images decoded, animations finished), the script sets `document.documentElement.dataset.captureReady = "true"`.
+The normal page behaves as designed; capture mode only changes how it is shown.
+
+## Layout that converts cleanly to Figma
+
+Build layouts so a design tool can read them as auto layout: use **flex and grid** for structure, not absolute positioning; avoid wrapper elements that add no layout or styling; use `transform` for effects only, never to position content; give repeated items one component with the same structure. Use **absolute positioning only for real overlays** (badges, decorative shapes, tooltips, sticky elements). All spacing (gap, padding, margin) comes from the spacing scale in `tokens.css` (`0, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96, 128` unless the design system defines another regular scale), never from one-off values like 10 or 46 px.
+
 ## Anchors for comments
 
 Every frame root has `data-frame="Screen / State"` and every reusable component root has `data-component="Name"`, so a review comment on the published page can be traced back to its source file (see `share-build.md`).

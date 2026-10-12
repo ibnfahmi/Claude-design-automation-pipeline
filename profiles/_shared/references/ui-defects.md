@@ -25,6 +25,7 @@ Usability and accessibility are covered elsewhere. This file is the **visual bug
 **Alignment and spacing**
 - Things that should line up but don't: left edges, baselines of label and value, icon and text centring, columns, grid gutters.
 - Inconsistent spacing: different gaps between the same kind of items, different padding on identical cards or buttons, uneven section rhythm, cramped or huge empty areas.
+- **Off-scale spacing:** gaps, paddings and margins that are not on the spacing scale (for example 10, 14, 23 or 46 px next to a 4 or 8 px rhythm). Collect the computed `gap`, `padding-*`, `margin-*` and `row-gap` values of the visible elements with `javascript_tool`, count the distinct values, and list the values that are not on the scale with their most common elements. Report the top offenders as one `[minor]` finding per value (major when it breaks alignment in a key section), with the fix of snapping to the nearest step.
 - Uneven card or row heights where the pattern calls for equal; unbalanced columns; orphaned single items on the last row.
 
 **Typography**

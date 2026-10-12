@@ -6,6 +6,8 @@ Annotate **behaviour, not just appearance**, and cover every state, not only the
 
 The Figma file is laid out as a **Cover** page with the applied thumbnail, a **Specs & Guidelines page**, a **Product Flows page** (every flow with all its cases and states) and **one page per feature**, with a label card above every screen and rows of screens per screen size (see `handoff-agent.md`). The specs page carries the file-wide rules; the feature pages carry the screens.
 
+Captured frames show the **final state** of every animation, use real **auto layout**, and follow a **spacing scale and layout grids** (see `figma-capture.md`).
+
 For each screen and component, the Figma file should let a developer find:
 
 - **Visual:** spacing and sizing (tokens or exact values), colour tokens, type style (name, size, weight, line height), radius, shadow, opacity, and behaviour at each breakpoint or viewport.

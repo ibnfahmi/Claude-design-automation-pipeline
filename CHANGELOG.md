@@ -2,6 +2,14 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.7.8] - 2026-10-12
+
+### Fixed
+- **The Figma export no longer captures half-loaded states.** Every project now has a **capture mode** (`?capture=1` on every frame route) that shows the final, settled state: animations and transitions finished, reveal-on-scroll items revealed, counters at their final value, "active step" effects in their resting state, lazy images and fonts loaded. The Handoff Agent waits for a ready signal, scrolls through the page to trigger scroll effects, checks that nothing is still changing, and looks at a screenshot before it captures. A mid-animation element is treated as a code defect, and is built in its final state instead.
+- **Captured frames are cleaned into real auto layout.** A structure pass deletes empty placeholders and transform wrappers, flattens single-child wrappers, applies auto layout (direction, gap, padding, alignment, hug or fill) to every frame with two or more in-flow children, keeps absolute positioning only for real overlays, names layers properly and turns repeats into components. Frames too broken to fix are rebuilt natively from the DOM.
+- **A grid and a spacing system developers can trust.** Gaps and paddings snap to the scale `0, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96, 128` and are bound to Figma variables (46 becomes 48, 10 becomes 12), fixed sizes use multiples of 4, and every top-level frame gets layout grids (12 columns on desktop, 8 on tablet, 4 on mobile, or the project's own). Where the code drifts from the system by 3 px or more, a deviation table on the Specs page shows the code value next to the Figma value.
+- **The code is built for it.** Layouts use flex and grid (absolute positioning only for real overlays), spacing comes only from the scale, and the Auditor now reports off-scale spacing values as UI defects. New reference `figma-capture.md`.
+
 ## [0.7.7] - 2026-10-12
 
 ### Changed
