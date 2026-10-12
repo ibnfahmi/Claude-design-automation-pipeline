@@ -4,6 +4,8 @@ Used by the Handoff Agent. Distilled from the `handoff-spec` skill in Owl-Listen
 
 Annotate **behaviour, not just appearance**, and cover every state, not only the happy path. Use design tokens and variable names, not raw values.
 
+The Figma file is laid out as a **Specs & Guidelines page** plus **one page per feature**, with a label card above every screen and rows of screens per screen size (see `handoff-agent.md`). The specs page carries the file-wide rules; the feature pages carry the screens.
+
 For each screen and component, the Figma file should let a developer find:
 
 - **Visual:** spacing and sizing (tokens or exact values), colour tokens, type style (name, size, weight, line height), radius, shadow, opacity, and behaviour at each breakpoint or viewport.

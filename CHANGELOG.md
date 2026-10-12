@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.7.5] - 2026-10-12
+
+### Changed
+- **The Figma export is organised for handoff.** The file now has a **Specs & Guidelines** page followed by **one page per feature** (`F-0 · Foundation`, `F-1 · …`), not a page per platform. On each feature page the screens sit in **rows by screen size, the largest on top and the smaller sizes below** (with the platform in the row label when a feature spans platforms), screens left to right in journey order with their states right after them. **Every screen has a label card above it** with the screen name and its state, status or case as a pill (Default, Empty, Error: invalid email, Success…) and its requirement and journey IDs. The **Specs & Guidelines page** covers overview, colour with contrast, typography, layout and breakpoints, shape and depth, iconography, components with variants and states, motion and interaction (including captured scroll effects), accessibility, content and language (RTL), naming and handoff, a requirements trace and open items, all built from the code, tokens and spec. The Handoff Agent now also receives the Features table, the design system, the `BEHAVIOUR` block and the languages.
+
 ## [0.7.4] - 2026-10-12
 
 ### Added
