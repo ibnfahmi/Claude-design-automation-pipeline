@@ -19,6 +19,10 @@ The design direction is one of:
 
 The **platform scope** lists the platforms with their chosen **viewports**; the first is the **primary viewport**. The Orchestrator also passes each platform's `design_guidance` and `code_target` (what the platform is built as); follow them.
 
+## Languages
+
+The Orchestrator gives you `scope.languages` (code, direction, which is the default). Build for them from the start, as `code-conventions.md` ("Languages") says: the default language drives every screen's copy and layout direction; extra languages come from a string file per language and a language switch; use logical CSS properties so a right-to-left language mirrors correctly; pick fonts that cover each script. Write real copy in each language, not placeholders, and flag any copy you had to translate yourself so the user can have it reviewed.
+
 ## Mode: scaffold and style preview (Stage 2c)
 
 The Orchestrator gives you **approved-or-proposed tokens** (colours, type, radii, spacing, shadows, extracted from the reference by the Design System Agent or chosen for `creative`), the reference's **signature elements** and screenshot paths when there are any (hero composition, button and navigation styles, motion), the confirmed spec's **key screen** (its components and real copy; the platform's `preview_screen` is the fallback), and the primary viewport. Goal: let the user see their product with this look in a minute, before the full build.

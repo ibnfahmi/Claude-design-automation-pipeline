@@ -31,6 +31,7 @@ Written to the client project folder (the session's working directory) after eve
     }
   },
   "scope": {
+    "languages": [{"code": "ar", "label": "Arabic", "dir": "rtl", "default": true}, {"code": "en", "label": "English", "dir": "ltr", "default": false}],
     "platforms": ["mobile-app", "landing-page"],
     "other": null,
     "options": {

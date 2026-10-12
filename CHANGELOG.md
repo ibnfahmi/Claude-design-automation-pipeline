@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.6.9] - 2026-10-12
+
+### Added
+- **Preflight asks which language(s) to design for.** A new clickable check after the screen sizes: English, Arabic (right-to-left), French, Spanish, or any other language typed under Other, with several allowed. With more than one, a follow-up asks which is the default. The choice (code, direction, default) is saved in `scope.languages` and passed to every agent: the Brief Agent records it in the scope settings, the Design Agent builds right-to-left layouts with logical CSS properties, one string file per language, a language switch and script-capable fonts, and the Auditor checks the key frames in every language and direction (mirroring, missing translations, text fit, fonts, numbers). New "Languages" section in `code-conventions.md`.
+
 ## [0.6.8] - 2026-10-11
 
 ### Added

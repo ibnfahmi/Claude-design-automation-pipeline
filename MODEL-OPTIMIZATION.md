@@ -32,6 +32,7 @@ Reasonable overrides:
 
 ## History
 
+- **0.6.9:** no model changes.
 - **0.6.8:** no model changes.
 - **0.6.7:** no model changes.
 - **0.6.6:** no model changes; the stress test is on request only.

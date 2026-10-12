@@ -6,6 +6,7 @@ Run these in order at Stage 1.
 2. Starting point, and the brief itself (or the existing project)
 3. Platform scope (clickable)
 4. Screen sizes (clickable)
+5. Languages (clickable)
 
 The **style direction** (a saved design system, a reference, or no design system, with a quick preview) is not part of preflight. It is its own step, Stage 2c, after the spec and the user journeys are confirmed, so the preview can use the real product. See `direction.md`. The **Figma connector** is only needed for an optional export at the end (Stage 6), or when the user starts from, or takes a reference from, a Figma file; it is checked then.
 
@@ -78,6 +79,18 @@ Preflight asks only what the brief rarely says and that decides which frames get
 
 Save the result as `scope` in the state file (format in `state-file.md`). Pass each platform's `ask: "brief"` options, with their choices and defaults, to the Brief Agent.
 
+## 5. Languages — which language(s) to design for
+
+The language decides the text direction, the fonts, the copy and how much room labels need, so ask it up front. Skip the question only when the starting point is an existing project whose languages are clear from its code (say which you found, and let the user change them).
+
+If the brief is already written in a language other than English, mention it and mark that language `(Recommended)`.
+
+**Step A:** AskUserQuestion, header `Languages`, `multiSelect: true`: *"Which language(s) should the design be in?"* Options: **English**, **Arabic (right-to-left)**, **French**, **Spanish**. Other languages (German, Hebrew, Persian, Urdu, Turkish, Chinese and so on) come through **Other**: the user types them. Add a one-line note on each option's description that Arabic, Hebrew, Persian and Urdu run right to left, so the whole layout is mirrored.
+
+**Step B, only when more than one language was chosen:** a second question, header `Default language`, single choice among the chosen languages (up to four): *"Which language is the default?"* The default language is the one the app opens in and the one the spec, journeys and frames are written in. The other languages are added through a language switch (see `code-conventions.md`).
+
+**Saving.** Store each language in `scope.languages` (format in `state-file.md`) with its code, label, direction (`rtl` for Arabic, Hebrew, Persian and Urdu, otherwise `ltr`) and which one is the default. Pass the list to the Brief Agent (a `Languages` row in the scope settings) and to every agent that builds, journeys or audits.
+
 ## Code stack: no question, plain HTML, CSS and JS
 
 The default output is **plain HTML, CSS and JS** for every project: it opens by double-click, has nothing to install for reviewers, and needs no stack decision up front. Don't ask which stack to use. Save `stack: "html-css-js"` and its dev port (5173) in the state file.
@@ -95,6 +108,7 @@ Show a short checklist, e.g.
 
 - ✅ Node 20.11, npm 10.2, Git 2.45
 - ✅ Starting point — brief
+- ✅ Languages — Arabic (default, RTL) and English
 - ✅ Scope — Mobile app (iPhone 16, iPhone SE), Landing page (Desktop 1440, Tablet 768, Mobile 375)
 
 Save the results under `preflight` and `scope` in the state file. The design direction is saved later, in Stage 2c.

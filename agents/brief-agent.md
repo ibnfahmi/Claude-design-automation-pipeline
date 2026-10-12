@@ -70,6 +70,7 @@ Platforms and screen sizes (from the scope), and the audience.
 | Landing page | Primary CTA | Book a demo | brief: "book a demo" section 1 |
 | Landing page | Sections | Hero, Benefits, Pricing, FAQ, Footer | brief section 2 |
 | Landing page | Layout type | Classic hero plus sections | default |
+| All | Languages | Arabic (default, right-to-left), English | preflight |
 
 ## Requirements
 | ID | Platform | Requirement | Basis | Source (quote or location) | Priority |

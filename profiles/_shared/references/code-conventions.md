@@ -75,6 +75,16 @@ The spec and the journeys name screens and states as `Screen / State` (for examp
 
 Viewports come from the scope: the primary viewport for states, and every chosen viewport for each screen. Make the app genuinely responsive (the frames at different widths are the same components), and use a device or window frame wrapper only where the platform has one.
 
+## Languages
+
+`scope.languages` lists the languages chosen in preflight, with a direction and a default.
+- **Direction:** set `lang` and `dir` on `<html>` from the active language. Use **logical CSS properties** (`margin-inline-start`, `padding-inline`, `inset-inline-end`, `text-align: start`, `border-start-start-radius`) instead of left and right, so right-to-left mirrors by itself. Mirror directional icons (arrows, chevrons, back buttons) but not logos, media controls, numerals or clocks.
+- **Strings:** all copy lives in one file per language (`scripts/i18n/<code>.js` in plain HTML, keyed by a stable name; the HTML reads `data-i18n="key"` and a small classic script fills it). The default language is complete first; every other chosen language is complete too, because a half-translated screen is a defect.
+- **Switch:** with more than one language, a visible language switch in the header (a globe icon with the language code is enough) changes the language and direction without a reload and remembers the choice; the default language applies on first visit. Each frame works in every language; frames are not duplicated per language.
+- **Fonts:** a family that covers each script (for example Arabic needs an Arabic-capable family), loaded from relative `fonts/` files so the `share/` copy works offline. Text sizes may need a step up for Arabic and other scripts with small x-heights.
+- **Numbers and dates:** formatted with `Intl` for the active language; digits follow the language's convention.
+- `localization.md` has the text-expansion and right-to-left details.
+
 ## Anchors for comments
 
 Every frame root has `data-frame="Screen / State"` and every reusable component root has `data-component="Name"`, so a review comment on the published page can be traced back to its source file (see `share-build.md`).
