@@ -5,7 +5,7 @@ When a build starts, tell the user how long it is likely to take. Do it at the s
 ## Count what is being built
 
 From the confirmed spec and the current phase's features, count:
-- **Frames:** the screens plus the interaction states of the phase's features (the spec's Screens and Interactions-and-states rows; Foundation counts in Phase 1). If the spec has no clean count, use the number of distinct `Screen / State` names.
+- **Frames:** count by screen **type** (one representative per type, `screen-types.md`), not by instance: the screens plus the interaction states of the phase's features (the spec's Screens and Interactions-and-states rows; Foundation counts in Phase 1). If the spec has no clean count, use the number of distinct `Screen / State` names.
 - **Viewports:** how many screen sizes were chosen, across platforms.
 - **Languages:** the number in `scope.languages`.
 - **Heavy items:** a WebGL or 3D hero, heavy motion, charts, maps, a design system being built in the background, a Figma reference with components.

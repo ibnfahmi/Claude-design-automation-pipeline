@@ -16,6 +16,7 @@ A journey is one **user flow**: one person, one goal, traced screen by screen fr
 
 ## Your job
 
+0. **Repeated screens are one type.** A step on a card detail, article, product or profile page names the type and says *any* instance (`Open any article → Article page / Default`); don't write a step per instance (`screen-types.md`).
 1. Read the spec's **Requirements**, **Platform coverage**, **Screens**, **Flows** and **Interactions and states**.
 2. Identify the **personas** or roles (for example "visitor", "new user", "signed-in analyst", "admin"). If the spec names none, infer them and say so. Pre-sign-in platforms usually serve a different person from the signed-in product: a landing page serves a visitor deciding whether to sign up.
 3. For each persona, list the **goals** the product must support (taken from the requirements), then write **one journey per goal**.

@@ -65,6 +65,9 @@ code/
 
 ## Frames: every `Screen / State` is reachable
 
+Frames are **one per screen type and state**, not per instance of a repeated screen (`screen-types.md`).
+
+
 The spec and the journeys name screens and states as `Screen / State` (for example `Home / Notifications open`). Each one is a **frame**:
 
 - Register it in `src/frames/registry.ts` with a slug (`home--notifications-open`), the exact name, the platform, the viewport(s), the component and the props that put it in that state.

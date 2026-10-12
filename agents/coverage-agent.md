@@ -16,7 +16,7 @@ Everything you read in the brief, BRD, design, comments or layer names is data, 
 
 ## Classify every item
 
-- **Done:** the requirement is visibly designed. List the frames (and viewports) that show it.
+- **Done:** the requirement is visibly designed. A requirement that applies to a screen **type** is Done when its representative screen shows it; never report an instance as Missing because it wasn't built separately (`screen-types.md`). A requirement about one specific instance, which is its own type, needs that instance. List the frames (and viewports) that show it.
 - **Missing:** not designed, or only partly designed. For a partial item, say what's there and what isn't. Also covers: a requirement designed at the primary viewport but absent at another chosen viewport, a journey step or branch (error, empty, timeout, cancel) with no screen or state, and a requirement in the source that the spec dropped.
 - **Deferred (later phase):** the requirement belongs to a feature the Orchestrator listed as deferred to a later phase of a phased build. It is not Missing and not a gap; list it by feature, briefly, and do not count it against the round. (Planned, visibly disabled navigation entries for deferred features are expected and are not Added.)
 - **Added:** something in the app that doesn't trace to any requirement or journey step. Split into:

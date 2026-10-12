@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.7.7] - 2026-10-12
+
+### Changed
+- **One representative screen per type.** Screens that repeat with different data (a card or product detail, an article or blog page, a profile, a category page) are designed and built **once, as a template**, not once per instance. The spec lists screens by type with a `Represents` note; journeys say "open any article"; the Design Agent builds one data-driven representative with realistic sample content and all its states (a listing shows about six sample items); coverage counts a requirement as Done when the representative shows it and never reports an instance as Missing; the audit tests the template and uses the stress test's worst-case data for instances that differ in length or shape; the time estimate and the phase size count by type; and the Figma export has one frame per type and state, with a card note "Template: applies to <instances>". Instances that differ in layout or behaviour, and screens you ask for separately, stay separate. New reference `screen-types.md`.
+
 ## [0.7.6] - 2026-10-12
 
 ### Added

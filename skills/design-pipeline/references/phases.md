@@ -10,7 +10,7 @@ The Brief Agent's spec has a **Features** table (see `brief-agent.md`): each maj
 
 ## When to offer it (Stage 2a, right after the spec is confirmed)
 
-Count the features other than Foundation. The project is **large** when it has **6 or more features**, or **30 or more requirements**, or the spec lists **25 or more frames**. Below that, don't ask: build everything in a single phase (the user can still say "split it into phases" at any point before the build starts).
+Count the features other than Foundation. The project is **large** when it has **6 or more features**, or **30 or more requirements**, or the spec lists **25 or more frames** (counted by screen type, one representative per type). Below that, don't ask: build everything in a single phase (the user can still say "split it into phases" at any point before the build starts).
 
 For a large project ask once with AskUserQuestion: *"This is a large product. Build it in phases so you can judge a few working features first?"* (header: `Phases`):
 1. **Yes, build in phases (Recommended)** — "You pick the major features for Phase 1. When it works, say 'continue' and I'll list what is left for Phase 2. Uses far fewer tokens per step."

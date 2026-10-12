@@ -24,6 +24,7 @@ Never skip a stage (except the user journeys step and the audit, which are optio
 **Where the platform profiles are.** `profiles/` is in the plugin root: from this skill's base directory, `../../profiles/`. `profiles/index.json` lists the platforms; each `profiles/<id>/profile.json` holds its preflight questions, required screens and states, design guidance, `code_target` (what the platform is built as) and audit checks (format in `profiles/README.md`). Pass subagents the absolute paths and the profile contents they need.
 
 **Reference files.** `profiles/_shared/references/` holds the shared guidance. Resolve these absolute paths once and hand them over as listed:
+- **Brief, Journey, Design, Coverage and Handoff agents and the Auditor:** also `_shared/references/screen-types.md` (one representative screen per type).
 - **Design Agent** (all modes): `_shared/references/localization.md` when `scope.languages` has more than one language or any right-to-left language, `_shared/references/code-conventions.md`, `_shared/references/share-build.md`, `_shared/references/code-quality.md`, `_shared/references/grounding.md`, plus every file listed in `auditor.references` of each platform in the scope. These are the same thresholds the Auditor will test against, so the first build meets them. In `style preview` mode, when the reference's `rendering` is `webgl` (or the brief asks for a 3D hero), also give it `_shared/references/webgl-3d.md`.
 - **Design System Agent** (`tokens` and `full` modes): `_shared/references/grounding.md`, and for a website URL reference in `tokens` mode also `_shared/references/reference-capture.md`.
 - **Auditor**: `_shared/references/code-conventions.md`, `_shared/references/share-build.md`, `_shared/references/ui-defects.md`, `_shared/references/stress-test.md` (only for a stress test) and the files in `auditor.references` of each platform in the scope (which include `code-quality.md`).
@@ -70,7 +71,7 @@ The brief itself is requested **in preflight, as soon as the user picks "A brief
 
 ## Stage 2a — Phases (large projects)
 
-Right after the spec is confirmed, follow `references/phases.md`: if the project is large (6 or more features, 30 or more requirements, or 25 or more frames), offer to build it in phases and let the user pick the major features for Phase 1 with clickable choices. Smaller projects skip this and build everything in one phase. Everything after this point (journeys, build, audit, coverage, review page) covers **the chosen phase's features only**; the spec stays complete.
+Right after the spec is confirmed, follow `references/phases.md`: if the project is large (6 or more features, 30 or more requirements, or 25 or more frames, counted by screen type), offer to build it in phases and let the user pick the major features for Phase 1 with clickable choices. Smaller projects skip this and build everything in one phase. Everything after this point (journeys, build, audit, coverage, review page) covers **the chosen phase's features only**; the spec stays complete.
 
 ## Stage 2b — Optional steps, then user journeys
 

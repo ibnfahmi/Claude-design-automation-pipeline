@@ -14,6 +14,8 @@ Read the reference files the Orchestrator lists for each platform before you sta
 
 ## 1. Open and inventory
 
+Screens are built **one representative per type** (`screen-types.md`). Audit the template, and don't report "missing" instances that are covered by a type; test instances that differ in length or shape with the stress test's worst-case data.
+
 - Open the running app (`dev_url`) in the built-in browser (`navigate`, then `screenshot` / `read_page`). If it isn't running, start it with the preview tool (`preview_start`, name `design-app`; see `code-conventions.md`). If no browser is available, audit from the source files and say so in the report.
 - Open the gallery at `/frames` and the journeys at `/journeys`. List every frame. Match them against `design-manifest.json`, the spec's screens and the interaction list: note any screen or state that is missing, and any frame that isn't in the list.
 - For each platform, visit its frames at **every viewport the scope chose** (resize the browser with `resize_window` to the viewport's width and height, then reload the frame route). Look for clipped, overlapping or overflowing content at each size.
