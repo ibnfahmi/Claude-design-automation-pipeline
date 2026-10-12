@@ -2,6 +2,12 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.7.9] - 2026-10-13
+
+### Changed
+- **Every page of the Figma file has the background #272727.** Set on each page as it is created and checked before the export returns.
+- **The standard cover thumbnail is built by default, in the team's template style.** A 1600 × 900 frame (#1B1B1B) with the logo at the top left, a **Version** pill and a **last update date** pill (`DD-Month-YYYY`), the **project name** in IBM Plex Sans SemiBold 120 **truncated to one line**, and the **description** in IBM Plex Sans Regular 60 **truncated to two lines**, applied as the file's thumbnail. The version is the BRD's or brief's version when it states one, otherwise `v1.0` for the first export and `v1.1`, `v1.2`... for later exports of the same project (tracked in `figma_exports`); the date is today's. The logo ships with the plugin (`_shared/assets/thumbnail-logo.svg`), is added through the Figma upload route so the 67 KB SVG isn't pasted into a tool call, and can be replaced by putting your own at `~/.claude/design-automation/brand/thumbnail-logo.svg`. New reference `figma-thumbnail.md` (replaces the earlier collage thumbnail).
+
 ## [0.7.8] - 2026-10-12
 
 ### Fixed
