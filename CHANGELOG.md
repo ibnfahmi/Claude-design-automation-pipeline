@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.7.1] - 2026-10-12
+
+### Added
+- **A time estimate before every build.** At the start of the build (and of each phase) the pipeline counts the frames, screen sizes, languages and heavy items (3D, motion, charts), then tells you in two or three lines how long it will take: a rounded range with its parts (build, audit, coverage, share build) and its assumptions. If it is long, it offers to cut it down (fewer features, skip the audit, fewer sizes or languages). It also records how long each part really took, tells you the actual time against the estimate when it finishes, and uses the earlier rounds of the same project to make the next estimate more accurate. The starting values are working defaults, not measured timings, and the estimate says so. New reference `build-estimate.md`.
+
 ## [0.7.0] - 2026-10-12
 
 ### Added

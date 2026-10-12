@@ -65,6 +65,7 @@ Written to the client project folder (the session's working directory) after eve
   ],
   "manifest_file": "design-manifest.json",
   "review_round": 2,
+  "timing": {"rounds": [{"round": 1, "phase": 1, "frames": 14, "viewports": 3, "languages": 2, "estimated_min": [45, 80], "actual_min": {"scaffold": 5, "build": 41, "audit": 17, "coverage": 6, "share": 4, "total": 73}}]},
   "audits": [
     {"round": 1, "result": "pass with issues", "interactions": "11/12", "platform_checks": "9/10", "critical": 0, "major": 2, "minor": 5, "report": "audit-round-1.md"}
   ],

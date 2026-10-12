@@ -109,9 +109,11 @@ Save the direction under `preflight` in the state file, set `stage: "design"`, a
 
 ## Stage 3 — Build
 
-Start `design-agent` in build mode (for Phase 2 and later, in **add phase** mode on the existing `code/`) with: the full confirmed spec, the features of the current phase (`current_phase` in the state file) and which features are deferred, `user-journeys.md` (if any), the `stack` (`html-css-js` unless the project is existing code or a platform has a fixed target), the platform scope (viewports; the first chosen viewport is the primary one) with each platform's `design_guidance` and `code_target` and the reference file paths listed above, the design direction from Stage 2c (`system` + the design system folder, `reference` + the approved tokens, signature elements and reference, `creative` + the approved tokens, or `existing` + the code folder or Figma link), and "round 1". Store its agent ID in the state file as `design_agent_id`.
+**First, tell the user how long it will take** (`references/build-estimate.md`): count the frames, screen sizes, languages and heavy items of this build (or phase), give a rounded range with its parts and assumptions in two or three lines, say it is an estimate, and offer to cut it down if it is long. Note the start time with `date +%s`.
 
-When it returns, save `dev_url`, `share_status` from its SHARE line, `interaction_list`, increase `review_round`, and write `design-manifest.json` from its FRAMES list (format in `references/state-file.md`). If its `GATES` line shows a failing build, send it back to fix that before auditing. Then go to Stage 3b.
+Then start `design-agent` in build mode (for Phase 2 and later, in **add phase** mode on the existing `code/`) with: the full confirmed spec, the features of the current phase (`current_phase` in the state file) and which features are deferred, `user-journeys.md` (if any), the `stack` (`html-css-js` unless the project is existing code or a platform has a fixed target), the platform scope (viewports; the first chosen viewport is the primary one) with each platform's `design_guidance` and `code_target` and the reference file paths listed above, the design direction from Stage 2c (`system` + the design system folder, `reference` + the approved tokens, signature elements and reference, `creative` + the approved tokens, or `existing` + the code folder or Figma link), and "round 1". Store its agent ID in the state file as `design_agent_id`.
+
+When it returns, note the end time, record the minutes in the state file under `timing` and tell the user the actual time against the estimate in one line (`build-estimate.md`). Save `dev_url`, `share_status` from its SHARE line, `interaction_list`, increase `review_round`, and write `design-manifest.json` from its FRAMES list (format in `references/state-file.md`). If its `GATES` line shows a failing build, send it back to fix that before auditing. Then go to Stage 3b.
 
 ## Stage 3b — Audit and coverage (every round)
 
@@ -124,7 +126,7 @@ Set `stage: "audit"` and tell the user the app is being compared with the brief 
 - `design-auditor` gets: `scope.languages` (it re-checks key frames in every language and direction), the built features (it tests the frames in `design-manifest.json`), `dev_url`, `code/`, the spec, the interaction list, the design direction, the platform scope with each platform's profile `auditor.checks` and the absolute paths of its `auditor.references`, and the round number.
 - `coverage-agent` gets: the current phase and its features, the **deferred** features and their requirement IDs (to report as Deferred, not Missing), `dev_url`, `code/`, `brief-source.md` (and any BRD files), the spec, `user-journeys.md` if it exists, `design-manifest.json`, the platform scope, and the round number.
 
-When they return, save a summary of each in the state file (`audits` and `coverage`: round, counts, report file). Neither agent changes the code; you decide with the user what to fix. Go to Stage 4.
+When they return, add their minutes to `timing` and save a summary of each in the state file (`audits` and `coverage`: round, counts, report file). Neither agent changes the code; you decide with the user what to fix. Go to Stage 4.
 
 ## Stage 4 — Review loop
 
