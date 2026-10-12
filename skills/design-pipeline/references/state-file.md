@@ -12,6 +12,7 @@ Written to the client project folder (the session's working directory) after eve
   "phases": [{"n": 1, "features": ["F-0", "F-1", "F-3"], "status": "planned | building | done"}],
   "skip_journeys": false,
   "skip_audit": false,
+  "doc_converter": "anydoc | declined | null",
   "stress_fixtures": false,
   "starting_point": "brief | code | figma",
   "existing_source": "folder path or Figma link, only when starting_point is code or figma",

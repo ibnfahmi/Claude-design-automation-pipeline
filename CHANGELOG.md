@@ -2,6 +2,13 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.7.3] - 2026-10-12
+
+### Added
+- **Documents are converted to markdown before the agents read them.** A brief or BRD given as Word, Excel, PowerPoint, PDF or another document format is converted with AnyDoc (`@firecrawl/anydoc`, Firecrawl, MIT, local, no account), installed once into the plugin's own tools folder with the user's consent and pinned to a version. Markdown is cleaner for the agents and cheaper in tokens than raw files. The conversion report (tool, pages converted, pages read from images, verification, language and direction) goes at the top of `brief-source.md`. New reference `documents.md`.
+- **PDFs are always cross-checked.** In tests, Word, Excel and CSV files (including Arabic cells and paragraphs) converted correctly, but one PDF came out with silently wrong letters while the converter reported success, and an Arabic PDF was refused with "needs OCR". So every PDF conversion is compared with an independent extraction on sample pages, Arabic and other right-to-left text is checked for logical order, and any garbled or OCR-needing page is read from its image instead. The converter's hosted OCR option (which sends the document to a cloud service) is never used without an explicit yes.
+- **A PDF is a new reference type** next to website, image and Figma: a brand guide or deck gives stated colour codes, fonts and rules from its text and the look from its pages. `/design-journeys` also accepts documents.
+
 ## [0.7.2] - 2026-10-12
 
 ### Changed

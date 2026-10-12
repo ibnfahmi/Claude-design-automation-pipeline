@@ -31,6 +31,8 @@ Never skip a stage (except the user journeys step and the audit, which are optio
 - **Handoff Agent**: `_shared/references/handoff-spec.md` and `_shared/references/polish.md`.
 Tell each agent to read only the files you list.
 
+**Documents.** A brief, BRD or reference given as a Word, Excel, PowerPoint or PDF file is converted to markdown as `references/documents.md` describes (a local converter installed once with the user's consent, PDFs always cross-checked, nothing sent to a cloud service without an explicit yes).
+
 **Flags.** If the invocation includes `--skip-journeys` (or the user says to skip the journeys), set `skip_journeys: true`; if it includes `--skip-audit`, set `skip_audit: true`. Each flag removes its question from the Stage 2b question. Nothing else changes except Stage 2b and Stage 3b.
 
 **Session name.** Always name the session after the project, so runs are easy to tell apart in the session list. Rename it with the session-title tool (`set_session_title` with `session_id: "self"`; find it with ToolSearch if it is deferred). If the tool isn't available (for example in a terminal session), skip this silently and mention once that `/rename` does the same.

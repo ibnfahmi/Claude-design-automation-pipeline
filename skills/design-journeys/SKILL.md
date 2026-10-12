@@ -13,7 +13,7 @@ This runs the pipeline's Journey Agent by itself, so journeys can be created, re
 
 Look in the current folder, in this order, and tell the user in one line what you found and will use:
 1. `design-spec.md` (a confirmed spec with numbered requirements `R-1`…), and `design-pipeline-state.json` if present (it holds the platform scope, the features and the current phase).
-2. `brief-source.md`, or a brief / BRD file the user names.
+2. `brief-source.md`, or a brief / BRD file the user names (a Word, Excel, PowerPoint or PDF file is converted first, as `../design-pipeline/references/documents.md` describes).
 3. An existing code project (`code/` or a folder the user names).
 
 If there is **no spec** (only a brief or code), create one first: start `design-automation:brief-agent` (mode `brief`, or `existing` for code) with the source and the platform scope, put any questions it returns to the user and send the answers back to the same agent, then show the spec's **Requirements** and **Platform coverage** and get a confirmation. Save it as `design-spec.md`. If there is nothing at all, ask for the brief, BRD or code folder.
