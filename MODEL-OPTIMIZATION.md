@@ -32,6 +32,7 @@ Reasonable overrides:
 
 ## History
 
+- **0.7.0:** no model changes.
 - **0.6.9:** no model changes.
 - **0.6.8:** no model changes.
 - **0.6.7:** no model changes.

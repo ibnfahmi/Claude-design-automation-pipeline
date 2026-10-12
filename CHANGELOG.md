@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.7.0] - 2026-10-12
+
+### Added
+- **The style preview can be an artifact that takes comments.** When the style preview is ready, the pipeline offers (once per project) to publish it as a private page. You select what you want changed and comment on it, send the thread to Claude, and the change lands on its own: the Design Agent updates the tokens, components and preview, rebuilds the page, and the thread is replied to and resolved. With a page published, approval no longer blocks on a clickable question; say "approved", "tweak: …" or "try a different reference" in the chat. The same link then carries on as the project's review page when the full design is built. The Design Agent now also produces a self-contained `share/style-preview.html` (`PREVIEW_FILE`).
+
 ## [0.6.9] - 2026-10-12
 
 ### Added

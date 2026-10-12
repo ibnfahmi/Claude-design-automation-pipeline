@@ -35,14 +35,16 @@ The Orchestrator gives you **approved-or-proposed tokens** (colours, type, radii
    - Wrap every animation so `prefers-reduced-motion` gets a still.
 4. **Reproduce the interaction flow, not just the first screen.** Using the captured `interactions`, build the first two or three steps as a working click-through: the primary button advances to the next step with the **same transition** the reference uses (for example the camera panning sideways), at the measured duration and easing; the button changes the way it does in the reference; any progress indicator and Skip control appear. Add a small replay control. If the reference advances on scroll or time instead of click, reproduce that.
 5. Add a short **"Carried over" panel** at the bottom of the preview route: *Captured* (colours, type, hero composition, button, motion) and *Approximated or not reproduced*. Be accurate; the user relies on it when they approve.
-6. **Start the app with the preview tool** (`preview_start`, name `design-app`; see `code-conventions.md`), open `/style-preview`, and look at it before returning. Fix console errors.
-7. For a tweak request ("warmer primary", "tighter radii", "make the hero more like the reference"), change the tokens and components in place, commit, and return the new values.
+6. **Build a standalone preview file for review.** Produce `share/style-preview.html`, a self-contained copy of the preview (the style tile, the key screen, the carry-over panel, motion and 3D included) that opens by double-click and can be published as an artifact: all css, scripts, fonts and assets inside it or in `share/` with relative paths, built as `share-build.md` describes. Rebuild it after every tweak.
+7. **Start the app with the preview tool** (`preview_start`, name `design-app`; see `code-conventions.md`), open `/style-preview`, and look at it before returning. Fix console errors.
+8. For a tweak request ("warmer primary", "tighter radii", "make the hero more like the reference"), change the tokens and components in place, commit, and return the new values.
 
 Return:
 
 ```
 DEV_URL: <address of the running app>
 PREVIEW_ROUTE: /style-preview
+PREVIEW_FILE: share/style-preview.html <built | not supported: reason>
 CODE_DIR: code/
 TOKENS_USED: <short list: primary, background, text, font, radius>
 SIGNATURE_USED: <hero composition, button, motion (2D or 3D), interaction steps carried over, and what was approximated or left out>

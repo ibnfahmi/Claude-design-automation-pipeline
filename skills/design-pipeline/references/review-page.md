@@ -4,9 +4,18 @@ The code is the deliverable, but fine-tuning is fastest when the reviewer **comm
 
 The local dev server stays the place to try the app and edit the code by hand. The review page is for pointing at things, and for stakeholders who can't run anything. It is private until the user shares it from claude.ai (sharing gives others comment access); never share it for them.
 
+## It starts at the style preview
+
+The review page is offered **at the style preview (Stage 2c)**, so the look can be fine-tuned by commenting on it before the full build, and the same link then carries on as the project's review page. The Design Agent builds a standalone, self-contained `share/style-preview.html` (and its css, scripts, fonts and assets, per `share-build.md`) next to the preview route. Publish it as described under "Publishing", with `file_path` = that file; for a plain HTML preview map its other files through `files`.
+
+- **The question** (once per project, asked when the preview is ready; skipped when `review_page` is already set or the stack can't build a share file): *"Publish a private page for this style preview, where you can comment on the look and I'll apply it?"* (header `Review page`), **Yes, publish it (Recommended)** — "A private page on claude.ai. Select what you want changed, leave a comment, and I'll change the tokens and the preview. The same link then carries on as the review page for the full design." / **No, local only**. Save `review_page` (`"declined"` or the URL) and `review_page_stage: "style-preview"`.
+- **Comments** arrive on their own as described below. At this stage a fix means changing the **tokens, the components and the preview route** (colours, type, radii, spacing, shadows, the hero, buttons, motion): resume the Design Agent in `scaffold and style preview` mode with the comment as a tweak, rebuild `share/style-preview.html`, republish to the same URL, reply and resolve. Say what changed in one line in the session.
+- **Approval does not wait on the page.** With a review page published, don't block on a clickable "Does this look right?" question: end the turn after giving the link, say that comments are applied as they arrive, and that the user can say "approved", "tweak: …" or "try a different reference" in the chat. The clickable question is used only when no page was published.
+- **At the full build (Stage 4)** republish the **same URL** with `share/index.html` as the page (pass `url`; map the old `style-preview.html` to `null` in `files` to remove it). The preview stays reachable inside the app at `#/style-preview`. Set `review_page_stage: "build"`. Threads resolved at the preview stay resolved.
+
 ## When it is offered
 
-After the first build round, once `share/index.html` exists and its file-open test is not `fail` (Stage 4, before the user is handed the round). Ask once per project with AskUserQuestion: *"Publish a private review page where you can comment on the design and I'll apply the comments?"* (header: `Review page`):
+If it was not already published at the style preview: after the first build round, once `share/index.html` exists and its file-open test is not `fail` (Stage 4, before the user is handed the round). Ask once per project with AskUserQuestion: *"Publish a private review page where you can comment on the design and I'll apply the comments?"* (header: `Review page`):
 1. **Yes, publish it (Recommended)** — "A private page on claude.ai, kept up to date after every round. Select what you want changed, leave a comment, and I'll fix it in the code. You can share it with teammates so they can comment too."
 2. **No, local only** — "Review on the local address only and tell me changes in the chat."
 
