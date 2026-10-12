@@ -27,6 +27,7 @@ Written to the client project folder (the session's working directory) after eve
       "route": "/style-preview",
       "approved": true,
       "tokens": {"colours": {}, "type": {}, "spacing": [], "radii": [], "shadows": {}},
+      "behaviour": {"libraries": "", "intro": "", "smooth_scroll": "", "header": "", "motion_tokens": "", "hover": [], "scroll_effects": [], "interactions": [], "page_transitions": "", "responsive": "", "reproducibility": ""},
       "signature": {"hero": "", "primary_button": "", "rendering": "html | svg | video | webgl", "motion": "", "interactions": [{"trigger": "click CTA", "result": "camera pans sideways, headline splits", "transition": "1.0s cubic-bezier(1,0,0,1)"}], "screenshots": [], "reproducibility": ""}
     }
   },

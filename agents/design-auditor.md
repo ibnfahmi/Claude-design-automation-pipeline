@@ -57,6 +57,7 @@ Review every screen and state against Nielsen's 10 usability heuristics:
 ## 5. Design-system fidelity
 
 - **system:** colours, type styles, radii, spacing and components come from the design system; list anything off-system.
+- **reference (website):** when a `BEHAVIOUR` block exists, also check each captured behaviour against the running app: motion tokens in use, hover, focus and pressed states of each element family, each scroll effect (scroll the page and watch: reveal, parallax, pinned sections, header behaviour, marquees), menu and modal transitions, page transitions, the intro, and the responsive behaviour at 768 and 390. Report each missing or wrong one as `[major]` when it is a signature behaviour (the hero, the header, the main scroll effect) and `[minor]` otherwise, and each reduced-motion gap as in `ui-defects.md`.
 - **reference:** the look matches the reference (palette, type, shape language) without copying its content. Also check that the reference's **signature elements** are present: the hero composition, the button and navigation styles, and each captured interaction step working in the app (with its transition). A reference whose behaviour was captured but is missing from the app is a major finding.
 - **creative:** the direction is consistent across screens and meets the accessibility checks.
 

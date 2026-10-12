@@ -32,6 +32,7 @@ Reasonable overrides:
 
 ## History
 
+- **0.7.2:** no model changes; the reference capture is longer, so the Design System Agent (Opus 5.5) uses more tokens on website references.
 - **0.7.1:** no model changes.
 - **0.7.0:** no model changes.
 - **0.6.9:** no model changes.

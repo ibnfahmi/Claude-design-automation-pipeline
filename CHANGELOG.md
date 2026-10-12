@@ -2,6 +2,12 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.7.2] - 2026-10-12
+
+### Changed
+- **A website URL reference now captures the whole experience.** Besides colours and type, the Design System Agent follows a new method (`reference-capture.md`) with the built-in browser: an inventory of libraries, keyframes, transitions and running animations; hover, focus and pressed states for every element family; every kind of interaction (menus, modals, tabs, accordions, carousels, forms); scroll effects found by scrolling the whole page and sampling (reveal on scroll with its stagger, parallax, pinned and horizontal sections, header behaviour, counters, marquees, smooth scrolling, scrubbed video or 3D); page and state transitions across up to three internal pages; the intro or loader; and the responsive behaviour at 768 and 390. The result is a `BEHAVIOUR` block next to the tokens.
+- **The Design Agent rebuilds it in its own code.** Motion tokens go into `tokens.css`, and each captured state and scroll effect becomes a small reusable behaviour (IntersectionObserver, CSS scroll-driven animation, View Transitions) with reduced-motion fallbacks. A library is vendored only if an effect truly needs one. The "Carried over" panel says honestly what was reproduced, approximated or left out. The Auditor checks each captured behaviour against the running app. Nothing is copied from the site: no scripts, styles, copy or assets.
+
 ## [0.7.1] - 2026-10-12
 
 ### Added

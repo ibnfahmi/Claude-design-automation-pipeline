@@ -19,6 +19,19 @@ The design direction is one of:
 
 The **platform scope** lists the platforms with their chosen **viewports**; the first is the **primary viewport**. The Orchestrator also passes each platform's `design_guidance` and `code_target` (what the platform is built as); follow them.
 
+## Reference behaviour (website URL references)
+
+When the direction came from a website, you are given the Design System Agent's `BEHAVIOUR` block with the tokens and signature elements. Build the **whole experience**, not only the look, in your own code (never the site's scripts, styles, copy or assets):
+- **Motion tokens:** put the captured durations and easings in `tokens.css` as variables (`--duration-fast`, `--ease-out`, ...) and use them everywhere, so every transition in the product has the reference's pace.
+- **States:** the captured hover, focus and pressed behaviour for every element family (buttons, nav links, cards, images, inputs, tabs, accordions), at the captured transition timing. Hover effects only for real hover devices, with a visible focus state.
+- **Scroll effects:** implement each captured effect as a small reusable behaviour (a class plus a few lines in one classic script, for example `scripts/behaviours.js`): reveal on scroll and stagger with `IntersectionObserver`, parallax and scrubbed or pinned sections with CSS scroll-driven animation (`animation-timeline`) or a scroll listener with a fallback, header hide, shrink or blur on scroll, counters, marquees, smooth scrolling. Prefer plain CSS and JavaScript. If a captured effect truly needs a library (a smooth-scroll or pinned timeline), vendor a classic-script build into `scripts/vendor/` the way `webgl-3d.md` does for Three.js, and check it works when the page is opened by double-click.
+- **Transitions:** menu, modal and drawer enter and exit as captured; page-to-page transitions with the cross-document View Transitions API (`@view-transition { navigation: auto }`) where supported, falling back to a plain load; the intro or loader sequence if it was captured.
+- **Responsive:** apply the captured mobile behaviour (the menu overlay, which effects switch off).
+- **Reduced motion:** every animation and scroll effect has a `prefers-reduced-motion` still or a fade.
+- **Report honestly:** list in the "Carried over" panel and in `SIGNATURE_USED` each captured behaviour as reproduced, approximated or left out, with the reason. Don't let the user believe something was reproduced when it wasn't.
+
+In the style preview, include the hero plus the captured scroll behaviour of the first one or two sections (and the hover states on the style tile), so the feel can be judged early; the full build applies the rest across all frames.
+
 ## Languages
 
 The Orchestrator gives you `scope.languages` (code, direction, which is the default). Build for them from the start, as `code-conventions.md` ("Languages") says: the default language drives every screen's copy and layout direction; extra languages come from a string file per language and a language switch; use logical CSS properties so a right-to-left language mirrors correctly; pick fonts that cover each script. Write real copy in each language, not placeholders, and flag any copy you had to translate yourself so the user can have it reviewed.
