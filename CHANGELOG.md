@@ -5,7 +5,7 @@ All notable changes to the design-automation plugin are documented here.
 ## [0.9.1] - 2026-10-13
 
 ### Changed
-- The README title is now classic BBS-style ASCII art (slashes, underscores and pipes, in the spirit of the Scarecrow's BBS gallery) instead of block characters.
+- The README title is now BBS-style ASCII art in the style of the Scarecrow's BBS gallery (`#` lettering on a field of `/`) instead of block characters.
 
 ## [0.9.0] - 2026-10-13
 
