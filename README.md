@@ -137,15 +137,7 @@ The plugin lives in a private GitLab repository: https://gitlab.com/cyshield-gro
 
 **Before installing**
 
-1. Ask the maintainer to add your GitLab account to the `cyshield-group1` group (Reporter role is enough). The first `git` operation opens a GitLab sign-in window; sign in once and it is remembered.
-2. If you installed an earlier version from GitHub (`design-automation`), remove it first:
-
-```
-claude plugin uninstall design-automation@design-team
-claude plugin marketplace remove design-team
-```
-
-   Also delete the `design-team` block under `extraKnownMarketplaces` in `~/.claude/settings.json`, otherwise adding the new source is refused.
+Ask the maintainer to add your GitLab account to the `cyshield-group1` group (Reporter role is enough). The first `git` operation opens a GitLab sign-in window; sign in once and it is remembered.
 
 **Install** (in Claude Code chat):
 
