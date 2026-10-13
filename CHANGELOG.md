@@ -6,6 +6,8 @@ All notable changes to the design-automation plugin are documented here.
 
 ### Changed
 - The README title is now BBS-style ASCII art in the style of the Scarecrow's BBS gallery (`#` lettering on a field of `/`) instead of block characters.
+- The title art is compact (14 lines, 74 columns).
+- **Hosting moved to GitLab** (`gitlab.com/cyshield-group1/Claude-design-automation-pipeline`); GitHub is no longer used, and the README install command points to GitLab.
 
 ## [0.9.0] - 2026-10-13
 
