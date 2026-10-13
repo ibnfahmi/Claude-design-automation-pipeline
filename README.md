@@ -44,6 +44,29 @@ NOTICE.md                attributions for the open-source guidance
 
 
 
+## 🎯 Built-in enhancements
+
+**Code and design accuracy**
+
+- **Numbered requirements, traced end to end.** The brief becomes numbered requirements; every frame lists the requirements and journey steps it covers, and a Coverage Agent reports Done, Missing and Added against the original brief or BRD after every round.
+- **A working app, not a mockup.** The output is code with real interactions, design tokens as CSS variables and a registry of every screen and state, so what is reviewed is what ships.
+- **Tested in the running app.** The Auditor resizes to each chosen screen size, clicks through every interaction and journey, reads the console and network, runs the build, and checks UI defects, accessibility, polish and code quality. Worst-case data stress tests are available on request.
+- **Look before build.** A quick style preview of your real product (a saved design system, or a reference such as a website, image or Figma file) is approved before the slow work runs. Website references are measured, including interactions, animations, transitions and scrolling effects.
+- **User journeys reviewed first.** Flows (with branches, errors and exits) are agreed before any design is built.
+- **One representative screen per type**, with all its states, instead of copies of every template instance.
+- **Quality gates** before delivery: clean build and lint, no console errors on any screen, a fresh install, and a double-click `share/` file that is tested from disk.
+- **Documents read as exact text.** Word, Excel, PowerPoint and PDF briefs are converted to markdown first, so values and wording are not guessed.
+- **Your edits are kept.** Revision rounds read `git diff` first and keep what you changed by hand; comments on the review page are applied automatically.
+- **Figma built from measurement.** Screens are measured from the settled page (final animation state, pinned fonts, spacing on a scale, layout grids), built as real auto layout and compared with a screenshot of the original.
+
+**Model and token usage**
+
+- **The right model per job.** Opus 5.5 for the brief, the audit, coverage and design-system extraction (mistakes there carry forward); Sonnet 5.5 for journeys, the build and the Figma export (see `MODEL-OPTIMIZATION.md`).
+- **Optional steps say what they cost.** User journeys and the audit are optional, with a note that they use many tokens; stress tests and the Figma export only run when asked.
+- **Build in phases.** Large projects are split by feature, so you judge a working first phase before the rest is built.
+- **Less to read, less to build.** Briefs are converted before agents read them, one screen per type is built, the design-system build runs in the background (or "tokens only" for a lighter one), and the preview is the start of the real project, not throwaway work.
+- **Time estimate before the build**, then the actual time against it.
+
 ## 🧩 Platform profiles
 
 A profile is what the pipeline knows about one kind of product, so the same steps fit a kiosk and a landing page. You pick the platforms in preflight (one or several); each profile supplies:

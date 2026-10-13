@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.8.9] - 2026-10-13
+
+### Added
+- The README has a "Built-in enhancements" section listing what improves code and design accuracy and what keeps model and token usage down.
+
 ## [0.8.8] - 2026-10-13
 
 ### Added

@@ -32,6 +32,7 @@ Reasonable overrides:
 
 ## History
 
+- **0.8.9:** no changes.
 - **0.8.8:** no changes.
 - **0.8.7:** no changes (the feedback script is removed).
 - **0.8.6:** no changes.
