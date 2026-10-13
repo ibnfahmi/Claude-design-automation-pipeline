@@ -28,6 +28,7 @@ hooks/                   feedback-detect.mjs — the local, opt-in script behind
       preflight.md       tool checks, starting point and brief, platform scope and screen sizes
       direction.md       style direction (design system, reference or creative) and the style preview
       state-file.md      design-pipeline-state.json and design-manifest.json formats, resume rules
+      gitlab.md          hosting the code project on GitLab (ask once, push after each round)
 agents/
   design-system-agent.md reference (image, screenshot, URL, Figma) → tokens fast, then a design-system folder
   brief-agent.md         brief, BRD, existing code or Figma → spec with numbered requirements and interaction states

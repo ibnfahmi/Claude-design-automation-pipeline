@@ -2,6 +2,14 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.8.4] - 2026-10-13
+
+### Added
+- **The code project can be hosted on GitLab (gitlab.com).** After the first build round the pipeline asks once per project: host the code on GitLab? You create an empty project (no README), paste its link, and the pipeline pushes `code/` after every finished round, the production check and each phase. New reference `references/gitlab.md`.
+  - **Safe by design:** before the first push it lists what would leave the machine and stops on secrets (`.env` values, keys, tokens), files over 50 MB or untracked-ignore gaps; the BRD, brief, client folder, `share/` and the state file are never pushed. It uses your own git login (SSH key or credential manager), never asks for or stores a password or token, never force-pushes, and if the repository isn't empty it asks instead of overwriting. If sign-in is needed it tells you the one command to run once and waits for "retry".
+  - Remembered per project (`git_remote`, `git_push`, `git_last_push` in the state file); a resumed run checks the remote still answers; the repository link is in the final delivery. A converted stack is its own repository.
+- **Tested here:** the push sequence against a local bare repository (first push, second push, rejected push to a non-empty remote). **Not tested:** a real gitlab.com repository and your login.
+
 ## [0.8.3] - 2026-10-13
 
 ### Fixed

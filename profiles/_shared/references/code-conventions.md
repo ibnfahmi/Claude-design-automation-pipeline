@@ -140,4 +140,4 @@ Buttons, menus, dialogs, tabs, forms (with validation), toggles and navigation a
 
 ## Git
 
-`git init` when the project is first scaffolded, with a sensible `.gitignore`. After every round: `git add -A && git commit -m "Round <n>: <summary>"`. At the start of a revision round, read `git status` and `git diff` against the last commit: the user may have edited the code directly, and **their edits must be kept** unless the feedback says otherwise. Never rewrite history and never push.
+`git init` when the project is first scaffolded, with a sensible `.gitignore`. After every round: `git add -A && git commit -m "Round <n>: <summary>"`. At the start of a revision round, read `git status` and `git diff` against the last commit: the user may have edited the code directly, and **their edits must be kept** unless the feedback says otherwise. Never rewrite history. Never push: the Orchestrator pushes to the user's GitLab repository after a round when they agreed to it (`gitlab.md`).

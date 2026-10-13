@@ -32,6 +32,7 @@ Reasonable overrides:
 
 ## History
 
+- **0.8.4:** no model changes; one question and a push step.
 - **0.8.3:** no model changes; the import mode is a short bookkeeping task on the Design System Agent.
 - **0.8.2:** no model changes; one more small question before the export and a placement script.
 - **0.8.1:** no model changes; the export adds a few small pages and a page-archive step on re-export.
