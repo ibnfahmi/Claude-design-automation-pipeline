@@ -44,6 +44,25 @@ NOTICE.md                attributions for the open-source guidance
 
 
 
+## 🧩 Platform profiles
+
+A profile is what the pipeline knows about one kind of product, so the same steps fit a kiosk and a landing page. You pick the platforms in preflight (one or several); each profile supplies:
+
+- the **questions** worth asking for that platform and a **preview screen** for the style step
+- the **code target** (for example a responsive app in device frames, a Manifest V3 extension, HTML email, a fixed-size TV or kiosk stage)
+- the **required screens and states**, **design guidance** (sizes, safe zones, touch or focus rules) and the **audit checks** the Auditor runs
+
+16 platforms in 4 groups:
+
+| Group | Platforms |
+|---|---|
+| Websites and web apps | Web app, Dashboard, Landing page, E-commerce |
+| Mobile, tablet, desktop and extensions | Mobile app, Tablet app, Desktop app, Browser extension |
+| Content and marketing | Email, Presentation deck, Social media, Docs / help center |
+| Public screens, systems and flows | Smart TV, Kiosk, Design system library, Flow (onboarding, checkout) |
+
+Anything else can be typed in as a free-text platform; it gets the web app checks. To add a platform, see [profiles/README.md](profiles/README.md).
+
 ## 🧪 Distilled from external skills
 
 Some guidance is rewritten (not copied) from open-source skills, all MIT licensed. Full attributions are in `NOTICE.md`.

@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.8.8] - 2026-10-13
+
+### Added
+- The README has a short "Platform profiles" section: what a profile provides and the 16 platforms in their 4 groups.
+
 ## [0.8.7] - 2026-10-13
 
 ### Removed
