@@ -1,8 +1,6 @@
 # 📄 README
 
-# Design automation pipeline
 
-```text
                      ___   ___  ___  ___   ___  _  _
                     |   \ | __|/ __||_ _| / __|| \| |                    '
          '      .   | |) || _| \__ \ | | | (_ || .` |
@@ -19,7 +17,6 @@
 '               |_|  |___||_|  |___||____||___||_|\_||___|
 
   Claude Code plugin ~ brief > journeys > design > audit > code > Figma
-```
 
 
 A Claude Code plugin that takes a raw design brief (or an existing code project or Figma file) to a **working code project**, with an optional Figma export:
