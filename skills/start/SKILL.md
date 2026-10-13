@@ -1,6 +1,6 @@
 ---
-name: design-pipeline
-description: Run the design pipeline, code first — take a raw design brief (or an existing code project or Figma file) through platform scope, a structured spec with numbered requirements, user journeys (user flows) for review, a style direction with a live preview, and a working code project that is audited for usability and checked for coverage against the brief, with an optional Figma export. Use when the user runs /design-pipeline (optionally with --skip-journeys), asks to start a new design from a brief, or wants to resume a run in the current folder.
+name: start
+description: Run the design pipeline, code first — take a raw design brief (or an existing code project or Figma file) through platform scope, a structured spec with numbered requirements, user journeys (user flows) for review, a style direction with a live preview, and a working code project that is audited for usability and checked for coverage against the brief, with an optional Figma export. Use when the user runs /design-pipeline:start (optionally with --skip-journeys), asks to start a new design from a brief, or wants to resume a run in the current folder.
 ---
 
 # Design pipeline — Orchestrator
@@ -46,7 +46,7 @@ Tell each agent to read only the files you list.
 Look for `design-pipeline-state.json` in the current folder (format in `references/state-file.md`).
 
 - Found and `stage` is not `done` → summarise where the run stopped and ask: resume, or start over? On resume, jump to that stage:
-  - `review` → run the "When the user returns" steps of Stage 4. Anything the user typed with the command (for example `/design-pipeline approved`) counts as review feedback.
+  - `review` → run the "When the user returns" steps of Stage 4. Anything the user typed with the command (for example `/design-pipeline:start approved`) counts as review feedback.
   - `phase_done` → a phase is finished and features remain: show the next phase's feature selection (`references/phases.md`).
   - `audit` → rerun Stage 3b. `journeys` → continue the journeys review (Stage 2b). `direction` → continue the style step (Stage 2c).
   - In a new session, first re-run the tool check (Node, npm and Git), keep the saved scope and direction (telling the user which are in use, and letting them change them), restart the dev server with the preview tool, and start a fresh Design Agent if one is needed (the old agent ID won't work). The code in `code/` is the source of truth; read `git log` and `git status` to see where it stands.
@@ -141,11 +141,11 @@ Give the user:
 - the interaction list
 - the **audit** result (only if it ran; otherwise say it is off and can be run on request): pass/fail, interactions passed, platform checks passed, counts by severity, and the critical and major issues in one line each (full report: `audit-round-<n>.md`)
 - the **coverage** result: *Done / Missing / Added* counts, each Missing requirement and each "Added (unrequested)" item in one line (full report: `coverage-round-<n>.md`)
-- this instruction: *"Try the app and tell me what to change, comment on the review page, or edit the code in `code/` yourself. Say 'run the audit' for a full test of the current build, or 'stress test it' to try worst-case data (long names, empty lists, 1,000 rows). When you're done, reply 'done' here (or run `/design-pipeline` in a new session to resume), or say 'approved' to finish. Tell me which audit issues to fix (for example 'fix all critical and major'). By default, the critical audit issues and every missing **must** requirement go into the next round. For each unrequested addition, tell me to keep it (I'll add it to the spec) or remove it."*
+- this instruction: *"Try the app and tell me what to change, comment on the review page, or edit the code in `code/` yourself. Say 'run the audit' for a full test of the current build, or 'stress test it' to try worst-case data (long names, empty lists, 1,000 rows). When you're done, reply 'done' here (or run `/design-pipeline:start` in a new session to resume), or say 'approved' to finish. Tell me which audit issues to fix (for example 'fix all critical and major'). By default, the critical audit issues and every missing **must** requirement go into the next round. For each unrequested addition, tell me to keep it (I'll add it to the spec) or remove it."*
 
 Set `stage: "review"` in the state file and **end your turn**. Do not poll.
 
-When the user returns (by replying here, or by running `/design-pipeline` and choosing to resume):
+When the user returns (by replying here, or by running `/design-pipeline:start` and choosing to resume):
 
 1. Read what changed in the code since the last commit (`git status`, `git diff` in `code/`), so you see any direct edits, and pass them on.
 2. Take anything the user typed in this session into account. If a review page is published, read any open comment threads once and handle them (`references/review-page.md`); comments sent to Claude are normally handled the moment they arrive.

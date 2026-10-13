@@ -1,6 +1,6 @@
 ---
-name: design-journeys
-description: Manually create user journeys (user flows) for a product, on demand, outside the full design pipeline. Takes a brief, a BRD, an existing spec or an existing code project in the current folder, covers every platform and the journeys that cross platforms, and saves user-journeys.md for review. Use when the user runs /design-journeys, or asks to create, redo or extend user journeys or user flows without running the whole pipeline.
+name: journeys
+description: Manually create user journeys (user flows) for a product, on demand, outside the full design pipeline. Takes a brief, a BRD, an existing spec or an existing code project in the current folder, covers every platform and the journeys that cross platforms, and saves user-journeys.md for review. Use when the user runs /design-pipeline:journeys, or asks to create, redo or extend user journeys or user flows without running the whole pipeline.
 ---
 
 # Design journeys: user journeys on demand
@@ -13,7 +13,7 @@ This runs the pipeline's Journey Agent by itself, so journeys can be created, re
 
 Look in the current folder, in this order, and tell the user in one line what you found and will use:
 1. `design-spec.md` (a confirmed spec with numbered requirements `R-1`…), and `design-pipeline-state.json` if present (it holds the platform scope, the features and the current phase).
-2. `brief-source.md`, or a brief / BRD file the user names (a Word, Excel, PowerPoint or PDF file is converted first, as `../design-pipeline/references/documents.md` describes).
+2. `brief-source.md`, or a brief / BRD file the user names (a Word, Excel, PowerPoint or PDF file is converted first, as `../start/references/documents.md` describes).
 3. An existing code project (`code/` or a folder the user names).
 
 If there is **no spec** (only a brief or code), create one first: start `design-pipeline:brief-agent` (mode `brief`, or `existing` for code) with the source and the platform scope, put any questions it returns to the user and send the answers back to the same agent, then show the spec's **Requirements** and **Platform coverage** and get a confirmation. Save it as `design-spec.md`. If there is nothing at all, ask for the brief, BRD or code folder.
@@ -36,4 +36,4 @@ Then check, before showing anything:
 
 Show each journey as a compact outline in the chat, for example `J1 Visitor signs up: Landing page / Home → click Start free trial → Sign up / Form → submit → Sign up / Verify email → open the link → Dashboard / Welcome`, with its branches beneath (errors, empty states, drop-off). Add the personas, which platforms each journey touches, the cross-platform journeys, and any spec gaps. Ask the user to review `user-journeys.md`: confirm, edit the file, or say what to change. Apply changes by resuming the same agent. Stop after an explicit confirmation.
 
-If `design-pipeline-state.json` exists, set `journeys_confirmed: true`, `journeys_file`, and `skip_journeys: false`, so the pipeline uses them. Don't change its `stage`. Finish with one line saying where the file is and that `/design-pipeline` will use it.
+If `design-pipeline-state.json` exists, set `journeys_confirmed: true`, `journeys_file`, and `skip_journeys: false`, so the pipeline uses them. Don't change its `stage`. Finish with one line saying where the file is and that `/design-pipeline:start` will use it.

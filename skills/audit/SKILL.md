@@ -1,6 +1,6 @@
 ---
-name: design-audit
-description: Manually audit a running app or code project, on demand, outside the full design pipeline. Tests it at every chosen screen size for usability, accessibility, visual UI defects, platform checks and code quality, clicks through every interaction and journey, and saves a severity-ranked audit report. Use when the user runs /design-audit, or asks to audit, test or review a design, site or app they already have (built by the pipeline or not).
+name: audit
+description: Manually audit a running app or code project, on demand, outside the full design pipeline. Tests it at every chosen screen size for usability, accessibility, visual UI defects, platform checks and code quality, clicks through every interaction and journey, and saves a severity-ranked audit report. Use when the user runs /design-pipeline:audit, or asks to audit, test or review a design, site or app they already have (built by the pipeline or not).
 ---
 
 # Design audit: the Auditor on demand

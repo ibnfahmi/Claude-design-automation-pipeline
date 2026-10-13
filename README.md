@@ -33,9 +33,9 @@ Release notes are in [CHANGELOG.md](CHANGELOG.md). To add a platform, see [profi
   plugin.json            plugin manifest
   marketplace.json       lets the team install it from this repo
 skills/
-  design-pipeline/       /design-pipeline — the Orchestrator
-  design-journeys/       /design-journeys — create user journeys on demand
-  design-audit/          /design-audit — audit a running app or project on demand
+  start/                 /design-pipeline:start — the Orchestrator
+  journeys/              /design-pipeline:journeys — create user journeys on demand
+  audit/                 /design-pipeline:audit — audit a running app or project on demand
     SKILL.md
     references/
       preflight.md       tool checks, starting point and brief, platform scope and screen sizes
@@ -152,19 +152,19 @@ Or just open the plugin and click install.
 ## 🧑‍💻 Use (per client project)
 
 1. Create a new folder for the client and start a new Claude Code session in it.
-2. Run `/design-pipeline`. (Plugin skills may also show as `/design-pipeline:design-pipeline`.)
+2. Run `/design-pipeline:start`. (The commands are `/design-pipeline:start`, `/design-pipeline:audit` and `/design-pipeline:journeys`.)
 3. Pass the Node check, then choose:
    - **where to start**: a brief or BRD, an existing code project, or a Figma file;
    - **the platforms** (one or several), the **screen sizes** by clicking (the code is plain HTML, CSS and JS by default; ask for a conversion to React, Next.js or another stack whenever you want one);
    - then paste the brief (or point to the BRD files).
 4. Answer any questions, and confirm the numbered requirements.
-5. Review the **user journeys** in `user-journeys.md`: flows with screens, decisions, error paths and exits, for every platform and across platforms (optional: the pipeline asks whether you want them, or pass `/design-pipeline --skip-journeys` to skip the question). The audit after each round is optional too (`--skip-audit`); both can use a lot of tokens.
+5. Review the **user journeys** in `user-journeys.md`: flows with screens, decisions, error paths and exits, for every platform and across platforms (optional: the pipeline asks whether you want them, or pass `/design-pipeline:start --skip-journeys` to skip the question). The audit after each round is optional too (`--skip-audit`); both can use a lot of tokens.
 6. Choose the **style**: a saved design system (folder or artifact), a reference (image, screenshot, website URL or Figma file) with a live preview of your product in that look, or no design system.
 7. The Design Agent builds the project in `code/`. After each round the Auditor tests the running app (Nielsen's heuristics, WCAG 2.1 AA, platform checks, code checks, a click-through of every interaction) and saves `audit-round-<n>.md`. The Coverage Agent compares the app with your brief and saves `coverage-round-<n>.md` (Done / Missing / Added).
 8. Try the app in the browser pane (frames at `/frames`, journeys at `/journeys`), and tell Claude what to change, or edit the code yourself: your edits are kept. Say which issues to fix and which unrequested additions to keep or remove.
 9. Reply **done** to send changes back, or say **approved** to finish. Unfixed critical audit issues and missing must-have requirements need an explicit "approve anyway". After approval you can optionally export the app to a Figma file.
 
-Progress is saved in `design-pipeline-state.json` in the client folder, so you can stop and run `/design-pipeline` again in a later session to resume.
+Progress is saved in `design-pipeline-state.json` in the client folder, so you can stop and run `/design-pipeline:start` again in a later session to resume.
 
 
 

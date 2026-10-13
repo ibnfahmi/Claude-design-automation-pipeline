@@ -53,4 +53,4 @@ Tell the user in one line what was done and whether any pages needed the slower 
 ## Other uses
 
 - **A PDF as a style reference** (a brand guide or a deck): convert its text for colour codes, font names and rules, and render the pages to images for the look (`direction.md`).
-- **`/design-journeys`** and **`/design-audit`** accept a document as the source and convert it the same way.
+- **`/design-pipeline:journeys`** and **`/design-pipeline:audit`** accept a document as the source and convert it the same way.

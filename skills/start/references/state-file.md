@@ -1,6 +1,6 @@
 # State file: `design-pipeline-state.json`
 
-Written to the client project folder (the session's working directory) after every stage. It lets `/design-pipeline` resume a run in a later session. The code itself lives in `code/` (a local git repository), which is the source of truth for the build.
+Written to the client project folder (the session's working directory) after every stage. It lets `/design-pipeline:start` resume a run in a later session. The code itself lives in `code/` (a local git repository), which is the source of truth for the build.
 
 ```json
 {

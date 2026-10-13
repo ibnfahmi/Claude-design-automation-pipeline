@@ -1,6 +1,6 @@
 # Stress test: realistic worst-case data
 
-Demo data is chosen, usually without anyone noticing, to make the design look good: names that fit on one line, counts that never need a separator, every optional field filled in. The stress test undoes that choice. It feeds each data-driven component the realistic worst case for every value it shows, and reports what breaks. It runs **only when the user asks** ("stress test it", `/design-audit` with the stress option), because it costs tokens.
+Demo data is chosen, usually without anyone noticing, to make the design look good: names that fit on one line, counts that never need a separator, every optional field filled in. The stress test undoes that choice. It feeds each data-driven component the realistic worst case for every value it shows, and reports what breaks. It runs **only when the user asks** ("stress test it", `/design-pipeline:audit` with the stress option), because it costs tokens.
 
 Distilled from the `break-ui` skill by Emil Kowalski (see `NOTICE.md`).
 

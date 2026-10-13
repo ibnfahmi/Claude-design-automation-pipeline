@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.9.3] - 2026-10-13
+
+### Changed
+- **The skills are renamed so the menu no longer repeats the plugin name.** `/design-pipeline:design-pipeline` is now `/design-pipeline:start`, `/design-pipeline:design-audit` is `/design-pipeline:audit` and `/design-pipeline:design-journeys` is `/design-pipeline:journeys`. The skill folders are `skills/start`, `skills/audit` and `skills/journeys`. The state file is still `design-pipeline-state.json`, so existing runs resume as before.
+
 ## [0.9.2] - 2026-10-13
 
 ### Changed
