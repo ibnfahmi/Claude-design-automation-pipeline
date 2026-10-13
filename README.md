@@ -46,6 +46,19 @@ NOTICE.md                attributions for the open-source guidance
 
 
 
+## 🧪 Distilled from external skills
+
+Some guidance is rewritten (not copied) from open-source skills, all MIT licensed. Full attributions are in `NOTICE.md`.
+
+| Source | What it adds to the pipeline |
+|---|---|
+| Emil Kowalski: `mobile-native`, `break-ui`, `emil-design-eng` | Native feel on phones, the worst-case stress test, component-feel and reflow checks in the audit |
+| Jakub Krehel: `better-accessibility`, `better-layout`, `better-typography`, `better-ui` | Accessibility, layout and type rules, hit areas, polish and motion values, the code-quality checks |
+| Owl-Listener `designer-skills` (MC Dean) | Visual critique, states and feedback, forms, data viz, dark mode, localisation and RTL, handoff specs, user-flow and journey structure |
+| Elaya: `landing-page-design` | Landing page and e-commerce page structure |
+| codeswithroh: Tastemaker | Grounding a look in real references instead of guessing |
+| ConardLi: `web-design-engineer` | Design-engineering and data-viz guidance, dashboard rules |
+
 ## 🔒 Feedback notes (optional, off until you say yes)
 
 The plugin can save a short note on **your computer only** when one of your messages during a design-pipeline run sounds confused, lost or frustrated, so you can send it to the maintainer. It is asked once, saves only a shortened and redacted copy of that message (no emails, links, paths or pasted briefs), and **nothing is ever sent unless you review the exact text and choose to send it**, with `/design-feedback`. Switch it off any time with `/design-feedback disable`.

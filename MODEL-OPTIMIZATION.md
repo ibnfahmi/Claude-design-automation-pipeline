@@ -32,6 +32,7 @@ Reasonable overrides:
 
 ## History
 
+- **0.8.6:** no changes.
 - **0.8.5:** no model changes.
 - **0.8.4:** no model changes; one question and a push step.
 - **0.8.3:** no model changes; the import mode is a short bookkeeping task on the Design System Agent.

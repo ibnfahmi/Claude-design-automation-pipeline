@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.8.6] - 2026-10-13
+
+### Added
+- The README has a short table of what was distilled from external skills and what each adds to the pipeline (details stay in `NOTICE.md`).
+
 ## [0.8.5] - 2026-10-13
 
 ### Changed
