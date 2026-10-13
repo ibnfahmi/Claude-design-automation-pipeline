@@ -12,7 +12,7 @@ A frame named `Thumbnail` on the `Cover` page, **1600 × 900**, fill **#1B1B1B**
 
 | Part | Spec |
 |---|---|
-| **Logo** | The brand logo as an editable vector, named `Logo`, **423 × 32**, at **x 128, y 149**, white. Default logo: the plugin's `_shared/assets/thumbnail-logo.svg`. If the user has put their own logo at `~/.claude/design-automation/brand/thumbnail-logo.svg`, use that instead (keep its aspect ratio at height 32; the width follows). |
+| **Logo** | The brand logo as an editable vector, named `Logo`, **423 × 32**, at **x 128, y 149**, white. Default logo: the plugin's `_shared/assets/thumbnail-logo.svg`. If the user has put their own logo at `~/.claude/design-pipeline/brand/thumbnail-logo.svg`, use that instead (keep its aspect ratio at height 32; the width follows). |
 | **Content block** | An auto-layout frame named `Content`, vertical, item spacing **40**, width **1344**, left **128**, **bottom edge at y 699** (201 px above the bottom of the frame), so it grows upwards when the description takes two lines. |
 | **Meta row** (first in `Content`) | An auto-layout frame, horizontal, item spacing **24**, with two pills (below). |
 | **Text stack** (second in `Content`) | An auto-layout frame, vertical, item spacing **24**, width fill (1344), holding the project name and the description. |

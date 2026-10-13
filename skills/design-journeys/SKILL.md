@@ -16,7 +16,7 @@ Look in the current folder, in this order, and tell the user in one line what yo
 2. `brief-source.md`, or a brief / BRD file the user names (a Word, Excel, PowerPoint or PDF file is converted first, as `../design-pipeline/references/documents.md` describes).
 3. An existing code project (`code/` or a folder the user names).
 
-If there is **no spec** (only a brief or code), create one first: start `design-automation:brief-agent` (mode `brief`, or `existing` for code) with the source and the platform scope, put any questions it returns to the user and send the answers back to the same agent, then show the spec's **Requirements** and **Platform coverage** and get a confirmation. Save it as `design-spec.md`. If there is nothing at all, ask for the brief, BRD or code folder.
+If there is **no spec** (only a brief or code), create one first: start `design-pipeline:brief-agent` (mode `brief`, or `existing` for code) with the source and the platform scope, put any questions it returns to the user and send the answers back to the same agent, then show the spec's **Requirements** and **Platform coverage** and get a confirmation. Save it as `design-spec.md`. If there is nothing at all, ask for the brief, BRD or code folder.
 
 ## 2. Platform scope and feature subset
 
@@ -26,7 +26,7 @@ If there is **no spec** (only a brief or code), create one first: start `design-
 
 ## 3. Write them
 
-Start `design-automation:journey-agent` with: the spec, the platform scope, `brief-source.md` if present, the feature subset if any, the existing journeys when adding, and the absolute path of `user-flows.md`. It saves `user-journeys.md` and returns a summary.
+Start `design-pipeline:journey-agent` with: the spec, the platform scope, `brief-source.md` if present, the feature subset if any, the existing journeys when adding, and the absolute path of `user-flows.md`. It saves `user-journeys.md` and returns a summary.
 
 Then check, before showing anything:
 - **Every platform in the scope appears in at least one journey** (its `BY_PLATFORM` lines), and cross-platform journeys exist wherever the product spans platforms. If a platform is missing, resume the same agent to cover it.

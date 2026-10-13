@@ -4,7 +4,7 @@
 // Prints JSON: { size, diffPercent, worst: [{ x, y, w, h, diffPercent }], diffImage }.
 // The two images are compared at the same size: the larger is cropped to the smaller's top-left if they differ by a few pixels,
 // and if the sizes differ a lot the result says so (sizeMismatch) so the caller can fix the frame size first.
-// Needs pngjs and pixelmatch in the tools folder (default ~/.claude/design-automation/tools/figma).
+// Needs pngjs and pixelmatch in the tools folder (default ~/.claude/design-pipeline/tools/figma).
 
 import fs from 'node:fs';
 import os from 'node:os';
@@ -15,7 +15,7 @@ import { pathToFileURL } from 'node:url';
 const args = {};
 for (let i = 2; i < process.argv.length; i++) { const a = process.argv[i]; if (a.startsWith('--')) { args[a.slice(2)] = process.argv[i + 1] && !process.argv[i + 1].startsWith('--') ? process.argv[++i] : 'true'; } }
 if (!args.a || !args.b) { console.error('Usage: compare-shots.mjs --a reference.png --b figma.png [--out diff.png]'); process.exit(2); }
-const toolsDir = args.tools || path.join(os.homedir(), '.claude', 'design-automation', 'tools', 'figma');
+const toolsDir = args.tools || path.join(os.homedir(), '.claude', 'design-pipeline', 'tools', 'figma');
 const req = createRequire(path.join(toolsDir, 'package.json'));
 let PNG, pixelmatch;
 try {

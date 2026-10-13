@@ -10,7 +10,7 @@
 // Output per frame: <slug>@<w>.json (the spec), <slug>@<w>.png (full-page reference screenshot); plus index.json.
 //
 // Needs playwright-core (and uses the machine's Chrome or Edge, so no browser download).
-// Default tools folder: ~/.claude/design-automation/tools/figma
+// Default tools folder: ~/.claude/design-pipeline/tools/figma
 
 import fs from 'node:fs';
 import os from 'node:os';
@@ -24,7 +24,7 @@ for (let i = 2; i < process.argv.length; i++) {
   const a = process.argv[i];
   if (a.startsWith('--')) { const k = a.slice(2); const v = process.argv[i + 1] && !process.argv[i + 1].startsWith('--') ? process.argv[++i] : 'true'; args[k] = v; }
 }
-const toolsDir = args.tools || path.join(os.homedir(), '.claude', 'design-automation', 'tools', 'figma');
+const toolsDir = args.tools || path.join(os.homedir(), '.claude', 'design-pipeline', 'tools', 'figma');
 const outDir = path.resolve(args.out || 'figma-spec');
 fs.mkdirSync(outDir, { recursive: true });
 

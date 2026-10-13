@@ -1,6 +1,12 @@
 # Changelog
 
-All notable changes to the design-automation plugin are documented here.
+All notable changes to the design-pipeline plugin are documented here.
+
+## [0.9.2] - 2026-10-13
+
+### Changed
+- **The plugin is renamed from `design-automation` to `design-pipeline`** and the word "automation" is removed everywhere (plugin id, install and update commands, agent names such as `design-pipeline:design-agent`, titles, descriptions and the helper-tools folder, now `~/.claude/design-pipeline/`). Reinstall once with `/plugin install design-pipeline@design-team`; move `~/.claude/design-automation/` to `~/.claude/design-pipeline/` to keep installed helper tools and a custom thumbnail logo. The GitLab repository path still has the old name until it is renamed.
+- Hosting is on GitLab only; the plugin installs from `gitlab.com/cyshield-group1/Claude-design-automation-pipeline`.
 
 ## [0.9.1] - 2026-10-13
 
@@ -12,7 +18,7 @@ All notable changes to the design-automation plugin are documented here.
 ## [0.9.0] - 2026-10-13
 
 ### Changed
-- The README title "Design automation pipeline" is also drawn as pixel-style block lettering (half-block characters, no image).
+- The README title "Design pipeline" is also drawn as pixel-style block lettering (half-block characters, no image).
 
 ## [0.8.9] - 2026-10-13
 
@@ -27,7 +33,7 @@ All notable changes to the design-automation plugin are documented here.
 ## [0.8.7] - 2026-10-13
 
 ### Removed
-- **The feedback notes feature is gone.** Removed the opt-in question at the start of a run, the `UserPromptSubmit` hook (`hooks/`), the `/design-feedback` skill and the README section. The plugin no longer watches your messages or saves notes. Notes already saved on your computer under `~/.claude/design-automation/` are not touched; delete them yourself if you don't want them.
+- **The feedback notes feature is gone.** Removed the opt-in question at the start of a run, the `UserPromptSubmit` hook (`hooks/`), the `/design-feedback` skill and the README section. The plugin no longer watches your messages or saves notes. Notes already saved on your computer under `~/.claude/design-pipeline/` are not touched; delete them yourself if you don't want them.
 
 ## [0.8.6] - 2026-10-13
 
@@ -89,7 +95,7 @@ All notable changes to the design-automation plugin are documented here.
 
 ### Changed
 - **Every page of the Figma file has the background #272727.** Set on each page as it is created and checked before the export returns.
-- **The standard cover thumbnail is built by default, in the team's template style.** A 1600 × 900 frame (#1B1B1B) with the logo at the top left, a **Version** pill and a **last update date** pill (`DD-Month-YYYY`), the **project name** in IBM Plex Sans SemiBold 120 **truncated to one line**, and the **description** in IBM Plex Sans Regular 60 **truncated to two lines**, applied as the file's thumbnail. The version is the BRD's or brief's version when it states one, otherwise `v1.0` for the first export and `v1.1`, `v1.2`... for later exports of the same project (tracked in `figma_exports`); the date is today's. The logo ships with the plugin (`_shared/assets/thumbnail-logo.svg`), is added through the Figma upload route so the 67 KB SVG isn't pasted into a tool call, and can be replaced by putting your own at `~/.claude/design-automation/brand/thumbnail-logo.svg`. New reference `figma-thumbnail.md` (replaces the earlier collage thumbnail).
+- **The standard cover thumbnail is built by default, in the team's template style.** A 1600 × 900 frame (#1B1B1B) with the logo at the top left, a **Version** pill and a **last update date** pill (`DD-Month-YYYY`), the **project name** in IBM Plex Sans SemiBold 120 **truncated to one line**, and the **description** in IBM Plex Sans Regular 60 **truncated to two lines**, applied as the file's thumbnail. The version is the BRD's or brief's version when it states one, otherwise `v1.0` for the first export and `v1.1`, `v1.2`... for later exports of the same project (tracked in `figma_exports`); the date is today's. The logo ships with the plugin (`_shared/assets/thumbnail-logo.svg`), is added through the Figma upload route so the 67 KB SVG isn't pasted into a tool call, and can be replaced by putting your own at `~/.claude/design-pipeline/brand/thumbnail-logo.svg`. New reference `figma-thumbnail.md` (replaces the earlier collage thumbnail).
 
 ## [0.7.8] - 2026-10-12
 
@@ -260,7 +266,7 @@ _This release was published for a short time as 0.6.0 and renumbered 0.5.2 to fo
 - **User edits are kept.** At the start of a revision round the Design Agent reads `git status` and `git diff` in `code/`, and keeps what you changed by hand.
 - **Figma is an optional export.** After approval the pipeline asks whether to export to Figma. The Handoff Agent captures each frame from the running app (or builds it natively if capture isn't available), binds the tokens as variables, writes motion notes from the real code, puts requirement IDs, journey steps and the source file on each frame, and wires prototype links in journey order. The Figma connector is checked only then, or when you start from or reference a Figma file.
 - **The stack is asked per project**, with a short note on when to use each: React + Vite + Tailwind (apps, dashboards, prototypes), Next.js (SEO, marketing site plus app in one project), plain HTML, CSS and JS (small static pages), or your own (Vue, Svelte, Astro and so on). It is skipped for an existing code project (its stack is kept) and where every platform has its own fixed target.
-- **Preflight checks Node and npm** (Node 20 or newer) instead of Claude Design and Figma. **Starting points** are now a brief, an existing code project (worked on in its own stack, on a `design-automation` branch), or a Figma file.
+- **Preflight checks Node and npm** (Node 20 or newer) instead of Claude Design and Figma. **Starting points** are now a brief, an existing code project (worked on in its own stack, on a `design-pipeline` branch), or a Figma file.
 - New shared references `code-conventions.md` (layout, tokens, frames, running, quality gates, git) and `code-quality.md` (the code-level bar), the latter added to every platform's audit references.
 - Renames: `design_url` → `dev_url` and `code_dir`, artboards → frames, the manifest's `code_file`, `route` and `source: existing`, and the review stage now centres on the running app.
 
@@ -506,7 +512,7 @@ None. All agents work as before; only the model assignment has changed.
 
 ### Next Steps
 
-1. Install v0.3.0: `/plugin install design-automation@design-team`
+1. Install v0.3.0: `/plugin install design-pipeline@design-team`
 2. Run on a typical project to compare costs
 3. Override models as needed per project (see AGENT-MODEL-REFERENCE.md)
 

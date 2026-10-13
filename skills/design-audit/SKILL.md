@@ -35,14 +35,14 @@ If a spec or a manifest exists, the Auditor also checks required screens and sta
 
 ## 4. Run it
 
-Start `design-automation:design-auditor` with: the address, the code folder, the manifest and spec if any, the interaction list if any (or "discover them"), the design direction if known (else "none"), the platform scope with each platform's `auditor.checks` and the absolute reference paths, the chosen narrowing (`stress: true` for the stress test, after the Design Agent has added the worst-case fixtures: resume it in stress-fixtures mode, or edit the project's fixtures yourself outside the pipeline), and the round number (the next `audit-round-<n>.md` in the folder). It saves `audit-round-<n>.md` and returns its summary.
+Start `design-pipeline:design-auditor` with: the address, the code folder, the manifest and spec if any, the interaction list if any (or "discover them"), the design direction if known (else "none"), the platform scope with each platform's `auditor.checks` and the absolute reference paths, the chosen narrowing (`stress: true` for the stress test, after the Design Agent has added the worst-case fixtures: resume it in stress-fixtures mode, or edit the project's fixtures yourself outside the pipeline), and the round number (the next `audit-round-<n>.md` in the folder). It saves `audit-round-<n>.md` and returns its summary.
 
 Show the user: the result (pass / pass with issues / fail), interactions passed, platform checks passed, counts by severity, and the **critical and major issues one line each** with the screen and the recommended fix. Point to the full report file. If the app has a `share/` build, the file-open test result is included.
 
 ## 5. Optional: fix
 
 Ask what to do: **Fix critical and major (Recommended)**, **Fix everything**, **Pick which ones**, or **Nothing, I'll handle it**. Apply fixes only on request:
-- If the project came from the pipeline (state file present), resume `design-automation:design-agent` in revision mode with the chosen issues, on the existing code, keeping the user's direct edits (`git diff`); then rerun the audit on the changed frames and report what is fixed.
+- If the project came from the pipeline (state file present), resume `design-pipeline:design-agent` in revision mode with the chosen issues, on the existing code, keeping the user's direct edits (`git diff`); then rerun the audit on the changed frames and report what is fixed.
 - Otherwise, edit the code yourself in small changes, keeping the project's own conventions, and rerun the audit on what you touched. Don't restyle beyond the issues.
 
 If a state file exists, record the result under `audits` (round, counts, report file) without changing `stage`.

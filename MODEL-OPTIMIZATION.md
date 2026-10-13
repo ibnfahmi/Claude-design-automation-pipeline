@@ -32,6 +32,7 @@ Reasonable overrides:
 
 ## History
 
+- **0.9.2:** no changes (the plugin is renamed to design-pipeline).
 - **0.9.1:** no changes.
 - **0.9.0:** no changes.
 - **0.8.9:** no changes.

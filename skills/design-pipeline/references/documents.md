@@ -8,8 +8,8 @@ A brief, a BRD, a requirements sheet or a brand guide often arrives as a Word, P
 
 **Install once, with the user's consent, in the plugin's own tools folder, never in the project:**
 1. Ask once with AskUserQuestion (header `Documents`): *"Install a small local document converter (AnyDoc, open source, runs on your computer) so Word, Excel, PowerPoint and PDF files are read faster and cheaper?"* **Yes (Recommended)** / **No, use the built-in reader**. Remember the answer in the state file (`doc_converter: "anydoc" | "declined"`); don't ask again.
-2. On yes: `mkdir -p ~/.claude/design-automation/tools/anydoc`, then in that folder `npm init -y` and `npm install @firecrawl/anydoc@0.2.4` (pinned; update the pin deliberately after checking the release). It adds a native binary for the platform. If it fails, say so and use the fallback.
-3. Run it as: `node ~/.claude/design-automation/tools/anydoc/node_modules/@firecrawl/anydoc/cli.js "<file>" -o "<out>.md"`. It writes markdown, sends diagnostics to stderr and never prompts. Exit code **0** = converted; **3** = a PDF page needs OCR (nothing is written); any other code = failed.
+2. On yes: `mkdir -p ~/.claude/design-pipeline/tools/anydoc`, then in that folder `npm init -y` and `npm install @firecrawl/anydoc@0.2.4` (pinned; update the pin deliberately after checking the release). It adds a native binary for the platform. If it fails, say so and use the fallback.
+3. Run it as: `node ~/.claude/design-pipeline/tools/anydoc/node_modules/@firecrawl/anydoc/cli.js "<file>" -o "<out>.md"`. It writes markdown, sends diagnostics to stderr and never prompts. Exit code **0** = converted; **3** = a PDF page needs OCR (nothing is written); any other code = failed.
 
 **Never use `--ocr hosted`**: it sends the whole document to Firecrawl's cloud service. Use it only if the user explicitly asks for it for that file, after being told the document leaves their computer. Client documents are confidential by default.
 

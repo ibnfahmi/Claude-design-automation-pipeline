@@ -6,7 +6,7 @@
   },
   "plugins": [
     {
-      "name": "design-automation",
+      "name": "design-pipeline",
       "source": "./",
       "description": "Brief → user journeys → working code design pipeline, with an optional Figma export."
     }

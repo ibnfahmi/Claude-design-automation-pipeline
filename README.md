@@ -21,7 +21,7 @@ A Claude Code plugin that takes a raw design brief (or an existing code project 
 
 **Preflight (Node check, brief, platforms, screen sizes) → Brief Agent → User journeys (your review) → Style direction and live preview → Design Agent builds the code → Auditor + Coverage report on the running app ⇄ your review → production check → optional Figma export**
 
-See *Design Automation Multi-Agent Blueprint v2* for the full design.
+See *Design Pipeline Multi-Agent Blueprint v2* for the full design.
 
 
 Release notes are in [CHANGELOG.md](CHANGELOG.md). To add a platform, see [profiles/README.md](profiles/README.md).
@@ -142,7 +142,7 @@ In Claude code chat:
 Then:
 
 ```
-/plugin install design-automation@design-team
+/plugin install design-pipeline@design-team
 ```
 
 Or just open the plugin and click install.
@@ -152,7 +152,7 @@ Or just open the plugin and click install.
 ## 🧑‍💻 Use (per client project)
 
 1. Create a new folder for the client and start a new Claude Code session in it.
-2. Run `/design-pipeline`. (Plugin skills may also show as `/design-automation:design-pipeline`.)
+2. Run `/design-pipeline`. (Plugin skills may also show as `/design-pipeline:design-pipeline`.)
 3. Pass the Node check, then choose:
    - **where to start**: a brief or BRD, an existing code project, or a Figma file;
    - **the platforms** (one or several), the **screen sizes** by clicking (the code is plain HTML, CSS and JS by default; ask for a conversion to React, Next.js or another stack whenever you want one);
@@ -177,5 +177,5 @@ claude plugin marketplace update design-team
 
 Then:
 ```
-claude plugin update design-automation@design-team
+claude plugin update design-pipeline@design-team
 ```
