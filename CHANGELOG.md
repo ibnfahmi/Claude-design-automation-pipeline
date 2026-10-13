@@ -2,6 +2,12 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.8.5] - 2026-10-13
+
+### Changed
+- **The plugin can create the GitLab project for you.** The GitLab question now offers "Yes, create it for me (Recommended)": you give the group or username once, and the pipeline creates a **private** project named after your project and pushes the code. It uses GitLab's CLI (`glab`) when that is installed and signed in, otherwise gitlab.com's **push to create** with your own git sign-in (a sign-in window opens the first time; no CLI and no token are needed). If neither works it says why and falls back to the paste-a-link option. It never creates anything public without asking, never uses a namespace you didn't name, never reuses a project that already has commits without asking, and still runs the secrets and large-file check before creating anything.
+- **Not tested against gitlab.com:** the creation commands (this machine has no `glab`, and creating a real project needs your sign-in). The first project is the test; if push to create is refused for your namespace, the message says so and falls back to pasting a link.
+
 ## [0.8.4] - 2026-10-13
 
 ### Added

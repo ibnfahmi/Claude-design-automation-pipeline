@@ -58,6 +58,8 @@ Written to the client project folder (the session's working directory) after eve
   "active_code_dir": "code/",
   "git_remote": "GitLab repository link, or null",
   "git_host": "gitlab | null",
+  "git_namespace": "GitLab username or group path, or null",
+  "git_created_by": "plugin | user | null",
   "git_push": "auto | declined | null",
   "git_last_push": {"date": "13-October-2026", "commit": "a1b2c3d"},
   "conversions": [{"stack": "react-vite-ts-tailwind", "dir": "code-react/", "round": 4}],
