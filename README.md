@@ -1,14 +1,14 @@
 # 📄 README
 
+# Design automation pipeline
+
 ▀█▀ ▀█  ▀█▀█ ▀█ █ ▀█▀█ ▀█▀      ▀█▀█ ▀█▀ ▀█▀▀ ▀█ ▀█▀▀ ▀█▀█
 ██  ██  ██▄█ ██ █ ██ █ ██▀      ██ █ ██▀  ▀▀█ ██ ██ ▄ ██ █
 ██▄ ██▄ ██ █ ██▄█ ██▄▀ ██▄      ██▄▀ ██▄ ██▄█ ██ ▀█▄█ ██ █
+          
           ▀█▀█ ▀█ ▀█▀█ ▀█▀ ▀█  ▀█ ▀█▀█ ▀█▀
           ██▄▀ ██ ██▄▀ ██▀ ██  ██ ██ █ ██▀
-          ██   ██ ██   ██▄ ██▄ ██ ██ █ ██▄    
-                    
-  Claude Code plugin ~ brief > journeys > design > audit > code > Figma
-
+          ██   ██ ██   ██▄ ██▄ ██ ██ █ ██▄
 
 A Claude Code plugin that takes a raw design brief (or an existing code project or Figma file) to a **working code project**, with an optional Figma export:
 
