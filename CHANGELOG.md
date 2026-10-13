@@ -2,6 +2,12 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.8.3] - 2026-10-13
+
+### Fixed
+- **Design System artifacts are found again.** Since 0.5.2 the style step only looked in `~/.claude/design-systems/` and never listed artifacts, so a design system that lives in your account (for example a pinned "Untitled UI PRO") was reported as "no design system found". It now looks in both places: local folders and Design System artifacts (own and shared), confirming each artifact by its `project/design-system.json`. Choosing an artifact imports it into a local folder (tokens, CSS variables, README, fonts; components on demand) through the new `import` mode of the Design System Agent, which never changes a token and adds the source, link and date. Later runs find the folder and offer to refresh it when the artifact changed. If nothing is found, the message now says where it looked and offers a pasted link, a folder, a reference or no design system, instead of silently dropping the option.
+- **Checked here:** the listing and file reads work for this account, and the Untitled UI PRO artifact has `project/tokens.json` (colour themes, type, spacing, radius, shadow...), `tokens.css`, a README, fonts and 150+ component docs. **Not tested:** the full style step end to end on a real project run.
+
 ## [0.8.2] - 2026-10-13
 
 ### Changed

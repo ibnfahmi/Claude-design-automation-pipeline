@@ -77,6 +77,18 @@ NOT_EXTRACTED:
 
 For a **URL**, use only what the page itself publishes. Take the look, never the content, logos or brand marks.
 
+## Mode: import (a Design System artifact the user already has)
+
+You are given the folder the Orchestrator filled from a Design System artifact (`~/.claude/design-systems/<name>/` with `tokens.json`, `tokens.css`, `README.md`, `design-system.json`, `manifest.json`, optionally `fonts/`), the artifact's link and its `lastChange.at`. **Don't re-derive or change any token.** The artifact is the source of truth. Do only this:
+
+1. Check `tokens.json` opens and has colour, type and spacing; list what is missing. Check `tokens.css` matches it (same names, light and dark themes).
+2. Add `meta` to `tokens.json` if absent: `name`, `source: "artifact"`, `artifact_url`, `artifact_changed` (its `lastChange.at`), `date` (today). Keep every existing key.
+3. Create `tailwind.theme.ts` mapping the CSS variables (colours, font families, spacing, radii, shadows) if it doesn't exist.
+4. Keep the artifact's `README.md` as the brand book; if it is missing, write a short one from the tokens (visual foundations, usage notes, what is missing).
+5. Note the fonts the system uses and whether the font files are in `fonts/`; if a family is missing, say which one the project must load.
+
+Return: `IMPORTED: <path>`, what was found, what is missing, the fonts, and anything the Orchestrator should ask the user. You never talk to the user.
+
 ## Mode: full (after the user approved the preview)
 
 You are given the **approved tokens** (possibly with the user's tweaks), the original reference, the system's name and the path of `grounding.md`. Build a portable **design-system folder** from them. Don't re-derive the tokens; use them exactly. The default location is `~/.claude/design-systems/<name>/` (create the folder; if the name exists, ask the Orchestrator via your return value rather than overwriting it).

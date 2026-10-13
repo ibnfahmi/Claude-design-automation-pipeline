@@ -63,7 +63,7 @@ claude mcp add --transport http figma https://mcp.figma.com/mcp
 ```
 
   3. Inside the claude session, type `/mcp`, pick figma (or figma-desktop), choose Authenticate, and finish signing in when your browser opens.
-- Optional: a saved design-system folder (in `~/.claude/design-systems/`), or a reference (image, screenshot, website URL or Figma file) to take the look from
+- Optional: a saved design system (a folder in `~/.claude/design-systems/`, or a Design System artifact in your account), or a reference (image, screenshot, website URL or Figma file) to take the look from
 - The Figma plugin for Claude Code (recommended for the export, for the `figma-use` and `figma-generate-design` skills)
 
 ## 📀 Install (each team member, once)
@@ -94,7 +94,7 @@ Or just open the plugin and click install.
    - then paste the brief (or point to the BRD files).
 4. Answer any questions, and confirm the numbered requirements.
 5. Review the **user journeys** in `user-journeys.md`: flows with screens, decisions, error paths and exits, for every platform and across platforms (optional: the pipeline asks whether you want them, or pass `/design-pipeline --skip-journeys` to skip the question). The audit after each round is optional too (`--skip-audit`); both can use a lot of tokens.
-6. Choose the **style**: a saved design system, a reference (image, screenshot, website URL or Figma file) with a live preview of your product in that look, or no design system.
+6. Choose the **style**: a saved design system (folder or artifact), a reference (image, screenshot, website URL or Figma file) with a live preview of your product in that look, or no design system.
 7. The Design Agent builds the project in `code/`. After each round the Auditor tests the running app (Nielsen's heuristics, WCAG 2.1 AA, platform checks, code checks, a click-through of every interaction) and saves `audit-round-<n>.md`. The Coverage Agent compares the app with your brief and saves `coverage-round-<n>.md` (Done / Missing / Added).
 8. Try the app in the browser pane (frames at `/frames`, journeys at `/journeys`), and tell Claude what to change, or edit the code yourself: your edits are kept. Say which issues to fix and which unrequested additions to keep or remove.
 9. Reply **done** to send changes back, or say **approved** to finish. Unfixed critical audit issues and missing must-have requirements need an explicit "approve anyway". After approval you can optionally export the app to a Figma file.

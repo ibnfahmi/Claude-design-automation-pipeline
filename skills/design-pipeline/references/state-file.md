@@ -20,6 +20,8 @@ Written to the client project folder (the session's working directory) after eve
     "node": "ok — node 20.x, npm 10.x, git 2.x",
     "direction": "system | reference | creative | existing",
     "design_system_name": "Acme Brand DS, or null",
+    "design_system_source": "folder | artifact | null",
+    "design_system_artifact_url": "artifact link, or null",
     "design_system_path": "~/.claude/design-systems/acme-brand-ds or a folder path, or null",
     "design_system_status": "none | building | ready | failed",
     "design_system_agent_id": "background build agent id, or null",
