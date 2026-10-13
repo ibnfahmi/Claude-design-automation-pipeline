@@ -2,6 +2,14 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.8.2] - 2026-10-13
+
+### Changed
+- **Feature pages have a new layout.** The flow runs **horizontally** (the entry point first, then each step in journey order, branches right after the step they branch from); each screen's **states are stacked below it**; the **next screen sizes go below** as further blocks, with the same columns at the same x. Every feature page also gets a **Flow strip** at the top (a linked map of the feature's steps) and a **Notes card under every frame** (trigger, motion, data, accessibility, requirement IDs, source file).
+- **You pick what is exported.** Before the export, the pipeline lists the frames per feature, grouped by flow step with their states, and asks "All of it" or "Let me pick". The choice is saved (`figma_selection`), offered again as the default on a re-export, and the frames left out are listed on the Changelog page as `Not exported (by choice)`. Re-exports still rebuild only the changed pages.
+- New `figma-layout.js` (a `use_figma` template that places a feature page's frames, label cards and notes by these rules).
+- **Tested here:** `figma-layout.js` against mock nodes (9 checks: columns in order, 80 px gaps, states below at the same x, card above, notes under, smaller size block below, same column x in every block, no overlaps). **Not tested:** real Figma placement, and the flow strip's links, in a real file.
+
 ## [0.8.1] - 2026-10-13
 
 ### Changed

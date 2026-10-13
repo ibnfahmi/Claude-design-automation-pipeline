@@ -35,14 +35,34 @@ v1.0 · F-1 · <Feature name>
 - **Archived pages** come after the `Archive` index page, newest first, each named `<version it came from> · <original page name>`.
 - A page the team added by hand (not in this list) is left alone and placed after the archive group.
 
+## Feature page layout
+
+```
+[Title block: feature name · description · requirement IDs · phase]
+[Flow strip: Entry point > Screen A > Screen B > ...  (boxes linked to the frames below)]
+
+Desktop · 1440                              size block, largest first
+  Entry point    Main screen    Next step    Next step      one column per flow step, journey order
+  Default        Default        Default      Default
+  Hover          Empty          Error                       the screen's other states stacked below it
+  Loading        Filled
+  [Notes under every frame]
+
+Tablet · 768                                next size block, same columns at the same x
+Mobile · 375
+```
+
+The flow runs horizontally (entry point first, branches as extra columns after the step they branch from), states go below their screen, and the next screen sizes go below as further blocks. `figma-layout.js` places the frames, label cards and notes; `handoff-agent.md` (steps 5, 5b, 5i and 6) has the details.
+
 ## What each page holds
 
 - **Cover:** the `Thumbnail` frame only (`figma-thumbnail.md`), applied as the file's thumbnail.
+- **Feature pages (`F-<n> · ...`):** a title block, the **Flow strip**, then the size blocks of the layout above. Every frame has a label card above it and a `Notes /` card under it.
 - **Specs & Guidelines:** the thirteen sections in `handoff-agent.md` (overview, colour, typography, layout with the deviation table, shape, iconography, components rules, motion, accessibility, content and language, naming, requirements trace, open items), plus the **font table** (family and weight in the code, Figma font, substituted or not).
 - **Product Flows:** the overview map and one flow per journey with all branches, cases and states, and the case matrix per feature (`handoff-agent.md`, step 5e).
 - **Components:** one section per reusable component, named `<Component>`: its anatomy (labelled parts), a grid of **variants by states** (default, hover, focus, pressed, disabled, loading, error as they apply), its sizes, and two or three usage notes (do and don't). They are real Figma components with variants (`Component / Variant` naming); frames on the other pages use instances of them. Order: foundations first (button, input, link, icon), then composed ones (card, list item, navigation, dialog).
-- **Handoff status:** an auto-layout table, **one row per frame**. Columns: **Frame** (the frame's name as a text link to the node), **Page**, **Size**, **Status** (`Draft`, `In review`, `Ready for dev`), **Changed in** (the version), **Requirements and journeys** (`R-4 · J1.2`). New frames start as `Draft`. The team sets statuses; a re-export keeps each frame's status unless the frame changed, in which case it becomes `In review` and `Changed in` shows the new version. Rows are sorted by page order, then by frame order.
-- **Changelog:** one entry per export, **newest first**: version, date, the screens **added**, **changed** and **removed** (each with its requirement IDs), the fonts substituted, the behaviours approximated, and the gaps (`Not built`). The first export reads "Initial export".
+- **Handoff status:** an auto-layout table, **one row per frame**. Columns: **Frame** (the frame's name as a text link to the node), **Page**, **Size**, **Status** (`Draft`, `In review`, `Ready for dev`), **Changed in** (the version), **Requirements and journeys** (`R-4 · J1.2`). Only exported frames get a row. New frames start as `Draft`. The team sets statuses; a re-export keeps each frame's status unless the frame changed, in which case it becomes `In review` and `Changed in` shows the new version. Rows are sorted by page order, then by frame order.
+- **Changelog:** one entry per export, **newest first**: version, date, the screens **added**, **changed** and **removed** (each with its requirement IDs), the fonts substituted, the behaviours approximated, the gaps (`Not built`), and the frames the user chose to leave out (`Not exported (by choice)`). The first export reads "Initial export".
 - **Archive:** a short intro, then an index table: **Archived page**, **From version**, **Archived on**, **Reason** (changed in `v1.2`, removed in `v1.2`).
 
 ## Names, everywhere

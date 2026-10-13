@@ -1,6 +1,6 @@
 {
   "name": "design-automation",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "Brief, existing code or Figma → platform scope → user journeys → a working, responsive code project (plain HTML, CSS and JS by default, or the platform's own target) with a live style preview, an audit and a Done/Missing/Added coverage report after every round, and an optional Figma export. Sixteen platform profiles (web app, dashboard, landing page, mobile, TV, kiosk and more).",
   "author": {
     "name": "Ahmed Fahmi"
