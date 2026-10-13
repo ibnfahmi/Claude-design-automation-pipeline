@@ -79,7 +79,9 @@ Written to the client project folder (the session's working directory) after eve
   "figma_destination": "new file | existing file URL | null",
   "figma_url": null,
   "figma_tools": "installed | declined | null",
-  "figma_exports": [{"date": "13-October-2026", "version": "v1.0", "url": "https://www.figma.com/design/..."}],
+  "figma_file": null,
+  "figma_frames": {},
+  "figma_exports": [{"date": "13-October-2026", "version": "v1.0", "name": "Acme app — v1.0", "url": "https://www.figma.com/design/..."}],
   "notes": []
 }
 ```

@@ -4,7 +4,7 @@ Used by the Handoff Agent. Distilled from the `handoff-spec` skill in Owl-Listen
 
 Annotate **behaviour, not just appearance**, and cover every state, not only the happy path. Use design tokens and variable names, not raw values.
 
-The Figma file is laid out as a **Cover** page with the applied thumbnail, a **Specs & Guidelines page**, a **Product Flows page** (every flow with all its cases and states) and **one page per feature**, with a label card above every screen and rows of screens per screen size (see `handoff-agent.md`). The specs page carries the file-wide rules; the feature pages carry the screens.
+The file is named `<Project> — v<version>` and its pages, dividers, archive and re-export rules are in `figma-structure.md`. The Figma file is laid out as a **Cover** page with the applied thumbnail, a **Specs & Guidelines page**, a **Product Flows page** (every flow with all its cases and states) and **one page per feature**, with a label card above every screen and rows of screens per screen size (see `handoff-agent.md`). The specs page carries the file-wide rules; the feature pages carry the screens.
 
 Every page has the background #272727 and the file has the standard cover thumbnail (`figma-thumbnail.md`).
 

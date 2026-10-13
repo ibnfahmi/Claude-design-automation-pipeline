@@ -2,6 +2,18 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.8.1] - 2026-10-13
+
+### Changed
+- **The Figma file now has a defined name and structure** (new reference `figma-structure.md`).
+  - **File name:** `<Project> — v<version>`, using the same version as the cover thumbnail (the BRD's version, otherwise `v1.0`, `v1.1`...). Applied with `figma.root.name`; if Figma refuses to rename, the exact name to type is reported.
+  - **Pages, in order, with divider pages:** `Cover`, `———  Overview  ———`, `Specs & Guidelines`, `Product Flows`, `Components`, `Handoff status`, `Changelog`, `———  Features  ———`, `F-0 · Foundation`, `F-1 · ...`, `———  Archive  ———`, `Archive`, then archived copies. Every page keeps the #272727 background.
+  - **New pages:** `Components` (anatomy, variants by states, sizes, usage notes; real components with variants), `Handoff status` (a table with one row per frame: link, page, size, Draft / In review / Ready for dev, changed in, requirement IDs), `Changelog` (newest export first) and `Archive` (index of replaced pages).
+  - **Re-export updates the same file:** each frame's spec is hashed; pages with changed or removed frames are copied into the archive as `<old version> · <page>` and rebuilt in place, unchanged pages and frame statuses are kept, the thumbnail's version and date are updated and the file is renamed. The pipeline asks "update the existing file / create a new file".
+  - **Naming conventions** for frames, label cards, components, variables and layers are written down in one place.
+- New `figma-pages.js` (a `use_figma` template: creates and orders the pages and dividers, sets every background, archives pages by cloning, renames the file; safe to run twice).
+- **Tested here:** `figma-pages.js` against a mock Figma file (12 checks: exact order, default page reused as Cover, backgrounds, idempotent second run, archive clone and its position, feature rename keeps order, hand-made pages kept). **Not tested:** renaming the file and `page.clone()` against real Figma; the first export, then a re-export, into a scratch file is the acceptance test.
+
 ## [0.8.0] - 2026-10-13
 
 ### Changed
