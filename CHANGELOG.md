@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.9.0] - 2026-10-13
+
+### Changed
+- The README title "Design automation pipeline" is also drawn as pixel-style block lettering (half-block characters, no image).
+
 ## [0.8.9] - 2026-10-13
 
 ### Added

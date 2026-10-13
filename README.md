@@ -2,6 +2,24 @@
 
 # Design automation pipeline
 
+```text
+█▀▀▀▄ █▀▀▀▀ ▄▀▀▀▀ ▀▀█▀▀ ▄▀▀▀▀ █▄  █
+█   █ █▄▄▄  ▀▄▄▄    █   █ ▄▄▄ █ ▀▄█
+█   █ █         █   █   █   █ █   █
+▀▀▀▀  ▀▀▀▀▀ ▀▀▀▀  ▀▀▀▀▀  ▀▀▀▀ ▀   ▀
+
+▄▀▀▀▄ █   █ ▀▀█▀▀ ▄▀▀▀▄ █▄ ▄█ ▄▀▀▀▄ ▀▀█▀▀ ▀▀█▀▀ ▄▀▀▀▄ █▄  █
+█▄▄▄█ █   █   █   █   █ █ █ █ █▄▄▄█   █     █   █   █ █ ▀▄█
+█   █ █   █   █   █   █ █   █ █   █   █     █   █   █ █   █
+▀   ▀  ▀▀▀    ▀    ▀▀▀  ▀   ▀ ▀   ▀   ▀   ▀▀▀▀▀  ▀▀▀  ▀   ▀
+
+█▀▀▀▄ ▀▀█▀▀ █▀▀▀▄ █▀▀▀▀ █     ▀▀█▀▀ █▄  █ █▀▀▀▀
+█▄▄▄▀   █   █▄▄▄▀ █▄▄▄  █       █   █ ▀▄█ █▄▄▄
+█       █   █     █     █       █   █   █ █
+▀     ▀▀▀▀▀ ▀     ▀▀▀▀▀ ▀▀▀▀▀ ▀▀▀▀▀ ▀   ▀ ▀▀▀▀▀
+```
+
+
 A Claude Code plugin that takes a raw design brief (or an existing code project or Figma file) to a **working code project**, with an optional Figma export:
 
 **Preflight (Node check, brief, platforms, screen sizes) → Brief Agent → User journeys (your review) → Style direction and live preview → Design Agent builds the code → Auditor + Coverage report on the running app ⇄ your review → production check → optional Figma export**
