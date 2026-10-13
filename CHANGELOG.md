@@ -2,6 +2,11 @@
 
 All notable changes to the design-automation plugin are documented here.
 
+## [0.8.7] - 2026-10-13
+
+### Removed
+- **The feedback notes feature is gone.** Removed the opt-in question at the start of a run, the `UserPromptSubmit` hook (`hooks/`), the `/design-feedback` skill and the README section. The plugin no longer watches your messages or saves notes. Notes already saved on your computer under `~/.claude/design-automation/` are not touched; delete them yourself if you don't want them.
+
 ## [0.8.6] - 2026-10-13
 
 ### Added
