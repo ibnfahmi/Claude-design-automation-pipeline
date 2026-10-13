@@ -133,7 +133,21 @@ claude mcp add --transport http figma https://mcp.figma.com/mcp
 
 ## 📀 Install (each team member, once)
 
-In Claude code chat:
+The plugin lives in a private GitLab repository: https://gitlab.com/cyshield-group1/Claude-design-automation-pipeline
+
+**Before installing**
+
+1. Ask the maintainer to add your GitLab account to the `cyshield-group1` group (Reporter role is enough). The first `git` operation opens a GitLab sign-in window; sign in once and it is remembered.
+2. If you installed an earlier version from GitHub (`design-automation`), remove it first:
+
+```
+claude plugin uninstall design-automation@design-team
+claude plugin marketplace remove design-team
+```
+
+   Also delete the `design-team` block under `extraKnownMarketplaces` in `~/.claude/settings.json`, otherwise adding the new source is refused.
+
+**Install** (in Claude Code chat):
 
 ```
 /plugin marketplace add https://gitlab.com/cyshield-group1/Claude-design-automation-pipeline.git
@@ -145,9 +159,9 @@ Then:
 /plugin install design-pipeline@design-team
 ```
 
-Or just open the plugin and click install.
+Or just open the plugin and click install. Then start a run with `/design-pipeline:start`.
 
-
+**Check it works** (optional): `git ls-remote https://gitlab.com/cyshield-group1/Claude-design-automation-pipeline.git HEAD` should print a commit id. A "not found" or sign-in loop means your account is not in the group yet.
 
 ## 🧑‍💻 Use (per client project)
 
@@ -168,7 +182,7 @@ Progress is saved in `design-pipeline-state.json` in the client folder, so you c
 
 
 
-## ⬆️ Update plugin to recieve enhanced pipeline updates
+## ⬆️ Update the plugin to receive new versions
 
 In Claude code chat:
 ```
