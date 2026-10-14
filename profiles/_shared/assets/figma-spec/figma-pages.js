@@ -11,7 +11,7 @@
  *   features: [ { id: "F-0", name: "Foundation" }, { id: "F-1", name: "Challenges" } ],   // built features, in order
  *   archive: [ { pageId: "12:3", fromVersion: "v1.0" } ],                   // pages to copy into the archive group, this run
  *   manifestFrames: [ "Home / Default", ... ],   // optional: frame names the export will build. Frames with these names that
- *                                                // the pipeline did not tag (no `pipeline:source = capture` tag) are reported as `foreign`
+ *                                                // the spec builder did not tag (no tag, or the capture tool) are reported as `foreign`
  *   archiveForeign: true, foreignFromVersion: "v1.0"   // optional: also archive the pages that hold foreign frames
  * }
  */
@@ -26,7 +26,7 @@ const ARCHIVE_DIVIDER = divider('Archive');
 const isArchived = (name) => /^v\d+(\.\d+)* · /.test(name);
 const isFeaturePage = (name) => /^F-\d+ · /.test(name);
 
-const report = { created: [], renamed: [], moved: [], archived: [], backgrounds: 0, unknownPages: [], fileRenamed: null, foreign: [], pipelineFrames: 0 };
+const report = { created: [], renamed: [], moved: [], archived: [], backgrounds: 0, unknownPages: [], fileRenamed: null, foreign: [], specFrames: 0 };
 const pages = () => figma.root.children;
 const byName = (n) => pages().find(p => p.name === n);
 
@@ -42,7 +42,7 @@ for (const f of PLAN.features) { // a feature renamed in the spec keeps its page
 }
 for (const name of wanted) { if (!byName(name)) { const p = figma.createPage(); p.name = name; report.created.push(name); } }
 
-// ---- 1b. frames the pipeline did not build: no 'capture' tag. Their pages are archived and rebuilt.
+// ---- 1b. frames the pipeline did not build: no 'spec' tag, or built by the capture tool. Their pages are archived and rebuilt.
 const archiveList = [...(PLAN.archive || [])];
 if (PLAN.manifestFrames) {
   const names = new Set(PLAN.manifestFrames);
@@ -51,7 +51,7 @@ if (PLAN.manifestFrames) {
     const bad = [];
     for (const fr of p.findAll(n => n.type === 'FRAME' && names.has(n.name))) {
       const src = fr.getPluginData('pipeline:source');
-      if (src === 'capture') report.pipelineFrames++; else bad.push({ name: fr.name, id: fr.id, source: src || 'untagged' });
+      if (src === 'spec') report.specFrames++; else bad.push({ name: fr.name, id: fr.id, source: src || 'untagged' });
     }
     if (bad.length) {
       report.foreign.push({ pageId: p.id, pageName: p.name, frames: bad });

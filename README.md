@@ -71,12 +71,13 @@ NOTICE.md                attributions for the open-source guidance
 - **Mobile opens as the real app.** The root address is the product's first screen at the phone width, with no bezel and no entry dashboard. The device frame, gallery and journeys stay on the review routes and in the Figma export.
 - **Only the platforms you pick are built.** If the brief describes another platform (an admin console, say), the spec lists it as out of scope with the quote, and nothing is designed, journeyed or counted as missing for it.
 - **Bottom clearance on phones.** The last control or text ends at least 16 px above the bottom safe area, and the Auditor measures it.
-- **Figma export without extra installs.** Each settled page (final animation state) is captured with the Figma connector, then structured natively: real auto layout, pinned fonts, spacing on a scale, layout grids, clean layer names. Nothing is installed on your machine. A re-export archives and rebuilds any frame the pipeline didn't make.
+- **No silent low-quality Figma frames.** Frames are built from a measured spec. If that path can't run, the pipeline asks before using the capture tool and labels those frames; on a re-export it archives and rebuilds any frame it didn't build from a spec.
 - **Everything sits on a grid.** Spacing (gaps, padding, margins) comes only from a 4 px base scale: `0, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96, 128`. Fixed sizes are multiples of 4, and layouts follow column grids (12 on desktop, 8 on tablet, 4 on mobile, or the project's own container). The Auditor reports off-scale values such as 10, 14 or 46 px, and the Figma export snaps to the scale and binds it to variables.
 - **One representative screen per type**, with all its states, instead of copies of every template instance.
 - **Quality gates** before delivery: clean build and lint, no console errors on any screen, a fresh install, and a double-click `share/` file that is tested from disk.
 - **Documents read as exact text.** Word, Excel, PowerPoint and PDF briefs are converted to markdown first, so values and wording are not guessed.
 - **Your edits are kept.** Revision rounds read `git diff` first and keep what you changed by hand; comments on the review page are applied automatically.
+- **Figma built from measurement.** Screens are measured from the settled page (final animation state, pinned fonts, spacing on a scale, layout grids), built as real auto layout and compared with a screenshot of the original.
 
 **Model and token usage**
 

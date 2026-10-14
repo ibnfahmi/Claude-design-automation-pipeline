@@ -2,11 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
-## [0.9.7] - 2026-10-14
+## [0.9.8] - 2026-10-14
 
 ### Changed
-- **The helper-tools package is removed; the Figma export uses only the connector's capture tool.** The measured-spec path (`playwright-core`, `pngjs`, `pixelmatch`, `extract-spec.mjs`, `spec-extractor.js`, `figma-builder.js`, `compare-shots.mjs`) and its install question are gone, because its frames came out with black icons and badly sized layouts. Each frame is opened at its own size in the built-in browser, settled (`?capture=1`), captured with `generate_figma_design` or `html_to_figma`, then structured natively (clean, flatten, real auto layout, pinned fonts, spacing scale, grids, names). A screenshot check of every frame (no black icons, no clipped text) runs before the export returns.
-- Frames are tagged `pipeline:source = capture` with a hash of the settled page, so a re-export knows what changed and archives and rebuilds frames the pipeline didn't make (0.9.6 behaviour, now keyed on `capture`). The `figma_tools` state value is removed. Existing machines can delete `~/.claude/design-pipeline/tools/figma`.
+- **The helper tools are restored.** 0.9.7 removed the measured-spec Figma export (`playwright-core`, `pngjs`, `pixelmatch`, `extract-spec.mjs`, `spec-extractor.js`, `figma-builder.js`, `compare-shots.mjs`) and relied only on the connector's capture tool. This version brings back exactly the 0.9.6 behaviour: the helper-tools question, the measured-spec path as the default, the capture tool only after you choose it, and frames tagged by how they were built.
+- **Known issues, not fixed here:** full-width and equal-width buttons are built as hug-content, padding is snapped to the scale while buttons hug, icons styled through CSS or `<use>` sprites can come out black, line height `normal` and substituted fonts can clip text, and the screenshot comparison cannot see a single wrong button. A fix plan is to be agreed before the next change.
 
 ## [0.9.6] - 2026-10-14
 
