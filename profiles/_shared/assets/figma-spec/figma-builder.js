@@ -11,14 +11,16 @@
  *                           hash: "<hash of the frame's spec>" }   (the top-level frame is tagged as built from the spec)
  *   FONTMAP  { "Family|weight|normal|italic": { family: "IBM Plex Sans", style: "SemiBold" }, ... }   (the pinned fonts)
  *   OPTS     { scale: [0,4,8,12,16,24,32,40,48,64,80,96,128], spaceVars: { "8": "VariableID:..." },
- *              colorVars: { "rgb(16, 42, 99)": "VariableID:..." }, fixedContainers: true }
+ *              colorVars: { "rgb(16, 42, 99)": "VariableID:..." }, fixedContainers: true,
+ *              components: { "Button|1a2b3c": { id: "12:34" } } }   (library first: a node whose `comp|sig` is listed becomes an instance)
+ *   SPEC.asComponent  { name: "Button / Primary" }: the built top-level frame is turned into a Figma component (library build)
  */
 const SPEC = __SPEC__;
 const FONTMAP = __FONTMAP__;
 const OPTS = __OPTS__;
 
 const SCALE = OPTS.scale || [0, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96, 128];
-const stats = { frames: 0, texts: 0, images: 0, svgs: 0, autoLayout: 0, absolute: 0, plainFrames: 0, gridRows: 0 };
+const stats = { frames: 0, texts: 0, images: 0, svgs: 0, autoLayout: 0, absolute: 0, plainFrames: 0, gridRows: 0, instances: 0 };
 const createdIds = [], images = [], bgImages = [], missingFonts = new Set(), approximated = new Set(), deviations = [];
 const loaded = new Set();
 const varCache = {};
@@ -193,6 +195,54 @@ function inferLayout(n) {
   return { mode: dir, gap: Math.max(0, median(gaps)), pad, pj: 'MIN', ca, order: seq, varGaps: gaps.length && Math.max(...gaps) - Math.min(...gaps) > 1 };
 }
 
+// ---------- sizing inside an auto-layout parent (frames and instances) ----------
+function applySizing(f, n, pinfo, auto, w, h) {
+  if (!(pinfo && pinfo.auto)) return;
+  const fixed = OPTS.fixedContainers !== false;
+  const hug = !!(n.L && n.L.inl) || n.act === 'button';
+  const mainH = pinfo.dir === 'HORIZONTAL';
+  if (n.L && n.L.pos === 'absolute') { /* handled by the caller */ }
+  else if (hug && auto) { f.layoutSizingHorizontal = 'HUG'; f.layoutSizingVertical = 'HUG'; }
+  else {
+    const growMain = n.F && n.F.g;
+    const crossMatches = pinfo.stretch && (mainH ? near(h, pinfo.contentH, 1.5) : near(w, pinfo.contentW, 1.5));
+    const fillCross = (crossMatches || (n.F && n.F.as === 'stretch'));
+    if (mainH) { if (growMain) f.layoutSizingHorizontal = 'FILL'; if (fillCross && pinfo.contentH) f.layoutSizingVertical = 'FILL'; }
+    else { if (growMain) f.layoutSizingVertical = 'FILL'; if (fillCross && pinfo.contentW) f.layoutSizingHorizontal = 'FILL'; }
+    if (!fixed && auto && !growMain && !fillCross) { f.layoutSizingHorizontal = 'HUG'; f.layoutSizingVertical = 'HUG'; }
+  }
+}
+
+// ---------- library first: a node that matches a built component becomes an instance of it ----------
+const specLeaves = (n, k) => { const out = []; (function w(x) { if (x.k === k) out.push(x); (x.c || []).forEach(w); })(n); return out; };
+const textOf = (t) => t.runs ? t.runs.map(r => r.txt).join('') : (t.txt || '');
+async function loadNodeFonts(tx) {
+  const fns = tx.fontName === figma.mixed ? tx.getStyledTextSegments(['fontName']).map(s => s.fontName) : [tx.fontName];
+  for (const fn of fns) await ensureFont(fn);
+}
+async function instantiate(n, entry, parent, pinfo) {
+  const main = await figma.getNodeByIdAsync(entry.id);
+  if (!main || main.type !== 'COMPONENT') { approximated.add('component not found: ' + n.comp); return null; }
+  const texts = specLeaves(n, 't'), imgs = specLeaves(n, 'i');
+  const inst = main.createInstance();
+  const tNodes = inst.findAll(x => x.type === 'TEXT');
+  const iNodes = inst.findAll(x => x.type === 'RECTANGLE' && x.name.startsWith('Image /'));
+  if (tNodes.length !== texts.length || iNodes.length !== imgs.length) { inst.remove(); approximated.add('component mismatch, built as a frame: ' + n.comp); return null; }
+  for (let i = 0; i < texts.length; i++) {
+    const want = textOf(texts[i]);
+    if (tNodes[i].characters !== want) { await loadNodeFonts(tNodes[i]); tNodes[i].characters = want; }
+  }
+  imgs.forEach((im, i) => images.push({ id: iNodes[i].id, src: im.src || '', kind: im.kind, fit: im.fit || 'fill', w: im.r[2], h: im.r[3] }));
+  parent.appendChild(inst);
+  const w = Math.max(1, n.r[2]), h = Math.max(1, n.r[3]);
+  inst.resize(w, h);
+  inst.name = n.comp;
+  applySizing(inst, n, pinfo, main.layoutMode && main.layoutMode !== 'NONE', w, h);
+  if (!pinfo || !pinfo.auto) { inst.x = n.r[0]; inst.y = n.r[1]; }
+  stats.instances++; stats.texts += texts.length; createdIds.push(inst.id);
+  return inst;
+}
+
 // ---------- building ----------
 async function build(n, parent, pinfo, where) {
   if (n.k === 't') {
@@ -212,6 +262,12 @@ async function build(n, parent, pinfo, where) {
     if (!n.svg) { const r = figma.createRectangle(); r.name = 'Icon (too large)'; r.resize(n.r[2], n.r[3]); parent.appendChild(r); approximated.add('svg too large'); return r; }
     const s = figma.createNodeFromSvg(n.svg); s.name = 'Icon'; s.resize(Math.max(1, n.r[2]), Math.max(1, n.r[3])); parent.appendChild(s);
     if (!pinfo || !pinfo.auto) { s.x = n.r[0]; s.y = n.r[1]; } stats.svgs++; createdIds.push(s.id); return s;
+  }
+  // library first: an instance of an already built component
+  const compKey = n.comp && n.sig ? n.comp + '|' + n.sig : null;
+  if (compKey && OPTS.components && OPTS.components[compKey] && !(SPEC.asComponent && n === SPEC.node)) {
+    const inst = await instantiate(n, OPTS.components[compKey], parent, pinfo);
+    if (inst) return inst;
   }
   // frame
   const lay = inferLayout(n);
@@ -234,21 +290,7 @@ async function build(n, parent, pinfo, where) {
   f.resize(w, h);
   await applyVisual(f, n, w, h);
   parent.appendChild(f);
-  if (pinfo && pinfo.auto) {
-    const fixed = OPTS.fixedContainers !== false;
-    const hug = !!(n.L && n.L.inl) || n.act === 'button';
-    const mainH = pinfo.dir === 'HORIZONTAL';
-    if (n.L && n.L.pos === 'absolute') { /* handled below */ }
-    else if (hug && auto) { f.layoutSizingHorizontal = 'HUG'; f.layoutSizingVertical = 'HUG'; }
-    else {
-      const growMain = n.F && n.F.g;
-      const crossMatches = pinfo.stretch && (mainH ? near(h, pinfo.contentH, 1.5) : near(w, pinfo.contentW, 1.5));
-      const fillCross = (crossMatches || (n.F && n.F.as === 'stretch'));
-      if (mainH) { if (growMain) f.layoutSizingHorizontal = 'FILL'; if (fillCross && pinfo.contentH) f.layoutSizingVertical = 'FILL'; }
-      else { if (growMain) f.layoutSizingVertical = 'FILL'; if (fillCross && pinfo.contentW) f.layoutSizingHorizontal = 'FILL'; }
-      if (!fixed && auto && !growMain && !fillCross) { f.layoutSizingHorizontal = 'HUG'; f.layoutSizingVertical = 'HUG'; }
-    }
-  }
+  applySizing(f, n, pinfo, auto, w, h);
   if (!pinfo || !pinfo.auto) { f.x = n.r[0]; f.y = n.r[1]; }
   createdIds.push(f.id);
   // children
@@ -304,8 +346,9 @@ let parent;
 if (sec.parentId) { parent = await figma.getNodeByIdAsync(sec.parentId); }
 else { const page = sec.pageId ? await figma.getNodeByIdAsync(sec.pageId) : figma.currentPage; if (sec.pageId) await figma.setCurrentPageAsync(page); parent = page; }
 const pinfo = (parent && parent.layoutMode && parent.layoutMode !== 'NONE') ? { auto: true, dir: parent.layoutMode, stretch: true, contentW: parent.width, contentH: parent.height } : { auto: false };
-const built = await build(root, parent, pinfo, sec.name || root.n || 'Frame');
+let built = await build(root, parent, pinfo, sec.name || root.n || 'Frame');
 if (built && sec.name) built.name = sec.name;
 if (built && !sec.parentId && typeof sec.x === 'number') { built.x = sec.x; built.y = sec.y; }
+if (built && sec.asComponent && !sec.parentId) { const c = figma.createComponentFromNode(built); c.name = sec.asComponent.name || built.name; c.setPluginData('pipeline:component', root.comp || ''); c.setPluginData('pipeline:sig', root.sig || ''); built = c; }
 if (built && !sec.parentId) { built.setPluginData('pipeline:source', 'spec'); if (sec.hash) built.setPluginData('pipeline:hash', String(sec.hash)); }
 return { createdNodeIds: createdIds, rootId: built && built.id, root: built && { name: built.name, w: Math.round(built.width), h: Math.round(built.height) }, stats, images, bgImages, missingFonts: [...missingFonts], approximated: [...approximated], deviations: deviations.slice(0, 60), deviationCount: deviations.length };

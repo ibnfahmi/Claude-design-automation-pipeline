@@ -26,9 +26,9 @@ Tell the user in one line what you found and will test.
 ## 3. What the audit covers
 
 Ask once with AskUserQuestion (header `Audit`, skip if the user already said), up to four options:
-1. **Full audit (Recommended)** — usability, accessibility, visual UI defects, platform checks, interactions, code checks.
-2. **UI defects only** — overflow, overlap, alignment, broken images, responsive breakage and component feel; the cheapest pass.
-3. **Stress test (worst-case data)** — long names, 60-character emails, empty lists, exactly one item, 1,000 rows, RTL and 200% zoom. Uses more tokens; adds dev-only worst-case fixtures to the project first (`stress-test.md`).
+1. **Full audit (Recommended)** — usability, accessibility, visual UI defects, platform checks, interactions, code checks. **Uses a large number of tokens.**
+2. **UI defects only** — overflow, overlap, alignment, broken images, responsive breakage and component feel; the cheapest pass; uses the fewest tokens.
+3. **Stress test (worst-case data)** — long names, 60-character emails, empty lists, exactly one item, 1,000 rows, RTL and 200% zoom. **Uses a very large number of tokens.** Adds dev-only worst-case fixtures to the project first (`stress-test.md`).
 4. **Other** — the user types it: accessibility only, interactions only, code checks only, or a combination.
 
 If a spec or a manifest exists, the Auditor also checks required screens and states; if not, it audits what it finds by crawling the app's navigation.

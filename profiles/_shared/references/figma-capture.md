@@ -57,6 +57,17 @@ What the builder does: **flex becomes auto layout** (direction, gap, padding, ju
 **Images:** after the sections are built, fill each placeholder: download the image sources the builder returned (for example with `curl` from the running app) and upload them with the connector's `upload_assets` (`nodeIds` set to the placeholder ids, up to 60 per call). Don't pass image bytes through `use_figma`.
 **Variables first:** before the first call create the variable collections (`Space/*` from the scale, colours and radii from `tokens.css`), return their ids, and pass them in `OPTS`.
 
+## 2c. Library first (`figma_library = instances`)
+
+The code's components are the library. Every reusable component's root carries `data-component="Name"` (`code-conventions.md`), and `spec-extractor.js` records it as `comp` together with `sig`: a short hash of the node's structure and look (fills, borders, radii, layout, text styles), **not** its text, size or images. The same `comp|sig` is the same Figma component.
+
+1. **Collect.** Walk every `<slug>@<w>.json` and group nodes by `comp|sig`. A group used in two or more places, and every component of the app shell and navigation, becomes a library component; a component used once stays a plain frame. Pick the first occurrence as the canonical one. If fewer than three components are found, say so: the code probably lacks `data-component` roots (report it for the Design Agent).
+2. **Order.** Leaf components first (those that contain no other `comp|sig` node), so a larger component is built with instances of the smaller ones inside it. After each component is built, add it to the `components` map you pass to the next call.
+3. **Build each component** on the `Components` page with `figma-builder.js`, using `SPEC.asComponent = { name: "<Component> / <Variant>" }`. The builder builds the canonical spec as a normal auto-layout frame and converts it with `figma.createComponentFromNode`, tagging it `pipeline:component` and `pipeline:sig`. Variant names come from the frame states where there are some (`Default`, `Pressed`, `Error`), otherwise `Variant 2`, `Variant 3`.
+4. **Group variants.** Components with the same `comp` and different `sig` are combined into one component set with `figma.combineAsVariants` (property `Variant`). Component ids stay valid after combining.
+5. **Build the screens.** Pass `OPTS.components = { "Button|1a2b3c": { id: "<component id>" }, ... }`. A node whose `comp|sig` is in the map becomes an **instance**: the builder creates the instance, sets each text to the node's own text (fonts loaded first), queues image fills for the instance's image rectangles, sets the measured size and the same sizing rules as a frame. If the text or image counts differ from the component, it discards the instance, builds the node as a frame and reports `component mismatch`. A missing component id is reported as `component not found`.
+6. **Report and check.** Components built, variants, instances created, nodes built as frames with the reason. The Components page shows `Used in <n> frames` under each component. The screenshot comparison (section 4b) and the checks in section 4 apply to screens built from instances exactly as to plain frames.
+
 ## 3. A grid and a spacing system that developers can trust
 
 The Figma file must follow a system even when the code doesn't. Snap to it; don't copy stray values.

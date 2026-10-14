@@ -14,7 +14,7 @@ Count the features other than Foundation. The project is **large** when it has *
 
 For a large project ask once with AskUserQuestion: *"This is a large product. Build it in phases so you can judge a few working features first?"* (header: `Phases`):
 1. **Yes, build in phases (Recommended)** — "You pick the major features for Phase 1. When it works, say 'continue' and I'll list what is left for Phase 2. Uses far fewer tokens per step."
-2. **No, build everything at once** — "One long build of all features. Slower and uses a large number of tokens."
+2. **No, build everything at once** — "One long build of all features. Slower, and **uses a large number of tokens.**"
 
 Save `phased: true|false` in the state file.
 

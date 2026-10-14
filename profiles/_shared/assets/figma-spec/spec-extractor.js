@@ -107,6 +107,21 @@
     return runs.filter(r => r.txt.length);
   }
 
+  // a component's signature: structure and look, not content or size (the text, the label length and the box size may differ per use)
+  function sigOf(n) {
+    const part = (x) => [
+      x.k,
+      x.k === 'i' || x.k === 's' ? Math.round(x.r[2]) + 'x' + Math.round(x.r[3]) : '',
+      x.bg || '', x.bd ? x.bd.w.join() + x.bd.c[0] : '', x.rad ? x.rad.join() : '',
+      x.k === 't' ? [x.ff, x.fs, x.fw, x.col].join() : '',
+      x.L ? [x.L.d, x.L.dir, x.L.jc, x.L.ai, x.L.pad].join() : '',
+      (x.c || []).map(part).join('|')
+    ].join('~');
+    const str = part(n); let h = 5381;
+    for (let i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0;
+    return (h >>> 0).toString(16);
+  }
+
   function visual(cs, o) {
     const bg = cs.backgroundColor; if (colorAlpha(bg) > 0) o.bg = bg;
     if (cs.backgroundImage && cs.backgroundImage !== 'none') o.bgi = cs.backgroundImage.slice(0, 600);
@@ -185,6 +200,7 @@
 
     const o = { k: 'f', n: nameOf(el), r: rel };
     if (el.dataset && el.dataset.pseudo) o.pseudo = el.dataset.pseudo;
+    const compName = el.getAttribute('data-component'); if (compName) o.comp = compName;
     if (/^H[1-6]$/.test(tag)) o.h = +tag[1];
     if (tag === 'BUTTON' || tag === 'A' || el.getAttribute('role') === 'button') o.act = tag === 'A' ? 'link' : 'button';
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') { o.inp = (el.type || tag.toLowerCase()); o.ph = el.placeholder || el.value || ''; Object.assign(o, { tp: typo(cs) }); }
@@ -216,6 +232,7 @@
           return [t];
         }
         o.c = [t];
+        if (o.comp) o.sig = sigOf(o);
         return [o];
       }
     }
@@ -235,6 +252,7 @@
       }
     }
     if (kids.length) o.c = kids;
+    if (o.comp) o.sig = sigOf(o);
     if (!kids.length && !o.bg && !o.bgi && !o.bd && !o.sh && !o.inp && !o.pseudo && !(o.L && o.L.pos)) { if (box.w < 1 || box.h < 1) return []; }
 
     // flatten a pure wrapper: one child, same size, no look of its own

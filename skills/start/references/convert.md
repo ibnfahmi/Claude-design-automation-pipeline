@@ -14,7 +14,7 @@ Don't suggest conversion during a run. In the final delivery (Stage 7), add one 
 
 ## How to convert
 
-1. Ask which stack if it isn't clear (AskUserQuestion with the three options above), then confirm in one line what will happen: *"I'll create a new `code-<stack>/` project next to `code/` from the finished HTML project. `code/` stays untouched."*
+1. Ask which stack if it isn't clear (AskUserQuestion with the three options above), then confirm in one line what will happen: *"I'll create a new `code-<stack>/` project next to `code/` from the finished HTML project. `code/` stays untouched."* Say in bold that a conversion **uses a large number of tokens**.
 2. Make sure `code/` is committed and the latest round is approved or at least built. Convert the **latest** state, including the user's direct edits and applied review comments.
 3. Start `design-agent` in **convert mode** (see `design-agent.md`) with the target stack, `design-manifest.json`, the spec, the journeys (if any), the platform scope and the reference files for that stack (`code-conventions.md`, `share-build.md`, `code-quality.md` and the platform references).
 4. When it returns, check its GATES (build passes, every frame renders, frame count equals the manifest's). Run Stage 3b on the converted project (the audit only if `skip_audit` is false; coverage always) and compare the frames visually with the HTML original: a screen that differs is a finding for the Design Agent, not something to hand over.

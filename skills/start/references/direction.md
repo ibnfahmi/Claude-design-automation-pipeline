@@ -36,7 +36,7 @@ Every run asks how the project should be styled, because each client usually has
 Use AskUserQuestion with the question *"How should this project be styled?"*:
 
 1. **Use a saved design system** — description names how many are available (e.g. "2 saved: Acme Brand, Untitled Kit"). Leave this option out only when none exist in either source, and then say where you looked (the user can still paste an artifact link or give a folder with Other on the next question).
-2. **Use a reference** — "An image, screenshot, website URL or Figma file to take the look from. You'll see a quick preview of your product in that look before anything slow runs."
+2. **Use a reference** — "An image, screenshot, website URL or Figma file to take the look from. You'll see a quick preview of your product in that look before anything slow runs. A website URL is measured in a browser and **uses more tokens** than an image."
 3. **No design system** — "The Design Agent picks a look that fits the brief. You can preview it first."
 
 If the confirmed spec's **Tone and style** or **Constraints** name a design system, brand guidelines or a reference, mark the matching option **(Recommended)** and say why. Otherwise, if `design-pipeline-state.json` from an earlier run in this folder names a direction, put that option first with "(Recommended — used last time)".
@@ -78,8 +78,8 @@ The slow part is saving a reusable design system. Show the user their product in
    - **Try a different reference** — go back to step 1.
    - Show any `CONTRAST_FLAGS` next to the question.
 6. **After approval**, ask (AskUserQuestion): *"Save this look as a reusable design system?"*
-   - **Save a design system** — "A folder with the tokens, a Tailwind theme and a brand book (and, from Figma, components), saved in `~/.claude/design-systems/` so other projects can use it. It takes a while, so I'll build it in the background."
-   - **Tokens only** — "A small design system with only the foundations. Faster."
+   - **Save a design system** — "A folder with the tokens, a Tailwind theme and a brand book (and, from Figma, components), saved in `~/.claude/design-systems/` so other projects can use it. **Uses a large number of tokens** and takes a while, so I'll build it in the background."
+   - **Tokens only** — "A small design system with only the foundations. Faster, and uses far fewer tokens."
    - **Use it for this project only** — "Nothing is saved outside the project. The project keeps the approved tokens in `tokens.css`."
 7. **Save / Tokens only** → ask for the system's name (suggest the client's name), then start `design-system-agent` in `full` mode **in the background** (Agent tool with `run_in_background: true`) with the reference, the approved tokens, the name, and `scope: "tokens-only"` if chosen. Save `design_system_status: "building"`, the name and the agent's ID.
    - **Image, screenshot or website reference:** these give tokens and no components, and the user has already approved the tokens, so **don't wait**. Save `direction: "reference"`, the approved tokens and the signature elements, and go straight to Stage 3. The project already has the approved tokens, and the folder is built in parallel for reuse in later projects. When the completion notice arrives, save its path, set `design_system_status: "ready"`, and tell the user in one line. If it fails, set `"failed"` and tell the user; this project is unaffected.

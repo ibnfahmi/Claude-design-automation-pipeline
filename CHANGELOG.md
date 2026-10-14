@@ -2,6 +2,12 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.10.0] - 2026-10-14
+
+### Added
+- **A Figma question: build a component library first?** After you choose what to export, you are asked whether to build the Components page first (real Figma components and variants from the code's `data-component` roots) and then build every screen from instances of them (`figma_library`: `instances` or `frames`). The extractor records each component's name and a signature of its structure and look; `figma-builder.js` builds a component with `SPEC.asComponent`, and turns any node that matches a built component into an instance with its own text, image fills and size, or builds it as a frame and reports a `component mismatch`. New test `figma-library.test.mjs` (mock Figma). **Not yet run against a real Figma file:** `createComponentFromNode`, `createInstance` and `combineAsVariants` need a live check.
+- **Token costs in bold.** Options that start a step using a large number of tokens now say so in bold in their description: the journeys, the audit (full and stress test), building everything at once instead of in phases, saving a full design system, website references, the Figma export, the Figma library (very large) and a stack conversion. The cheaper choices say what they save. A rule in `SKILL.md` keeps this when options change.
+
 ## [0.9.9] - 2026-10-14
 
 ### Changed
