@@ -38,6 +38,7 @@ Written to the client project folder (the session's working directory) after eve
     "languages": [{"code": "ar", "label": "Arabic", "dir": "rtl", "default": true}, {"code": "en", "label": "English", "dir": "ltr", "default": false}],
     "platforms": ["mobile-app", "landing-page"],
     "other": null,
+    "out_of_scope": [{"platform": "dashboard", "quote": "…admin console…"}],
     "options": {
       "mobile-app": {"os": "both", "device_frames": ["iphone-16", "iphone-se"], "orientation": "portrait", "navigation": "decide", "dark_mode": "no", "screens": "From the brief"},
       "landing-page": {"breakpoints": ["desktop", "tablet", "mobile"], "conversion_goal": "Start free trial"}

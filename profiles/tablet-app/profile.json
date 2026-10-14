@@ -102,7 +102,7 @@
     }
   ],
   "preview_screen": "The main screen in the first chosen frame and orientation, using the extra width (sidebar, split panes or a multi-column layout).",
-  "code_target": "A responsive prototype in the project's stack (plain HTML, CSS and JS by default) inside tablet frames, in both orientations if chosen.",
+  "code_target": "The real app as a responsive web build in the project's stack (plain HTML, CSS and JS by default) at the tablet viewport, with no bezel at `/`, in both orientations if chosen. The tablet frame is drawn only on the frame routes and in capture mode.",
   "required_screens": [],
   "required_states": [
     "Keyboard open",

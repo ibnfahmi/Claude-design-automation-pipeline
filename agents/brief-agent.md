@@ -26,6 +26,7 @@ Extract:
    - Take requirements from the source wherever it speaks to that platform (`basis: brief`).
    - Where the source is silent or thin, **derive them from the product itself** (`basis: derived`): what the product is, who it is for, its main features and flows, and its stated goals. Use the platform profile's `derive_when_silent` hint and its required screens and states as the starting point. For example, for a landing page of a product described in the brief: a hero stating the main value proposition with the primary action leading to the sign-up or sign-in the app requires; benefits that map to the product's must-have features; how it works from the main user flow; proof and FAQ sections; a footer with legal links. Write real, specific requirements from the product's own content, and mark each `derived` so the user can see it is your proposal and not the brief's.
    - Add the profile's required screens and states as `basis: profile`.
+   **Only the platforms in the scope.** The scope is the user's decision. If the source describes a platform that is **not** in the scope (for example an admin console when only the mobile app was chosen), do not number requirements, screens, flows or states for it and do not ask about it. List it under **Out of scope (not designed)** with the platform and the quote from the source. A dependency on it (for example an admin approving a user) becomes mock data or a status inside an in-scope platform, never screens of the other platform.
    If a platform has **no** requirements with `basis: brief`, don't silently proceed: return a **question** (with a suggested default of "yes, draft it from the product") telling the user that the source doesn't describe that platform and what you plan to derive.
 3. **Screens**: every screen needed, per platform, with its purpose and the requirement IDs it covers.
 4. **Flows**: how users move between screens, **including flows that cross platforms** (for example the landing page's call to action leading to sign-up, then to the dashboard after sign-in).
@@ -86,6 +87,13 @@ Platforms and screen sizes (from the scope), and the audience.
 | F-1 | Password reset | Reset by email, from request to new password | R-1, R-2 | S | F-0 | yes |
 
 (Group every requirement into exactly one feature. A feature is a major product capability a user would name, not a screen. Aim for 6 to 14 features, with `F-0 Foundation` always first; Size is S, M or L for the relative build effort; Core marks the feature that carries the main end-to-end flow. The Orchestrator uses this table to offer a phased build for large projects.)
+
+## Out of scope (not designed)
+| Platform | What the source says | Source (quote or location) |
+|---|---|---|
+| Admin console | User management and an overview dashboard | "…admin console…" §6 |
+
+(Platforms the source describes that the user did not select. Leave the section out when there are none.)
 
 ## Platform coverage
 | Platform | From the brief | Derived | From the profile | Total |

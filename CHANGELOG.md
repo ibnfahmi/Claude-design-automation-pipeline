@@ -2,6 +2,13 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.9.5] - 2026-10-14
+
+### Fixed
+- **A platform you didn't pick could still be built.** A brief that described an admin console produced one although only the mobile app was chosen. Now the Brief Agent lists unselected platforms under **Out of scope (not designed)** with the source quote, the Journey Agent writes no journeys for them, the Coverage Agent never counts them as Missing (and calls any frame of an unselected platform a major Added item), the Design Agent never builds them and the Auditor flags them. Preflight reads back what is in and what is out.
+- **Mobile projects opened as a prototype presentation.** The root route was left undefined, so an entry page with cards (app, console, frames) appeared, and the app sat inside a phone bezel. Now `/` is the product's first real screen at the phone width with no bezel and no entry page, in the local app and in the review page; the device frame, gallery and journeys stay on the frame routes and in the Figma export.
+- **The bottom of phone screens was too tight.** There was no number for it. Now the last control or text ends at least 16 px above the bottom safe area (50 px from the edge on iOS, 40 px on Android), a CTA and its legal line are one block 8 px apart, and the Auditor measures it on every mobile frame.
+
 ## [0.9.4] - 2026-10-14
 
 ### Changed

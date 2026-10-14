@@ -23,6 +23,8 @@ Every stack also produces a `share/` folder that opens by double-click; the rule
 
 The dev routes are `/frames`, `/frames/<slug>`, `/journeys` and `/style-preview` in every stack. They are review tooling; keep them out of the way of the real app's routes.
 
+**The root route.** `/` is the product's first real screen (splash, sign-in or home), in every stack and for every platform. It is never an entry page, hub or index of platforms, phases, frames or journeys. Only the platforms in the scope are built.
+
 ## Targets by platform
 
 Each profile's `code_target` says what is built; the technology is always the project's own stack (plain HTML, CSS and JS by default). "The chosen stack" means the project's stack (plain HTML by default).
@@ -30,7 +32,7 @@ Each profile's `code_target` says what is built; the technology is always the pr
 | Platform | Built as |
 |---|---|
 | Web app, dashboard, landing page, e-commerce, docs, flow, design system | An app in the chosen stack. A design-system project is a documented component library with a docs route per component |
-| Mobile app, tablet app | A responsive web prototype in the chosen stack, shown inside device frames (status bar, notch or island, home indicator, safe areas). It is a prototype, not native code |
+| Mobile app, tablet app | The real app as a responsive web build in the chosen stack, at the device viewport and with no bezel at `/`. The device frame (status bar, notch or island, home indicator, safe areas) is drawn only on the frame routes (`/frames/<slug>`) and in `?capture=1`, for review and the Figma export. It is not native code |
 | Desktop app | A prototype in the chosen stack inside a window frame for each operating system. Not an Electron build unless asked |
 | Browser extension | A real Manifest V3 extension project (`manifest.json`, popup and options pages built with Vite), whatever the stack, plus preview routes that render each surface at its real size |
 | Email | HTML email templates (table layout, inline-friendly CSS) in `emails/`, whatever the stack, rendered by a preview route in light, dark and images-blocked views |

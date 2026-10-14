@@ -2,7 +2,7 @@
 
 Stakeholders in a review come from every industry and every level of tech knowledge. They must be able to open the design **without installing anything**. So every code project also produces a `share/` folder, next to `code/` in the client folder, and `share/index.html` opens by double-click from disk (`file://`), offline, in any current browser.
 
-`share/` is built from `code/`, never edited by hand. Rebuild it at the end of every build and revision round, and again at the production check.
+`share/index.html` opens the real app, as `/` does in `code/` (no entry page, no cover, no phase intro). A small link to the frames and journeys sits in a corner for reviewers. `share/` is built from `code/`, never edited by hand. Rebuild it at the end of every build and revision round, and again at the production check.
 
 ## What `file://` blocks (design for it)
 

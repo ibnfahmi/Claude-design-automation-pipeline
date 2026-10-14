@@ -20,7 +20,7 @@ The Design Agent builds to this, and the Auditor checks the source and the runni
 - `100dvh` for an app shell, `100svh` for a hero, never `100vh` for bottom-pinned UI. `width: 100%`, not `100vw`.
 - Grid and flex children holding long text: `minmax(0, 1fr)` and `min-width: 0`.
 - Breakpoints come from the content and the platform's chosen viewports. Hold the layout until it breaks, then collapse.
-- Fixed bars pad for safe areas with `env(safe-area-inset-*)`, and the viewport meta includes `viewport-fit=cover` so the values aren't zero.
+- Fixed bars pad for safe areas with `env(safe-area-inset-*)`, and the viewport meta includes `viewport-fit=cover` so the values aren't zero. Bottom padding on a screen or fixed bar is at least `calc(env(safe-area-inset-bottom, 0px) + 16px)`, and the frame component reserves 34 px (iOS) or 24 px (Android) for the home-indicator zone.
 - Hint at hidden content (a peeking next item, a disclosure control). Truncated text has a way to the full value.
 
 ## Touch and pointer

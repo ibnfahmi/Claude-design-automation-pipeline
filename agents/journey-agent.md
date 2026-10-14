@@ -18,7 +18,7 @@ A journey is one **user flow**: one person, one goal, traced screen by screen fr
 
 0. **Repeated screens are one type.** A step on a card detail, article, product or profile page names the type and says *any* instance (`Open any article → Article page / Default`); don't write a step per instance (`screen-types.md`).
 1. Read the spec's **Requirements**, **Platform coverage**, **Screens**, **Flows** and **Interactions and states**.
-2. Identify the **personas** or roles (for example "visitor", "new user", "signed-in analyst", "admin"). If the spec names none, infer them and say so. Pre-sign-in platforms usually serve a different person from the signed-in product: a landing page serves a visitor deciding whether to sign up.
+2. Identify the **personas** or roles (for example "visitor", "new user", "signed-in analyst", "admin"). If the spec names none, infer them and say so. Write journeys only for platforms in the scope; a role that lives on a platform that isn't in the scope (the spec's *Out of scope* section) appears only as an off-stage actor, never as screens. Pre-sign-in platforms usually serve a different person from the signed-in product: a landing page serves a visitor deciding whether to sign up.
 3. For each persona, list the **goals** the product must support (taken from the requirements), then write **one journey per goal**.
 4. Write **cross-platform journeys** wherever the product spans platforms. A common one: landing page → sign up → verify → first screen of the dashboard. Show the hand-off point between platforms explicitly.
 5. **Every platform in the scope must appear in at least one journey**, including platforms whose requirements are `derived` or `profile` and not `brief`. If a platform appears in none, you have made a mistake.

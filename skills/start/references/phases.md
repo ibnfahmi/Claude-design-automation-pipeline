@@ -29,7 +29,7 @@ Save `phased: true|false` in the state file.
 ## What a phase changes in the pipeline
 
 - **Journeys (Stage 2b):** the Journey Agent writes journeys **only for the phase's features** (append new `J` numbers in later phases; never renumber). A journey that runs into a feature from a later phase ends at that boundary and is marked "continues in Phase N".
-- **Build (Stage 3):** the Design Agent builds only the phase's features, plus Foundation in Phase 1. Navigation and entry points to features that are not built yet appear as visibly disabled **Planned** entries (no empty pages, no fake data), so the product still looks whole. Later phases run in **add phase** mode on the same `code/` project (see `design-agent.md`): same design system, same conventions, nothing existing is rebuilt.
+- **Build (Stage 3):** the Design Agent builds only the phase's features, plus Foundation in Phase 1. Navigation and entry points to features that are not built yet appear as visibly disabled **Planned** entries (no empty pages, no fake data), so the product still looks whole. Phases are never shown as an entry page or a cover: `/` stays the real first screen. Later phases run in **add phase** mode on the same `code/` project (see `design-agent.md`): same design system, same conventions, nothing existing is rebuilt.
 - **Manifest:** every frame records its `feature` and `phase`.
 - **Audit (Stage 3b):** the Auditor tests the frames in the manifest, which are the built ones.
 - **Coverage:** requirements of features that belong to a later phase are **Deferred (later phase)**, not Missing. Missing means "in this phase and not built". The summary reads `Phase <n> of <m>: Done <x> · Missing <y> · Deferred <z> · Added <w>`. Planned navigation entries are not "Added".

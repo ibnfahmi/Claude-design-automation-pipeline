@@ -57,7 +57,7 @@ The tool's built-in **Other** covers anything else. If the user types an other-p
 
 **Step B — one call, one multi-select question per chosen family:** *"Which websites and web apps?"* (header: the family's short name), with one option per platform in that family (label = the platform's label, description = its `summary`).
 
-Save the chosen platform IDs.
+Save the chosen platform IDs. If a brief was given, then say in one line what is in and what is out, for example *"Designing: Mobile app. Not designing: Admin dashboard (the brief describes it). Change the platforms if you want it added."* Save the platforms the brief describes but the user didn't choose as `scope.out_of_scope` (platform and quote).
 
 ## 4. Screen sizes — the only per-platform question
 
