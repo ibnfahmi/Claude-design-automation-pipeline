@@ -9,7 +9,10 @@
  *   fileName: "Shabab Masr — v1.2",
  *   background: { r: 0.153, g: 0.153, b: 0.153 },                          // #272727
  *   features: [ { id: "F-0", name: "Foundation" }, { id: "F-1", name: "Challenges" } ],   // built features, in order
- *   archive: [ { pageId: "12:3", fromVersion: "v1.0" } ]                    // pages to copy into the archive group, this run
+ *   archive: [ { pageId: "12:3", fromVersion: "v1.0" } ],                   // pages to copy into the archive group, this run
+ *   manifestFrames: [ "Home / Default", ... ],   // optional: frame names the export will build. Frames with these names that
+ *                                                // the spec builder did not tag (no tag, or the capture tool) are reported as `foreign`
+ *   archiveForeign: true, foreignFromVersion: "v1.0"   // optional: also archive the pages that hold foreign frames
  * }
  */
 const PLAN = __PLAN__;
@@ -23,7 +26,7 @@ const ARCHIVE_DIVIDER = divider('Archive');
 const isArchived = (name) => /^v\d+(\.\d+)* · /.test(name);
 const isFeaturePage = (name) => /^F-\d+ · /.test(name);
 
-const report = { created: [], renamed: [], moved: [], archived: [], backgrounds: 0, unknownPages: [], fileRenamed: null };
+const report = { created: [], renamed: [], moved: [], archived: [], backgrounds: 0, unknownPages: [], fileRenamed: null, foreign: [], specFrames: 0 };
 const pages = () => figma.root.children;
 const byName = (n) => pages().find(p => p.name === n);
 
@@ -39,8 +42,27 @@ for (const f of PLAN.features) { // a feature renamed in the spec keeps its page
 }
 for (const name of wanted) { if (!byName(name)) { const p = figma.createPage(); p.name = name; report.created.push(name); } }
 
+// ---- 1b. frames the pipeline did not build: no 'spec' tag, or built by the capture tool. Their pages are archived and rebuilt.
+const archiveList = [...(PLAN.archive || [])];
+if (PLAN.manifestFrames) {
+  const names = new Set(PLAN.manifestFrames);
+  for (const p of pages().filter(p => isFeaturePage(p.name))) {
+    await p.loadAsync();
+    const bad = [];
+    for (const fr of p.findAll(n => n.type === 'FRAME' && names.has(n.name))) {
+      const src = fr.getPluginData('pipeline:source');
+      if (src === 'spec') report.specFrames++; else bad.push({ name: fr.name, id: fr.id, source: src || 'untagged' });
+    }
+    if (bad.length) {
+      report.foreign.push({ pageId: p.id, pageName: p.name, frames: bad });
+      const from = PLAN.foreignFromVersion || 'v0.0';
+      if (PLAN.archiveForeign && !byName(`${from} · ${p.name}`) && !archiveList.some(a => a.pageId === p.id)) archiveList.push({ pageId: p.id, fromVersion: from });
+    }
+  }
+}
+
 // ---- 2. archive copies (before the order is fixed, so the copies are placed with the archive group)
-for (const a of (PLAN.archive || [])) {
+for (const a of archiveList) {
   const src = await figma.getNodeByIdAsync(a.pageId);
   if (!src || src.type !== 'PAGE') { report.archived.push({ pageId: a.pageId, error: 'page not found' }); continue; }
   await src.loadAsync();

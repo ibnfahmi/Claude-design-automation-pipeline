@@ -12,7 +12,7 @@ let code = fs.readFileSync(path.join(HERE, '..', 'figma-builder.js'), 'utf8');
 
 const FONTMAP = {};
 for (const f of spec.fonts) FONTMAP[`${f.family}|${f.weight}|${f.style}`] = { family: f.family, style: f.weight >= 700 ? 'Bold' : f.weight >= 600 ? 'SemiBold' : 'Regular' };
-const section = { node: spec.root, parentId: null, name: 'Home / Default @ Desktop 1440', x: 0, y: 0 };
+const section = { node: spec.root, parentId: null, name: 'Home / Default @ Desktop 1440', x: 0, y: 0, hash: 'h123' };
 code = code.replace('__SPEC__', JSON.stringify(section)).replace('__FONTMAP__', JSON.stringify(FONTMAP)).replace('__OPTS__', JSON.stringify({ fixedContainers: true }));
 
 // ---------- mock Figma ----------
@@ -37,6 +37,8 @@ class Node {
   set layoutPositioning(v) { if (v === 'ABSOLUTE' && !(this.parent && this.parent._lm !== 'NONE')) fail('ABSOLUTE needs an auto-layout parent'); this._lp = v; }
   get layoutPositioning() { return this._lp || 'AUTO'; }
   setBoundVariable() {}
+  setPluginData(k, v) { (this._pd = this._pd || {})[k] = v; }
+  getPluginData(k) { return (this._pd || {})[k] || ''; }
 }
 class Text extends Node {
   constructor() { super('TEXT'); this._fn = { family: 'Inter', style: 'Regular' }; this._chars = ''; this.textAutoResize = 'WIDTH_AND_HEIGHT'; this.ranges = []; }
@@ -95,6 +97,8 @@ if (gf) {
   const s = ap(0.5, 0), e = ap(0.5, 1);
   check('gradient transform maps top to start and bottom to end', Math.abs(s[0]) < 1e-6 && Math.abs(s[1] - 0.5) < 1e-6 && Math.abs(e[0] - 1) < 1e-6 && Math.abs(e[1] - 0.5) < 1e-6, JSON.stringify([s, e]));
 }
+const topFrame = figma.currentPage.children[0];
+check('top-level frame is tagged as built from the spec, with its hash', topFrame.getPluginData('pipeline:source') === 'spec' && topFrame.getPluginData('pipeline:hash') === 'h123');
 check('buttons hug their content', all.some(n => n.name === 'Button' || n.name === 'Btn') );
 console.log('\nstats', JSON.stringify(result.stats), '\napproximated', JSON.stringify(result.approximated), '\ndeviations', result.deviationCount);
 if (errors.length) { console.error('\nFAILED:', errors.length); process.exit(1); }

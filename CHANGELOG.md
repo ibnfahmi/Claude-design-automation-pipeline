@@ -2,6 +2,12 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.9.6] - 2026-10-14
+
+### Fixed
+- **A capture-tool frame could end up in the Figma file without anyone choosing it.** Those frames have black-square icons, clipped text and off-scale spacing. Now: the helper-tools question says plainly that "No" lowers quality; if the measured-spec path can't run, the pipeline stops, says why and asks (fix and retry, or use the capture tool for these frames); frames from the capture tool are tagged `capture-fallback` and marked on the Handoff status page; and `figma-builder.js` tags every frame it builds as `spec`.
+- **Re-exports now recognise frames the pipeline didn't build.** `figma-pages.js` reports frames with a manifest name but no `spec` tag (capture tool, by hand, older version), and a re-export archives their pages and rebuilds them from the specs, with a one-line notice. The user can keep a page.
+
 ## [0.9.5] - 2026-10-14
 
 ### Fixed

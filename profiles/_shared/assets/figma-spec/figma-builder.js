@@ -7,7 +7,8 @@
  * fonts loaded before text is written, every node id returned.
  *
  *   SPEC     the section: { node: <spec node>, parentId: "<figma node id to append to, or null to create a top-level frame>",
- *                           x, y: page position for a new top-level frame, name: "<frame name>", pageId: "<page id>" }
+ *                           x, y: page position for a new top-level frame, name: "<frame name>", pageId: "<page id>",
+ *                           hash: "<hash of the frame's spec>" }   (the top-level frame is tagged as built from the spec)
  *   FONTMAP  { "Family|weight|normal|italic": { family: "IBM Plex Sans", style: "SemiBold" }, ... }   (the pinned fonts)
  *   OPTS     { scale: [0,4,8,12,16,24,32,40,48,64,80,96,128], spaceVars: { "8": "VariableID:..." },
  *              colorVars: { "rgb(16, 42, 99)": "VariableID:..." }, fixedContainers: true }
@@ -306,4 +307,5 @@ const pinfo = (parent && parent.layoutMode && parent.layoutMode !== 'NONE') ? { 
 const built = await build(root, parent, pinfo, sec.name || root.n || 'Frame');
 if (built && sec.name) built.name = sec.name;
 if (built && !sec.parentId && typeof sec.x === 'number') { built.x = sec.x; built.y = sec.y; }
+if (built && !sec.parentId) { built.setPluginData('pipeline:source', 'spec'); if (sec.hash) built.setPluginData('pipeline:hash', String(sec.hash)); }
 return { createdNodeIds: createdIds, rootId: built && built.id, root: built && { name: built.name, w: Math.round(built.width), h: Math.round(built.height) }, stats, images, bgImages, missingFonts: [...missingFonts], approximated: [...approximated], deviations: deviations.slice(0, 60), deviationCount: deviations.length };
