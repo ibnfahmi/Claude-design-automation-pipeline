@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.9.4] - 2026-10-14
+
+### Changed
+- **The BRD step now asks for brand requirements.** The "A brief or BRD" option and the request for the brief ask you to add a logo, brand guideline, colours, fonts or tone of voice too. Brand material is kept as the project's brand source and the style step uses it before proposing any other look.
+
 ## [0.9.3] - 2026-10-13
 
 ### Changed
