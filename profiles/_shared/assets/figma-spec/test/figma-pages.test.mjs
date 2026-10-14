@@ -52,14 +52,14 @@ check('hand-made page is kept after the archive group', names()[names().length -
 // ---- frames the pipeline did not build are found and their pages archived
 const mkFrame = (name, source) => ({ id: '9:' + nextId++, type: 'FRAME', name, getPluginData: (k) => (k === 'pipeline:source' ? source : '') });
 const pageF1 = root.children.find(p => p.name === 'F-1 · Quests'), pageF0 = root.children.find(p => p.name === 'F-0 · Foundation');
-pageF0.children.push(mkFrame('Home / Default', 'spec'));
-pageF1.children.push(mkFrame('Chat / Default', 'capture-fallback'), mkFrame('Chat / Empty', ''), mkFrame('Chat / Spec', 'spec'));
+pageF0.children.push(mkFrame('Home / Default', 'capture'));
+pageF1.children.push(mkFrame('Chat / Default', 'hand-made'), mkFrame('Chat / Empty', ''), mkFrame('Chat / Spec', 'capture'));
 const manifestFrames = ['Home / Default', 'Chat / Default', 'Chat / Empty', 'Chat / Spec'];
 const fplan = { ...plan, fileName: 'Demo — v1.1', features: [{ id: 'F-0', name: 'Foundation' }, { id: 'F-1', name: 'Quests' }] };
 const before = names().length;
 r = await run({ ...fplan, manifestFrames });
-check('foreign frames are reported, spec frames are not', r.foreign.length === 1 && r.foreign[0].pageName === 'F-1 · Quests' && r.foreign[0].frames.length === 2 && r.specFrames === 2, JSON.stringify(r.foreign));
-check('report lists their source (capture-fallback, untagged)', r.foreign[0].frames.map(f => f.source).sort().join() === 'capture-fallback,untagged');
+check('foreign frames are reported, spec frames are not', r.foreign.length === 1 && r.foreign[0].pageName === 'F-1 · Quests' && r.foreign[0].frames.length === 2 && r.pipelineFrames === 2, JSON.stringify(r.foreign));
+check('report lists their source (hand-made, untagged)', r.foreign[0].frames.map(f => f.source).sort().join() === 'hand-made,untagged');
 check('nothing is archived unless asked', r.archived.length === 0 && names().length === before);
 r = await run({ ...fplan, manifestFrames, archiveForeign: true, foreignFromVersion: 'v1.1' });
 check('archiveForeign copies only the page with foreign frames', r.archived.length === 1 && r.archived[0].copy === 'v1.1 · F-1 · Quests', JSON.stringify(r.archived));
