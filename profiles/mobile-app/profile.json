@@ -143,7 +143,7 @@
       "default": "From the brief"
     }
   ],
-  "preview_screen": "The home screen inside the first chosen device frame, with status bar, primary content and navigation.",
+  "preview_screen": "The home screen at the first chosen device size, as the real app (no device frame), with its primary content and navigation.",
   "code_target": "The real app as a responsive web build in the project's stack (plain HTML, CSS and JS by default) at the device viewport, with no bezel at `/`, with tab or stack navigation and touch interactions. The device frame (status bar, safe areas, home indicator) is drawn only on the frame routes and in capture mode. Not native code.",
   "required_screens": [
     "Splash or launch",

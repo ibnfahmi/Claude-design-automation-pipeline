@@ -29,4 +29,4 @@ Used by `mobile-app`, `tablet-app` and the mobile breakpoints of web profiles. D
 
 ## Verify on a real device
 
-Emulators miss sticky hover, tap highlights, browser-chrome height changes, safe areas and the keyboard. When handoff includes a coded prototype, note that those behaviours need a phone.
+Emulators miss sticky hover, tap highlights, browser-chrome height changes, safe areas and the keyboard. When handoff includes the coded app, note that those behaviours need a phone.

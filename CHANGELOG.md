@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.9.9] - 2026-10-14
+
+### Changed
+- **Mobile no longer says "a prototype inside device frames" anywhere.** The mobile rule already built the real app with no bezel at `/` (0.9.5); three leftovers are cleaned up: the mobile style preview now shows the home screen as the real app at the chosen device size (no frame), the README's list of code targets says "a responsive app at the device size", and the real-device note in the mobile guidance says "the coded app". The device frame is drawn only on the review routes and in the Figma export.
+
 ## [0.9.8] - 2026-10-14
 
 ### Changed

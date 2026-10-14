@@ -92,7 +92,7 @@ NOTICE.md                attributions for the open-source guidance
 A profile is what the pipeline knows about one kind of product, so the same steps fit a kiosk and a landing page. You pick the platforms in preflight (one or several); each profile supplies:
 
 - the **questions** worth asking for that platform and a **preview screen** for the style step
-- the **code target** (for example a responsive app in device frames, a Manifest V3 extension, HTML email, a fixed-size TV or kiosk stage)
+- the **code target** (for example a responsive app at the device size, a Manifest V3 extension, HTML email, a fixed-size TV or kiosk stage)
 - the **required screens and states**, **design guidance** (sizes, safe zones, touch or focus rules) and the **audit checks** the Auditor runs
 
 16 platforms in 4 groups:
