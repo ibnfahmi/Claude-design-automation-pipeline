@@ -79,7 +79,7 @@ NOTICE.md                attributions for the open-source guidance
 - **Quality gates** before delivery: clean build and lint, no console errors on any screen, a fresh install, and a double-click `share/` file that is tested from disk.
 - **Documents read as exact text.** Word, Excel, PowerPoint and PDF briefs are converted to markdown first, so values and wording are not guessed.
 - **Your edits are kept.** Revision rounds read `git diff` first and keep what you changed by hand; comments on the review page are applied automatically.
-- **Figma built from measurement.** Screens are measured from the settled page (final animation state, pinned fonts, spacing on a scale, layout grids), built as real auto layout and compared with a screenshot of the original.
+- **Figma built from measurement, with three small helper tools.** Screens are measured from the settled page (final animation state, pinned fonts, spacing on a scale, layout grids), built as real auto layout and compared with a screenshot of the original. The measuring and comparing use three open-source packages, installed once with your consent into `~/.claude/design-pipeline/tools/figma`: **playwright-core** (opens each page in the Chrome or Edge you already have and measures every element, with no browser download), **pngjs** (reads and writes the screenshot PNG files) and **pixelmatch** (compares the app screenshot with the Figma screenshot and finds the regions that differ). If you decline them, the pipeline asks before falling back to the Figma connector's capture tool, whose frames are lower quality and are labelled `capture fallback`.
 
 **Model and token usage**
 
@@ -137,6 +137,7 @@ claude mcp add --transport http figma https://mcp.figma.com/mcp
   3. Inside the claude session, type `/mcp`, pick figma (or figma-desktop), choose Authenticate, and finish signing in when your browser opens.
 - Optional: a saved design system (a folder in `~/.claude/design-systems/`, or a Design System artifact in your account), or a reference (image, screenshot, website URL or Figma file) to take the look from
 - The Figma plugin for Claude Code (recommended for the export, for the `figma-use` and `figma-generate-design` skills)
+- Optional, installed for you on the first Figma export after you say yes: the three helper packages **playwright-core**, **pngjs** and **pixelmatch** (see "Figma built from measurement" above). They run locally and use your installed Chrome or Edge.
 
 ## 📀 Install (each team member, once)
 

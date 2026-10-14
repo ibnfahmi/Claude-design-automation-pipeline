@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.10.1] - 2026-10-14
+
+### Changed
+- The README now names the Figma export's helper tools (`playwright-core`, `pngjs`, `pixelmatch`), says what each does and where they are installed, and lists them under Requirements.
+
 ## [0.10.0] - 2026-10-14
 
 ### Added
