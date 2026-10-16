@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.10.5] - 2026-10-16
+
+### Added
+- **Forms in the running app are prefilled with demo values.** Sign-in, sign-up, checkout, onboarding and other forms hold realistic made-up values (reserved `.test` and `example.com` emails, a fake masked password, the public test card number, `123456` codes) from one `demo-values` module, so reviewers can click through without typing. Submitting works against the mock data, clearing a field still shows validation, `?prefill=0` shows the empty form, and `/frames/*` and capture mode stay exact to each frame's named state, so the Figma export is unchanged. The Auditor checks it and flags real-looking credentials as major. Not yet run end to end.
+
 ## [0.10.4] - 2026-10-16
 
 ### Fixed

@@ -90,6 +90,15 @@ Viewports come from the scope: the primary viewport for states, and every chosen
 - **Numbers and dates:** formatted with `Intl` for the active language; digits follow the language's convention.
 - `localization.md` has the text-expansion and right-to-left details.
 
+## Demo prefill (so reviewers never have to type)
+
+In the **running app** (`/` and its routes, the share build and the review page) every form field is **prefilled with realistic demo values**, so a reviewer can click straight through sign-in, sign-up, checkout, onboarding and search without typing anything.
+- **What:** emails (`demo@<project>.test` or `maria.hassan@example.com`, only the reserved `.test` and `example.com` domains), a made-up password (`Demo-pass-2026`, shown masked), names, phone numbers (`+1 555 0100`), addresses, one-time codes (`123456`), dates, search terms, and for payments only the public test card numbers (`4242 4242 4242 4242`). Never real emails, passwords, ID numbers or cards.
+- **Where from:** one `demo-values` module in `src/data/`, so the same person has the same email, name and phone in every form. Values are set as real values, not placeholders; demo password fields use `autocomplete="off"` so the browser doesn't offer to save them.
+- **It still behaves like a form:** submitting the prefilled form succeeds against the mock data, and clearing or breaking a field still shows its validation message.
+- **Off on the frame routes and in capture mode:** `/frames/<slug>` and `?capture=1` show exactly the state the frame is named for (`Empty`, `Filled`, `Error`), so the Figma export and the gallery match the spec. A `Filled` frame uses the demo values.
+- **`?prefill=0`** turns the prefill off on any route, to look at the empty forms.
+
 ## Capture mode (so design tools get the final state)
 
 Every frame route accepts `?capture=1`, built into every project from the start (a small classic script, `scripts/capture-mode.js`, plus a few CSS rules). In capture mode the page shows its **final, settled state**, so the Figma export (and any screenshot) never catches a half-finished animation:
