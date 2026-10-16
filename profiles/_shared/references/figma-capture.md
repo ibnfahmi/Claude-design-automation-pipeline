@@ -72,7 +72,7 @@ The code's components are the library. Every reusable component's root carries `
 
 The Figma file must follow a system even when the code doesn't. Snap to it; don't copy stray values.
 
-**Spacing scale (4 px base, 8 px rhythm):** `0, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96, 128`. Use these for **item spacing, padding and margins**. Create them as Figma variables `Space/4`, `Space/8` … and **bind** every gap and padding to a variable. If the project's design system defines its own scale (for example `tokens.css`), use it instead, as long as it is a regular scale; say so on the Specs page.
+**Spacing scale (4 px base, 8 px rhythm):** `0, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96, 128`. Use these for **item spacing, padding and margins**. Create them as Figma variables `Space/4`, `Space/8` … and **bind** every gap and padding to a variable. If the project's design system defines its own scale (for example `tokens.css`), use it instead, as long as it is a regular scale; say so in the report.
 - **Snap each measured value to the nearest scale step** (ties go to the larger step): 10 is a tie between 8 and 12, so it becomes 12 (9 becomes 8, 11 becomes 12), 46 becomes 48, 23 becomes 24, 52 becomes 48, 60 becomes 64. A value of 1 or 2 px that is a hairline border or optical nudge is not spacing.
 - **Sizes:** fixed widths and heights of components (buttons, inputs, avatars, icons, cards) are multiples of 4 (icons 16, 20, 24, 32, 40, 48). Line heights are multiples of 4 and come from the type scale. Radii come from a short scale (`0, 4, 8, 12, 16, 24, full`).
 - **Alignment:** left edges, baselines and centres line up; items in a row share a top or centre line; repeated cards have equal widths and heights.
@@ -84,14 +84,14 @@ The Figma file must follow a system even when the code doesn't. Snap to it; don'
 - Add a baseline grid of 8 on frames with text-heavy layouts if the design system uses one.
 Section and column widths follow the columns. Content that sits off the grid on purpose (full-bleed images, backgrounds) is marked as such.
 
-**Deviations are reported, not hidden.** Where snapping moved a value by 3 px or more, or a layout could not follow the grid, add a row to the **Layout** section of the Specs page (a table of: where, value in the code, value in Figma). That list tells developers where the code drifts from the system, and the Orchestrator can offer a revision round that aligns the code with the scale.
+**Deviations are reported, not hidden.** Where snapping moved a value by 3 px or more, or a layout could not follow the grid, list it in the result under `DEVIATIONS` (where, value in the code, value in Figma); it is not drawn in the file. That list tells developers where the code drifts from the system, and the Orchestrator can offer a revision round that aligns the code with the scale.
 
 ## 3b. Pin the fonts before the import
 
 1. Take the fonts the extractor found (`index.json`: family, weight, style, count, and whether the page had them loaded).
 2. In one read-only `use_figma` call run `await figma.listAvailableFontsAsync()` and map every `family | weight | style` to an **exact Figma font** (family and style name; verify the style string from the list, such as `SemiBold` against `Semi Bold`, never guess). Load each with `figma.loadFontAsync` in that call and return the mapping (`FONTMAP`) and any font that is missing.
 3. **Missing fonts are reported before any frame is built**: name the font, the closest available substitute, and what it affects. Continue with the substitute only after saying so (the Handoff Agent doesn't stop to ask unless the user can fix it in a minute, for example by enabling the font in Figma). Never let Figma substitute silently.
-4. Put the pinned fonts in the font table on the Specs page.
+4. Report the pinned fonts in the result (`FONTS`).
 
 ## 4b. Compare each screen with its reference, and iterate
 
@@ -109,4 +109,4 @@ Snapping to the spacing scale moves things by a few pixels, so a small residual 
 - Every screen has been compared with its reference screenshot (final difference reported, three passes at most), and a screenshot of every frame in Figma matches the running app in its **final state** (differences only from snapping, none larger than a few pixels), and no frame shows a half-faded, shrunken or sliding element.
 - No default or tool-made layer names; repeated elements are component instances.
 - Every frame that holds more than one in-flow child uses auto layout; absolute positioning appears only on intended overlays; padding and gaps are bound to the spacing variables and are all on the scale; layout grids are set on every top-level frame.
-- The deviation table is on the Specs page.
+- The deviations are listed in the result.

@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.10.17] - 2026-10-17
+
+### Changed
+- **The Figma export no longer creates a Specs & Guidelines page.** The file now has Cover, Components, Changelog, the feature pages and the Archive. The twelve sections (colour, typography, layout, shape, iconography, motion, accessibility and so on), the font table and the deviation table are no longer drawn. The things they reported are still given in the export's result: pinned and substituted fonts under `FONTS`, and values moved by 3 px or more when snapped to the spacing scale under a new `DEVIATIONS` line. Features planned for later phases are now listed in the Changelog entry. Files exported earlier keep their old Specs & Guidelines page, so delete it by hand if you don't want it.
+
 ## [0.10.16] - 2026-10-17
 
 ### Changed

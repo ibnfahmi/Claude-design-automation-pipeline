@@ -20,7 +20,7 @@ const PLAN = __PLAN__;
 const DASH = '———';
 const divider = (n) => `${DASH}  ${n}  ${DASH}`;
 const BG = [{ type: 'SOLID', color: PLAN.background || { r: 0x27 / 255, g: 0x27 / 255, b: 0x27 / 255 } }];
-const FIXED_TOP = ['Cover', divider('Overview'), 'Specs & Guidelines', 'Components', 'Changelog', divider('Features')];
+const FIXED_TOP = ['Cover', divider('Overview'), 'Components', 'Changelog', divider('Features')];
 const featureName = (f) => `${f.id} · ${f.name}`;
 const ARCHIVE_DIVIDER = divider('Archive');
 const isArchived = (name) => /^v\d+(\.\d+)* · /.test(name);

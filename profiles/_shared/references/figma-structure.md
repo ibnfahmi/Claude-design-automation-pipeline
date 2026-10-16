@@ -15,7 +15,6 @@ Every page, dividers and archived pages included, has the background **#272727**
 ```
 Cover
 ———  Overview  ———
-Specs & Guidelines
 Components
 Changelog
 ———  Features  ———
@@ -56,7 +55,6 @@ The flow runs horizontally (entry point first, branches as extra columns after t
 
 - **Cover:** the `Thumbnail` frame only (`figma-thumbnail.md`), applied as the file's thumbnail.
 - **Feature pages (`F-<n> · ...`):** a title block, the **Flow strip**, then the size blocks of the layout above. Every frame has a label card above it and a `Notes /` card under it.
-- **Specs & Guidelines:** the twelve sections in `handoff-agent.md` (overview, colour, typography, layout with the deviation table, shape, iconography, components rules, motion, accessibility, content and language, naming, open items), plus the **font table** (family and weight in the code, Figma font, substituted or not).
 - **Components:** one section per reusable component, named `<Component>`: its anatomy (labelled parts), a grid of **variants by states** (default, hover, focus, pressed, disabled, loading, error as they apply), its sizes, and two or three usage notes (do and don't). They are real Figma components with variants (`Component / Variant` naming); frames on the other pages use instances of them. Order: foundations first (button, input, link, icon), then composed ones (card, list item, navigation, dialog).
 - **Library mode (`figma_library = instances`):** the Components page is built **first**, from the code's components (`figma-capture.md` section 2c), and each component shows `Used in <n> frames`. Screens on the feature pages are built from instances of these components.
 - **Changelog:** one entry per export, **newest first**: version, date, the screens **added**, **changed** and **removed**, the fonts substituted, the behaviours approximated, the gaps (`Not built`), and the frames the user chose to leave out (`Not exported (by choice)`). The first export reads "Initial export".
@@ -83,7 +81,7 @@ When the project already has a Figma file (`figma_file` in the state file), **up
 1. **Find what changed.** Each frame's spec (`<slug>@<w>.json`) is hashed; the hashes, node ids and pages of the last export are in `figma_frames` in the state file. A frame is **new** (no hash), **changed** (different hash), **unchanged**, or **removed** (in the old export, not in the manifest). A renamed frame counts as removed plus new.
 1b. **Find frames this pipeline did not build.** Run `figma-pages.js` with `manifestFrames` (the manifest's frame names). A frame with a manifest name that has no `pipeline:source = spec` tag is **foreign**: it was made by the capture tool, by hand, or by an older version, and it can have broken layout. Do not ask frame by frame. Archive every page that holds one (`archiveForeign: true`, `foreignFromVersion` = the previous version, or `v0.0` when unknown), rebuild that page from the specs, and say so in one line (*"Archived F-2 · Chats and rebuilt it: 12 frames were not built from a measured spec."*). The user can answer "keep it" for a page; then it is left alone and listed as `Not rebuilt (kept by choice)`.
 2. **Archive, then rebuild, page by page.** For each page that has a changed or removed frame: clone the old page into the archive group as `<old version> · <page name>` (`figma-pages.js`, archive action), then clear that page and rebuild it in place from the new specs. Pages whose frames are all unchanged are left untouched. Removed frames are in the archived copy only.
-3. **Update the file-wide pages:** the Thumbnail's version and date (edit the texts in place, then re-apply the thumbnail), Specs & Guidelines (tokens, deviations, fonts), Components (only changed components, the rest left), Changelog (a new entry at the top), Archive (new rows in the index).
+3. **Update the file-wide pages:** the Thumbnail's version and date (edit the texts in place, then re-apply the thumbnail), Components (only changed components, the rest left), Changelog (a new entry at the top), Archive (new rows in the index).
 4. **Rename the file** to the new version and record the export in `figma_exports` (`date`, `version`, `name`, `url`) and the new `figma_frames` map in the state file.
 5. Report what was added, changed, archived and left alone.
 
