@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.10.7] - 2026-10-16
+
+### Changed
+- **Mobbin (https://mobbin.com/) joins the website-reference inspiration links** (now five: Awwwards, Behance, Muzli, MotionSites, Mobbin), in the option text and in the follow-up message. It is handled like the other galleries: its pages hold screenshots, so the screenshots are used as the reference; anything behind its sign-in is skipped, and the pipeline never signs in for you.
+
 ## [0.10.6] - 2026-10-16
 
 ### Fixed
