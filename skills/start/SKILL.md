@@ -106,7 +106,7 @@ Ask how the project should be styled and, for a reference, show a quick style pr
 
 The Design Agent **scaffolds the project** here (`code/`, tokens, the preview route, the dev server and a first git commit), so the preview and the full build share the same project. For a reference, the reusable design-system folder is built **in the background**; the build starts straight away with the approved tokens and doesn't wait for it, except that a Figma reference with components waits.
 
-The preview can be published as a private page where the user comments directly on the look (`references/review-page.md`, "It starts at the style preview"): comments are applied to the tokens and the preview as they arrive, and the same link continues as the review page in Stage 4.
+The preview is **published automatically** as a private page (no question) where the user comments directly on the look (`references/review-page.md`, "It starts at the style preview"): comments are applied to the tokens and the preview as they arrive, and the same link continues as the review page in Stage 4.
 
 Save the direction under `preflight` in the state file, set `stage: "design"`, and go to Stage 3.
 
@@ -133,7 +133,7 @@ When they return, add their minutes to `timing` and save a summary of each in th
 
 ## Stage 4 — Review loop
 
-Before handing over the round, handle the **review page** as `references/review-page.md` describes: on the first round ask whether to publish a private review page with comments (skip if `review_page` is already set, for example from the style preview, in which case republish the same URL with the full build; or if the stack has no share build), and after every later round republish it to the same URL.
+Before handing over the round, handle the **review page** as `references/review-page.md` describes: on the first round **publish it automatically, with no question** (skip if `review_page` is `declined`; if it is already set, for example from the style preview, republish the same URL with the full build; skip it too if the stack has no share build), and after every later round republish it to the same URL.
 
 Give the user:
 - the running app (the preview opens in the built-in browser pane; give the address too, so they can open it in their own browser), the gallery at `/frames`, and the journeys at `/journeys`

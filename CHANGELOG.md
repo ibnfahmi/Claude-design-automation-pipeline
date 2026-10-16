@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.10.2] - 2026-10-16
+
+### Changed
+- **The runnable output is published as a private artifact automatically.** The pipeline no longer asks "Publish a private review page?". The style preview is published when it is ready, and the share build after the first build round, both to a private claude.ai page that is republished to the same link after every round and comment fix. Saying "no review page" (or "local only") saves `review_page: "declined"` and stops it; "publish it" turns it back on. Stacks without a share build still review locally, and the page stays private until you share it. Not yet run end to end: the first publish may show the Artifact tool's own approval prompt.
+
 ## [0.10.1] - 2026-10-14
 
 ### Changed

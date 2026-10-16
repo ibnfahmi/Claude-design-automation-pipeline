@@ -65,7 +65,7 @@ Written to the client project folder (the session's working directory) after eve
   "git_last_push": {"date": "13-October-2026", "commit": "a1b2c3d"},
   "conversions": [{"stack": "react-vite-ts-tailwind", "dir": "code-react/", "round": 4}],
   "share_dir": "share/",
-  "review_page": "null | declined | https://claude.ai/artifact/… (private review page with comments)",
+  "review_page": "null (publish at the next opportunity) | declined (the user said no review page) | https://claude.ai/artifact/… (private review page with comments)",
   "comment_threads_handled": ["thread ids already applied"],
   "share_status": "pass | pass with issues | fail | not verified | not supported",
   "dev_port": 5173,
