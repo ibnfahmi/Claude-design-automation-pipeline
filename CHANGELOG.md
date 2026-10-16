@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.10.8] - 2026-10-16
+
+### Changed
+- **Dribbble (https://dribbble.com/) joins the website-reference inspiration links** (now six: Awwwards, Behance, Muzli, MotionSites, Mobbin, Dribbble), in the option text and in the follow-up message. Dribbble was already handled as a screenshot gallery.
+
 ## [0.10.7] - 2026-10-16
 
 ### Changed
