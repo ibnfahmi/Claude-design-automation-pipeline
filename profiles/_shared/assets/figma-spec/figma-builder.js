@@ -13,6 +13,8 @@
  *   OPTS     { scale: [0,4,8,12,16,24,32,40,48,64,80,96,128], spaceVars: { "8": "VariableID:..." },
  *              colorVars: { "rgb(16, 42, 99)": "VariableID:..." }, fixedContainers: true,
  *              components: { "Button|1a2b3c": { id: "12:34" } } }   (library first: a node whose `comp|sig` is listed becomes an instance)
+ *   OPTS.calibration  { text: { "Inter|600": { lineHeightScale: 1.02, yOffset: 1.5 } }, spacing: { headingGap: 4 }, scroll: { dx: -16 } }
+ *              derived from the pixel-diff of a few test frames by calibrate.mjs; absent means no correction (see figma-capture.md, "Calibrate first")
  *   SPEC.asComponent  { name: "Button / Primary" }: the built top-level frame is turned into a Figma component (library build)
  */
 const SPEC = __SPEC__;
@@ -20,6 +22,10 @@ const FONTMAP = __FONTMAP__;
 const OPTS = __OPTS__;
 
 const SCALE = OPTS.scale || [0, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96, 128];
+const CAL = OPTS.calibration || null;
+const CAL_TEXT = (CAL && CAL.text) || {}, CAL_SP = (CAL && CAL.spacing) || {}, CAL_SC = (CAL && CAL.scroll) || {};
+const calFor = (t) => CAL_TEXT[(t.ff || '') + '|' + (t.fw || 400)] || null;
+const tagNode = (node, n) => { if (n && n.i !== undefined && node && node.setPluginData) node.setPluginData('pipeline:node', String(n.i)); };
 const stats = { frames: 0, texts: 0, images: 0, svgs: 0, autoLayout: 0, absolute: 0, plainFrames: 0, gridRows: 0, instances: 0 };
 const createdIds = [], images = [], bgImages = [], missingFonts = new Set(), approximated = new Set(), deviations = [];
 const loaded = new Set();
@@ -129,7 +135,7 @@ async function makeText(t, parentInfo) {
   tx.characters = runs.map(r => r.txt).join('');
   tx.name = (t.n || tx.characters).slice(0, 40);
   tx.fontSize = t.fs || runs[0].fs;
-  tx.lineHeight = t.lh ? { unit: 'PIXELS', value: t.lh } : { unit: 'AUTO' };
+  { const c = calFor(t); const k = c && c.lineHeightScale ? c.lineHeightScale : 1; tx.lineHeight = t.lh ? { unit: 'PIXELS', value: Math.round(t.lh * k * 100) / 100 } : { unit: 'AUTO' }; }
   tx.letterSpacing = { unit: 'PIXELS', value: t.ls || 0 };
   const tcase = { uppercase: 'UPPER', lowercase: 'LOWER', capitalize: 'TITLE' }[t.tt]; if (tcase) tx.textCase = tcase;
   if (t.td && /underline/.test(t.td)) tx.textDecoration = 'UNDERLINE'; else if (t.td && /line-through/.test(t.td)) tx.textDecoration = 'STRIKETHROUGH';
@@ -246,8 +252,20 @@ async function instantiate(n, entry, parent, pinfo) {
 // ---------- building ----------
 async function build(n, parent, pinfo, where) {
   if (n.k === 't') {
-    const tx = await makeText(n, pinfo); parent.appendChild(tx); sizeText(tx, n, parent, pinfo);
-    if (!pinfo || !pinfo.auto) { tx.x = n.r[0]; tx.y = n.r[1]; }
+    const cal = calFor(n);
+    const tx = await makeText(n, pinfo); tagNode(tx, n);
+    const gapPx = n.h && CAL_SP.headingGap > 0 ? CAL_SP.headingGap : 0;
+    const offPx = cal && cal.yOffset > 0 ? cal.yOffset : 0;
+    if (pinfo && pinfo.auto && (gapPx || offPx)) { // auto layout can't offset a child, so the text sits in a wrapper with padding
+      const w = figma.createAutoLayout('VERTICAL'); w.name = 'Text group'; w.paddingTop = offPx; w.paddingBottom = gapPx;
+      parent.appendChild(w);
+      const fillW = (pinfo.dir === 'VERTICAL' && pinfo.contentW && near(n.r[2], pinfo.contentW, 2)) || (pinfo.dir === 'HORIZONTAL' && n.F && n.F.g);
+      w.layoutSizingHorizontal = fillW ? 'FILL' : 'HUG'; w.layoutSizingVertical = 'HUG';
+      w.appendChild(tx); sizeText(tx, n, w, { auto: true, dir: 'VERTICAL', contentW: fillW ? n.r[2] : 0, contentH: n.r[3] });
+      createdIds.push(w.id, tx.id); return w;
+    }
+    parent.appendChild(tx); sizeText(tx, n, parent, pinfo);
+    if (!pinfo || !pinfo.auto) { tx.x = n.r[0]; tx.y = n.r[1] + (cal && cal.yOffset ? cal.yOffset : 0); }
     createdIds.push(tx.id); return tx;
   }
   if (n.k === 'i') {
@@ -256,11 +274,12 @@ async function build(n, parent, pinfo, where) {
     r.fills = [{ type: 'SOLID', color: { r: 0.85, g: 0.85, b: 0.85 }, opacity: 1 }];
     if (n.rad) { const [a, b, c, d] = n.rad; if (a === b && b === c && c === d) r.cornerRadius = a; else { r.topLeftRadius = a; r.topRightRadius = b; r.bottomRightRadius = c; r.bottomLeftRadius = d; } }
     parent.appendChild(r); if (!pinfo || !pinfo.auto) { r.x = n.r[0]; r.y = n.r[1]; }
+    tagNode(r, n);
     images.push({ id: r.id, src: n.src || '', kind: n.kind, fit: n.fit || 'fill', w: n.r[2], h: n.r[3] }); stats.images++; createdIds.push(r.id); return r;
   }
   if (n.k === 's') {
     if (!n.svg) { const r = figma.createRectangle(); r.name = 'Icon (too large)'; r.resize(n.r[2], n.r[3]); parent.appendChild(r); approximated.add('svg too large'); return r; }
-    const s = figma.createNodeFromSvg(n.svg); s.name = 'Icon'; s.resize(Math.max(1, n.r[2]), Math.max(1, n.r[3])); parent.appendChild(s);
+    const s = figma.createNodeFromSvg(n.svg); tagNode(s, n); s.name = 'Icon'; s.resize(Math.max(1, n.r[2]), Math.max(1, n.r[3])); parent.appendChild(s);
     if (!pinfo || !pinfo.auto) { s.x = n.r[0]; s.y = n.r[1]; } stats.svgs++; createdIds.push(s.id); return s;
   }
   // library first: an instance of an already built component
@@ -292,7 +311,7 @@ async function build(n, parent, pinfo, where) {
   parent.appendChild(f);
   applySizing(f, n, pinfo, auto, w, h);
   if (!pinfo || !pinfo.auto) { f.x = n.r[0]; f.y = n.r[1]; }
-  createdIds.push(f.id);
+  createdIds.push(f.id); tagNode(f, n);
   // children
   const isGrid = n.L && n.L.d === 'grid' && (n.c || []).some(inFlow);
   const kidsAbs = (n.c || []).filter(c => !inFlow(c));
@@ -302,7 +321,7 @@ async function build(n, parent, pinfo, where) {
     const cinfo = { auto: true, dir: lay.mode, stretch: lay.stretch, contentW: w - (f.paddingLeft + f.paddingRight), contentH: h - (f.paddingTop + f.paddingBottom) };
     for (const c of lay.order) await build(c, f, cinfo, where + ' / ' + f.name);
   } else {
-    for (const c of (n.c || []).filter(inFlow)) await build(c, f, { auto: false }, where + ' / ' + f.name);
+    for (const c of (n.c || []).filter(inFlow)) { const ch = await build(c, f, { auto: false }, where + ' / ' + f.name); if (n.sc && CAL_SC.dx && ch) ch.x += CAL_SC.dx; }
   }
   for (const c of kidsAbs) { const ch = await build(c, f, { auto: false }, where); placeAbsolute(ch, c, f, w, h); }
   return f;
@@ -310,7 +329,7 @@ async function build(n, parent, pinfo, where) {
 function placeAbsolute(node, c, parent, pw, ph) {
   if (!node) return;
   if ('layoutPositioning' in node && parent.layoutMode && parent.layoutMode !== 'NONE') { node.layoutPositioning = 'ABSOLUTE'; stats.absolute++; }
-  node.x = c.r[0]; node.y = c.r[1];
+  node.x = c.r[0]; node.y = c.r[1] + (c.k === 't' && calFor(c) && calFor(c).yOffset ? calFor(c).yOffset : 0);
   if ('constraints' in node) {
     const l = c.r[0], r = pw - (c.r[0] + c.r[2]), t = c.r[1], b = ph - (c.r[1] + c.r[3]);
     node.constraints = { horizontal: near(l, r, 2) ? 'CENTER' : (r < l ? 'MAX' : 'MIN'), vertical: near(t, b, 2) ? 'CENTER' : (b < t ? 'MAX' : 'MIN') };

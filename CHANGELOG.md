@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.11.0] - 2026-10-17
+
+### Added
+- **The Figma export calibrates itself from the pixel-diff data.** Following the ProTrack result (118 frames compared, median 2.16%, worst 6.32%, text offsets, heading-to-paragraph spacing and a carousel opening with a left offset), the Handoff Agent now runs a calibration before the full build on projects of about 12 frames or more: 3 fit frames and 2 held-out frames on a temporary page; `figma-probe.js` reads back where the built nodes are; `calibrate.mjs` derives, per font, a text offset and a line-height scale, plus the gap under headings and the carousel start offset (a parameter changes only when at least three nodes agree); up to 4 rounds with the diff as the check; the result is kept only if the held-out frames improve. The accepted `figma-calibration.json` is passed to the builder (`OPTS.calibration`) for every frame and reused on re-exports, and the comparison's pass limits come from it (never below 2% whole-screen, 10% per area). The extractor now numbers every node and records scroll position, the builder tags each node `pipeline:node`, and the report has a `CALIBRATION` line with the parameters, the before and after diffs, the Figma calls used and the estimated cost of the full build. New tests (`figma-calibrate.test.mjs`) check that known offsets are recovered, that a calibration that doesn't help is rejected and that the builder applies it. **Not yet run on a real Figma file:** the probe's read-back, the call counts and the effect on real frames need a live check (the ProTrack agent's own calibration result is the reference to compare with). Inside auto layout only positive text offsets and heading gaps can be applied.
+
 ## [0.10.17] - 2026-10-17
 
 ### Changed

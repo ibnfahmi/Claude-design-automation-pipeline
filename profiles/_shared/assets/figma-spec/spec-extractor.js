@@ -202,6 +202,7 @@
     if (el.dataset && el.dataset.pseudo) o.pseudo = el.dataset.pseudo;
     const compName = el.getAttribute('data-component'); if (compName) o.comp = compName;
     if (/^H[1-6]$/.test(tag)) o.h = +tag[1];
+    if (/^(auto|scroll)$/.test(cs.overflowX) && el.scrollWidth > el.clientWidth + 1) o.sc = { sl: Math.round(el.scrollLeft), sw: el.scrollWidth, cw: el.clientWidth };
     if (tag === 'BUTTON' || tag === 'A' || el.getAttribute('role') === 'button') o.act = tag === 'A' ? 'link' : 'button';
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') { o.inp = (el.type || tag.toLowerCase()); o.ph = el.placeholder || el.value || ''; Object.assign(o, { tp: typo(cs) }); }
     visual(cs, o); layout(cs, o); childFlex(cs, o);
@@ -274,6 +275,7 @@
   root.bg = bg;
   layout(bs, root);
   root.c = [].concat(...[...document.body.childNodes].map(c => c.nodeType === 1 ? walk(c, bodyBox) : []));
+  { let ix = 0; (function number(n) { n.i = ix++; (n.c || []).forEach(number); })(root); } // a stable index per node, so the built Figma node can be matched to it (pipeline:node)
   if (root.L && root.L.d === 'block') root.L.d = 'block';
 
   // restore the page
