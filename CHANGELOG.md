@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.10.6] - 2026-10-16
+
+### Fixed
+- **The website-reference question no longer shows clickable inspiration links.** After you chose "A website URL", the follow-up message only said that some design showcases had been suggested. The instruction said to "give the three inspiration sites again as links" without listing them (and there are four), so the links were paraphrased away. The message now has the four links (Awwwards, Behance, Muzli, MotionSites) written out in full, one per line, and the instruction forbids naming them without links or pointing back to the option text.
+
 ## [0.10.5] - 2026-10-16
 
 ### Added
