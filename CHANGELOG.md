@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.10.14] - 2026-10-17
+
+### Changed
+- **The Figma file no longer mentions requirements, source files or feature numbers.** Label cards show only the screen name and its state; note cards no longer carry `Requirements:` or `Source: code/...` lines; frame descriptions no longer list requirement and journey IDs or file paths; the feature title block, the Changelog entries and the Specs & Guidelines page lose their requirement IDs, and the Requirements trace section (and the trace on re-exports) is removed. A rule at the top of the Handoff Agent's build section forbids `R-n`, `F-n`, `J1.2` and source paths anywhere in the file. The feature pages keep their names (`F-1 · Sign-in and onboarding`) because the page script finds them by that name; say so if you want those renamed without the number. The manifest and state file still hold all IDs.
+
 ## [0.10.13] - 2026-10-17
 
 ### Changed

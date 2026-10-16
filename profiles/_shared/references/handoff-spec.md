@@ -19,4 +19,3 @@ For each screen and component, the Figma file should let a developer find:
 - **Assets:** icons as SVG using the current colour (named consistently), images with resolution, format and responsive variants, fonts with source.
 - **Edge cases:** minimum and maximum content, behaviour at each breakpoint, device-specific considerations, and accessibility requirements (names, roles, keyboard, screen-reader announcements).
 - **Implementation notes:** reusable components, data assumptions, API dependencies, performance considerations.
-- **Traceability:** the requirement IDs and journey steps each frame covers.
