@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.10.4] - 2026-10-16
+
+### Fixed
+- **A platform the brief excludes was marked "(Recommended)".** A brief that said there is no web version still got web and desktop highlighted, because the rule marked any platform the brief mentioned. Now only platforms the brief asks to be built are marked; platforms mentioned in passing stay unmarked; platforms the brief excludes ("no web version", "mobile only") are never marked, say "The brief says ..." in their description, and are recorded in `scope.out_of_scope` as excluded by the brief. When the brief is unclear, nothing is marked.
+
 ## [0.10.3] - 2026-10-16
 
 ### Changed
