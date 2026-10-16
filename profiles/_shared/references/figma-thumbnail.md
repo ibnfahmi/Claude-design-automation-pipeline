@@ -4,7 +4,7 @@ Used by the Handoff Agent every time it creates a Figma file. The thumbnail is b
 
 ## Page background
 
-Every page in the file (Cover, Specs & Guidelines, Product Flows, every feature page, and any page that already exists) has the background **#272727**. With `use_figma`, for each page: `page.backgrounds = [{ type: 'SOLID', color: { r: 0x27/255, g: 0x27/255, b: 0x27/255 } }]`. Set it as soon as a page is created, and check every page before returning.
+Every page in the file (Cover, Specs & Guidelines, every feature page, and any page that already exists) has the background **#272727**. With `use_figma`, for each page: `page.backgrounds = [{ type: 'SOLID', color: { r: 0x27/255, g: 0x27/255, b: 0x27/255 } }]`. Set it as soon as a page is created, and check every page before returning.
 
 ## The thumbnail frame
 

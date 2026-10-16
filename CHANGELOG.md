@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.10.12] - 2026-10-17
+
+### Changed
+- **The Figma export no longer creates a Product Flows page.** The file now has Cover, Specs & Guidelines, Components, Handoff status, Changelog, the feature pages and the Archive. The overview map, the one-flow-per-journey drawings, the case matrix, the `FLOWS` line of the report and the flow-coverage check are removed. The flow strip at the top of each feature page and the prototype links that follow the journeys stay. Files exported by earlier versions keep their old Product Flows page (the page script leaves pages it doesn't know in place), so delete it by hand if you don't want it. The Figma export is cheaper in tokens without it.
+
 ## [0.10.11] - 2026-10-16
 
 ### Changed
