@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.10.15] - 2026-10-17
+
+### Changed
+- **Comparing the Figma screens with the app runs by default, on every export.** The comparison with `pixelmatch` and `pngjs` after the screens are built is no longer something the Handoff Agent may skip: it runs for every frame, with no question, and a screen that was not compared is reported as a defect. `compare-shots.mjs` now gives a `pass` verdict and an exit code: a frame fails when the whole-screen difference is above 2%, when any single grid cell differs by more than 10% (so one wrong-sized button or icon is caught even though it barely moves the whole-screen number), or when the sizes differ. Failing frames get up to three fix passes, and one that still fails is listed under `COMPARE` with its worst regions, never silently. The one-time install of the helper packages stays the only consent.
+
 ## [0.10.14] - 2026-10-17
 
 ### Changed

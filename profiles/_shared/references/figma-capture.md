@@ -95,11 +95,13 @@ Section and column widths follow the columns. Content that sits off the grid on 
 
 ## 4b. Compare each screen with its reference, and iterate
 
+**This runs by default, on every export, for every frame, with no question and no way to skip it.** The only consent in the whole path is the one-time install of the helper packages. If the packages are not installed the export does not get this far (section 0): it stops and asks, it does not build without comparing.
+
 For every frame, after it is built (and its images filled):
 1. Take a screenshot of the Figma frame at 1x (`get_screenshot`, or `await frame.screenshot({ scale: 1 })`), download it to `figma-spec/<slug>@<w>.figma.png`.
-2. Run `node <assets>/figma-spec/compare-shots.mjs --a figma-spec/<slug>@<w>.png --b figma-spec/<slug>@<w>.figma.png --out figma-spec/<slug>@<w>.diff.png`. It returns the difference percentage and the worst regions (x, y, width, height).
-3. If the size differs (`sizeMismatch`) fix the frame size first. If the difference is above about **2%**, look at the worst regions in the diff image and the two screenshots, find the cause (a wrong gap or padding, a fixed size where it should fill, a missing font or weight, a missing image, a shadow, a gradient direction), fix **those nodes** with a targeted `use_figma` call, and compare again. **Up to three passes per screen.** Don't rebuild the frame.
-4. Record each screen's final difference and any residual issue (for example "gradient approximated", "font substituted"), and report them in the result.
+2. Run `node <assets>/figma-spec/compare-shots.mjs --a figma-spec/<slug>@<w>.png --b figma-spec/<slug>@<w>.figma.png --out figma-spec/<slug>@<w>.diff.png`. It returns `pass` (true or false, and the exit code says the same), the difference percentage and the worst regions (x, y, width, height). A frame **fails** when the whole-screen difference is above 2%, when any grid cell differs by more than 10% (this catches a single wrong-sized button or icon that the whole-screen number hides) or when the sizes differ.
+3. If the size differs (`sizeMismatch`) fix the frame size first. If the frame fails (`pass: false`), look at the worst regions in the diff image and the two screenshots, find the cause (a wrong gap or padding, a fixed size where it should fill, a missing font or weight, a missing image, a shadow, a gradient direction), fix **those nodes** with a targeted `use_figma` call, and compare again. **Up to three passes per screen.** Don't rebuild the frame.
+4. A frame is returned only when it passes. After three passes, a frame that still fails is returned anyway but is **listed as failing** in `COMPARE` with its worst regions and the cause you found, never silently. Record each screen's final difference and any residual issue (for example "gradient approximated", "font substituted"), and report them in the result.
 Snapping to the spacing scale moves things by a few pixels, so a small residual difference is expected; unexplained large regions are not.
 
 ## 4. Check before returning

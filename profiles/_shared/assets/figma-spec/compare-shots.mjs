@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 // Compare a reference screenshot (from the running app) with a screenshot of the Figma frame.
-//   node compare-shots.mjs --a reference.png --b figma.png [--out diff.png] [--tools <dir>] [--grid 12x8] [--threshold 0.1]
-// Prints JSON: { size, diffPercent, worst: [{ x, y, w, h, diffPercent }], diffImage }.
+//   node compare-shots.mjs --a reference.png --b figma.png [--out diff.png] [--tools <dir>] [--grid 12x8] [--threshold 0.1] [--max-diff 2] [--max-cell 10]
+// Prints JSON: { size, sizeMismatch, diffPercent, worst: [{ x, y, w, h, diffPercent }], pass, thresholds, diffImage }.
+// `pass` is true when the sizes match, the whole-screen difference is at most --max-diff percent (default 2) AND no single grid cell
+// differs by more than --max-cell percent (default 10): a wrong-sized button barely moves the whole-screen number but fills its cell.
+// The exit code is 0 on pass and 1 on fail, so a build step can't carry on past a failing screen.
 // The two images are compared at the same size: the larger is cropped to the smaller's top-left if they differ by a few pixels,
 // and if the sizes differ a lot the result says so (sizeMismatch) so the caller can fix the frame size first.
 // Needs pngjs and pixelmatch in the tools folder (default ~/.claude/design-pipeline/tools/figma).
@@ -41,4 +44,9 @@ for (let j = 0; j < gy; j++) for (let i = 0; i < gx; i++) {
 cells.sort((p, q) => q.diffPercent - p.diffPercent);
 let diffImage = null;
 if (args.out) { fs.writeFileSync(args.out, PNG.sync.write(diff)); diffImage = path.resolve(args.out); }
-console.log(JSON.stringify({ size: { reference: [A.width, A.height], figma: [B.width, B.height], compared: [w, h] }, sizeMismatch, diffPercent: Math.round(n / (w * h) * 10000) / 100, worst: cells.filter(c => c.diffPercent > 0).slice(0, 6), diffImage }, null, 2));
+const diffPercent = Math.round(n / (w * h) * 10000) / 100;
+const maxDiff = +(args['max-diff'] || 2), maxCell = +(args['max-cell'] || 10);
+const worstCell = cells.length ? cells[0].diffPercent : 0;
+const pass = !sizeMismatch && diffPercent <= maxDiff && worstCell <= maxCell;
+console.log(JSON.stringify({ size: { reference: [A.width, A.height], figma: [B.width, B.height], compared: [w, h] }, sizeMismatch, diffPercent, worst: cells.filter(c => c.diffPercent > 0).slice(0, 6), pass, thresholds: { maxDiff, maxCell }, diffImage }, null, 2));
+process.exitCode = pass ? 0 : 1;
