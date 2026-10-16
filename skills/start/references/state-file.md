@@ -1,10 +1,12 @@
 # State file: `design-pipeline-state.json`
 
-Written to the client project folder (the session's working directory) after every stage. It lets `/design-pipeline:start` resume a run in a later session. The code itself lives in `code/` (a local git repository), which is the source of truth for the build.
+Written to the client project folder after every stage. The client folder is named after the project, like the session (`SKILL.md`, "Client folder"), and is a subfolder of the folder the session was started in (`launch_folder`); `design-pipeline-pointer.json` in the launch folder points to it. It lets `/design-pipeline:start` resume a run in a later session. The code itself lives in `code/` (a local git repository), which is the source of truth for the build.
 
 ```json
 {
   "project": "Acme onboarding app",
+  "client_folder": "C:/Users/you/Documents/Claude projects/Acme onboarding app",
+  "launch_folder": "C:/Users/you/Documents/Claude projects",
   "stage": "review",
   "updated_at": "2026-10-03T10:30:00Z",
   "phased": false,

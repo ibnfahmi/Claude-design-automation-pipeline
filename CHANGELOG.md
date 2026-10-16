@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.10.3] - 2026-10-16
+
+### Changed
+- **Each run gets a folder with the same name as the session.** As soon as the project name is known (the moment the session is renamed), the pipeline creates `<launch folder>/<Project name>/`, moves the files it has made so far into it (the state file, `brief-source.md`, converted documents), and works there, passing absolute paths to every agent. The folder you started in is never renamed (Windows blocks renaming a folder in use); it gets a small `design-pipeline-pointer.json`, and running `/design-pipeline:start` there finds the run, or lists the runs if there are several. Names are made safe for the file system, numbered if another project already uses them, and never renamed later on their own. New state fields: `client_folder` and `launch_folder`. Not yet run end to end: the directory change uses the session's `change_directory` tool or `cd`.
+
 ## [0.10.2] - 2026-10-16
 
 ### Changed
