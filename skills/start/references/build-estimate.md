@@ -9,7 +9,7 @@ From the confirmed spec and the current phase's features, count:
 - **Viewports:** how many screen sizes were chosen, across platforms.
 - **Languages:** the number in `scope.languages`.
 - **Heavy items:** a WebGL or 3D hero, heavy motion, charts, maps, a design system being built in the background, a Figma reference with components.
-- **Steps that follow:** whether the audit is on (`skip_audit`), whether a stress test was asked for, the share build and its file-open test, republishing the review page.
+- **Steps that follow:** whether the audit is on (`skip_audit`), whether the coverage report is on (`skip_coverage`), whether a stress test was asked for, the share build and its file-open test, republishing the review page.
 
 ## Working defaults
 
@@ -24,7 +24,7 @@ These are **unmeasured starting values**, not benchmarks. They come from the sha
 | A WebGL or 3D hero | adds 10 to 25 minutes |
 | Share build and its file-open test | 2 to 5 minutes |
 | Audit (if on) | 8 to 20 minutes, plus about 0.5 minute per frame |
-| Coverage report | 3 to 8 minutes |
+| Coverage report (if on) | 3 to 8 minutes |
 | Stress test (only if asked) | adds fixtures (5 to 10 minutes) and an audit pass |
 
 Add the parts that apply. State the total as a range, the parts it is made of, and what it assumes, for example: *"Estimated time: about 45 to 80 minutes for Phase 1 (build 30 to 50, audit 12 to 22, coverage and share build 5 to 10). That is for 14 frames, 3 screen sizes and 2 languages. It's an estimate, not a promise; I'll tell you the actual time when it finishes."* Round to the nearest 5 minutes. If the total is over about 60 minutes, say it and offer to **cut it down**: fewer features in this phase, skip the audit, or fewer screen sizes or languages. Don't ask a question unless the user wants to change something.

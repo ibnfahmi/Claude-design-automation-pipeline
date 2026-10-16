@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.10.9] - 2026-10-16
+
+### Changed
+- **The coverage report is optional.** It is asked together with the journeys and the audit, once the spec is confirmed (**Yes, report every round (Recommended)**, which says in bold that it uses a large number of tokens every round, or **No, skip the report**), or skipped with `--skip-coverage`. The choice is saved as `skip_coverage`. When it is off no Coverage Agent runs; you can ask "run the coverage report" at any time for one run on the current build. Approval, the Figma export completeness check and the delivery summary no longer depend on a report: they use it only if one ran. When both the audit and the coverage report are off, the build round has no checking agents, only the share-file test by the Design Agent.
+
 ## [0.10.8] - 2026-10-16
 
 ### Changed

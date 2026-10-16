@@ -14,6 +14,7 @@ Written to the client project folder after every stage. The client folder is nam
   "phases": [{"n": 1, "features": ["F-0", "F-1", "F-3"], "status": "planned | building | done"}],
   "skip_journeys": false,
   "skip_audit": false,
+  "skip_coverage": false,
   "doc_converter": "anydoc | declined | null",
   "stress_fixtures": false,
   "starting_point": "brief | code | figma",
