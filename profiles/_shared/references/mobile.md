@@ -4,7 +4,7 @@ Used by `mobile-app`, `tablet-app` and the mobile breakpoints of web profiles. D
 
 ## Frames
 
-- Draw the real device frame, including the status bar, notch or Dynamic Island, and home indicator, on the frame routes and in the Figma export. The running app at `/` has no bezel. Content must not sit under them: respect the top and bottom safe areas.
+- Draw the real device frame, including the status bar, notch or Dynamic Island, and home indicator, on the frame routes and in the Figma export. The running app at `/` has no bezel; the share build (the review artifact) puts the whole app inside the device frame. Content must not sit under them: respect the top and bottom safe areas.
 - **Bottom clearance.** The last control or line of text ends at least **16 px above the bottom safe area**: the iOS home indicator zone is 34 px, so the content ends 50 px or more from the screen's bottom edge; the Android gesture bar is 24 px, so 40 px or more. A CTA with a legal or helper line under it is one content block (8 px between them), and the block keeps this clearance. Text never rests on the home indicator.
 - Fixed bars (tab bar, bottom CTA) extend their background into the home-indicator area, with the controls padded above it.
 - Design the keyboard-open state for every screen with an input. The focused field and its submit action stay visible.

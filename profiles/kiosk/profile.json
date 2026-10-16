@@ -39,8 +39,8 @@
     {
       "id": "screen",
       "ask": "preflight",
-      "question": "Screen size and orientation?",
-      "type": "single",
+      "question": "Which screen sizes and orientations?",
+      "type": "multi",
       "choices": [
         {
           "value": "portrait-1080",
@@ -48,7 +48,17 @@
           "size": [
             1080,
             1920
-          ]
+          ],
+          "group": "Portrait kiosks"
+        },
+        {
+          "value": "portrait-1440",
+          "label": "Portrait 1440x2560 (large totem)",
+          "size": [
+            1440,
+            2560
+          ],
+          "group": "Portrait kiosks"
         },
         {
           "value": "landscape-1080",
@@ -56,7 +66,8 @@
           "size": [
             1920,
             1080
-          ]
+          ],
+          "group": "Landscape kiosks"
         },
         {
           "value": "landscape-768",
@@ -64,10 +75,31 @@
           "size": [
             1366,
             768
-          ]
+          ],
+          "group": "Landscape kiosks"
+        },
+        {
+          "value": "landscape-800",
+          "label": "Landscape 1280x800 (tablet kiosk)",
+          "size": [
+            1280,
+            800
+          ],
+          "group": "Landscape kiosks"
+        },
+        {
+          "value": "landscape-4x3",
+          "label": "Landscape 1024x768 (4:3 POS or ticket machine)",
+          "size": [
+            1024,
+            768
+          ],
+          "group": "Landscape kiosks"
         }
       ],
-      "default": "portrait-1080",
+      "default": [
+        "portrait-1080"
+      ],
       "viewport": true
     },
     {

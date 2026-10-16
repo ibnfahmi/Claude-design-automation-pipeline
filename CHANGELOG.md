@@ -2,6 +2,12 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.10.11] - 2026-10-16
+
+### Changed
+- **The review artifact shows the app inside a device frame; the code stays frameless.** `share/index.html` (what is published as the private artifact) now wraps the whole app in a **device shell** built from the same frame component the `/frames` routes use: status bar and island or notch for phones, a tablet bezel, a desktop window, a TV with a stand, a kiosk cabinet. It uses the primary device, offers a small device picker when several devices were chosen, scales down to fit small screens, and is switched on only in the share build, so the code project's `/` and the Figma export are unchanged. The Auditor checks it.
+- **More devices to pick from, and always asked.** Mobile app: iPhone 16, iPhone 16 Pro Max, iPhone SE, Google Pixel 9, Samsung Galaxy S25, Android small (older, 360x640, was 360x800). Tablet: iPad 11-inch, iPad Pro 13-inch, iPad mini, Android 10-inch, Android 8-inch. Smart TV (now multi-select): Full HD, 4K, Apple TV, Google TV / Android TV, Samsung Tizen / LG webOS. Kiosk (now multi-select): portrait 1080x1920 and 1440x2560, landscape 1920x1080, 1366x768, 1280x800 and 1024x768. Choices are asked in groups (for example Apple phones, Android phones) so every device is a click, and the device platforms are no longer hidden behind the "recommended sizes" shortcut, which is why only the iPhone 16 was offered before. Not yet run end to end; the device shell is described for the Design Agent to build and has not been rendered.
+
 ## [0.10.10] - 2026-10-16
 
 ### Fixed

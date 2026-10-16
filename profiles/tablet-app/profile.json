@@ -15,7 +15,8 @@
           "size": [
             834,
             1194
-          ]
+          ],
+          "group": "Apple tablets"
         },
         {
           "value": "ipad-pro-13",
@@ -23,15 +24,35 @@
           "size": [
             1032,
             1376
-          ]
+          ],
+          "group": "Apple tablets"
+        },
+        {
+          "value": "ipad-mini",
+          "label": "iPad mini (744x1133)",
+          "size": [
+            744,
+            1133
+          ],
+          "group": "Apple tablets"
         },
         {
           "value": "android-tablet",
-          "label": "Android tablet (800x1280)",
+          "label": "Android tablet 10-inch (800x1280)",
           "size": [
             800,
             1280
-          ]
+          ],
+          "group": "Android tablets"
+        },
+        {
+          "value": "android-tablet-small",
+          "label": "Android tablet 8-inch (600x960)",
+          "size": [
+            600,
+            960
+          ],
+          "group": "Android tablets"
         }
       ],
       "default": [

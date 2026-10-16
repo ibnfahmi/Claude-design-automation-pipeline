@@ -36,31 +36,8 @@
           "size": [
             393,
             852
-          ]
-        },
-        {
-          "value": "iphone-se",
-          "label": "iPhone SE, small (375x667)",
-          "size": [
-            375,
-            667
-          ]
-        },
-        {
-          "value": "pixel",
-          "label": "Android Pixel (412x915)",
-          "size": [
-            412,
-            915
-          ]
-        },
-        {
-          "value": "android-small",
-          "label": "Android small (360x800)",
-          "size": [
-            360,
-            800
-          ]
+          ],
+          "group": "Apple phones"
         },
         {
           "value": "iphone-16-pro-max",
@@ -68,7 +45,44 @@
           "size": [
             440,
             956
-          ]
+          ],
+          "group": "Apple phones"
+        },
+        {
+          "value": "iphone-se",
+          "label": "iPhone SE, small (375x667)",
+          "size": [
+            375,
+            667
+          ],
+          "group": "Apple phones"
+        },
+        {
+          "value": "pixel",
+          "label": "Google Pixel 9 (412x915)",
+          "size": [
+            412,
+            915
+          ],
+          "group": "Android phones"
+        },
+        {
+          "value": "galaxy-s25",
+          "label": "Samsung Galaxy S25 (360x780)",
+          "size": [
+            360,
+            780
+          ],
+          "group": "Android phones"
+        },
+        {
+          "value": "android-small",
+          "label": "Android small, older (360x640)",
+          "size": [
+            360,
+            640
+          ],
+          "group": "Android phones"
         }
       ],
       "default": [

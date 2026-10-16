@@ -39,27 +39,58 @@
     {
       "id": "resolution",
       "ask": "preflight",
-      "question": "Stage size?",
-      "type": "single",
+      "question": "Which TV platforms and stage sizes?",
+      "type": "multi",
       "choices": [
         {
           "value": "1080p",
-          "label": "1920x1080 (1080p)",
+          "label": "Full HD stage (1920x1080)",
           "size": [
             1920,
             1080
-          ]
+          ],
+          "group": "TV stage"
         },
         {
           "value": "4k",
-          "label": "3840x2160 (4K)",
+          "label": "4K stage (3840x2160)",
           "size": [
             3840,
             2160
-          ]
+          ],
+          "group": "TV stage"
+        },
+        {
+          "value": "apple-tv",
+          "label": "Apple TV, tvOS (1920x1080)",
+          "size": [
+            1920,
+            1080
+          ],
+          "group": "TV platforms"
+        },
+        {
+          "value": "google-tv",
+          "label": "Google TV / Android TV (1920x1080)",
+          "size": [
+            1920,
+            1080
+          ],
+          "group": "TV platforms"
+        },
+        {
+          "value": "tizen-webos",
+          "label": "Samsung Tizen / LG webOS (1920x1080)",
+          "size": [
+            1920,
+            1080
+          ],
+          "group": "TV platforms"
         }
       ],
-      "default": "1080p",
+      "default": [
+        "1080p"
+      ],
       "viewport": true
     },
     {

@@ -2,7 +2,15 @@
 
 Stakeholders in a review come from every industry and every level of tech knowledge. They must be able to open the design **without installing anything**. So every code project also produces a `share/` folder, next to `code/` in the client folder, and `share/index.html` opens by double-click from disk (`file://`), offline, in any current browser.
 
-`share/index.html` opens the real app, as `/` does in `code/` (no entry page, no cover, no phase intro). A small link to the frames and journeys sits in a corner for reviewers. `share/` is built from `code/`, never edited by hand. Rebuild it at the end of every build and revision round, and again at the production check.
+`share/index.html` opens the real app **inside a device frame**, because it is what the review artifact shows (no entry page, no cover, no phase intro). The code project's own `/` stays frameless; only the share build adds the **device shell** (below). A small link to the frames and journeys sits in a corner for reviewers. `share/` is built from `code/`, never edited by hand.
+
+## Device shell (share build only)
+
+The share build wraps the whole app in the same frame component the `/frames` routes use (status bar, island or notch and home indicator for phones; the tablet bezel; a window with a title bar for desktop apps; a TV bezel with a stand; a kiosk cabinet), switched on by the share flag (`window.__SHARE__` or `VITE_SHARE`), so `code/` and `?capture=1` are unaffected.
+- **Which device:** the primary device in `scope.viewports`. When more than one device was chosen, a small **device picker** in a corner of the page switches the frame and the viewport (the app is responsive, so it re-lays out at that size).
+- **Fitting:** on a screen smaller than the frame, the frame scales down to fit (`transform: scale`), centred, and the page never scrolls sideways. On a phone-sized screen showing a phone-sized app, the frame is dropped and the app fills the screen.
+- **Platforms:** phones, tablets, desktop apps, smart TVs and kiosks get a shell; web apps, dashboards and landing pages don't (a plain page).
+- **Inside the frame the app behaves normally:** the same routes, the demo prefill and the journeys. Rebuild it at the end of every build and revision round, and again at the production check.
 
 ## What `file://` blocks (design for it)
 

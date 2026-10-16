@@ -65,15 +65,17 @@ A platform profile is a set of **rules that apply automatically**: its required 
 
 Preflight asks only what the brief rarely says and that decides which frames get drawn: the **screen sizes**. These are each profile option marked `"ask": "preflight"`. Options marked `"ask": "auto"` have a single choice and are used without asking. Options marked `"ask": "brief"` are not asked here.
 
-**Step A — one question:** *"Screen sizes: use the recommended sizes for every platform?"* (header: `Screen sizes`)
+**Device platforms always get their device question.** The mobile app, tablet app, smart TV, kiosk and desktop app each need a real choice of device (iPhone or Android, which tablet, which TV or machine), so they are never hidden behind Step A: ask them in Step B whatever the user answers here. Step A covers the other platforms only; skip it when every platform in scope is a device platform.
+
+**Step A — one question, for the platforms that are not device platforms:** *"Screen sizes: use the recommended sizes for every platform?"* (header: `Screen sizes`)
 
 - **Use recommended sizes (Recommended)** — the description lists each platform's defaults, for example "Landing page: Desktop 1440, Tablet 768, Mobile 375 · Mobile app: iPhone 16".
 - **Choose for each platform** — "Pick the sizes yourself."
 
-**Step B — only if the user chose "Choose for each platform":** one AskUserQuestion call per batch of 4 platforms, one question per platform:
+**Step B — always for the device platforms, and for the other platforms only if the user chose "Choose for each platform":** one AskUserQuestion call per batch of 4 questions:
 
 - question = the option's `question`; header = a short name (for example `Web sizes`, `Mobile frames`); `multiSelect` is true for `type: multi` and false for `type: single`.
-- options = the **first 4** of the option's `choices` (label as written; add "(Recommended)" to the defaults). Choices beyond the fourth are reachable through **Other**. If the user types a size the profile doesn't list, accept a name plus a width and height; ask for the numbers if missing.
+- options = the option's `choices` (label as written; add "(Recommended)" to the defaults). The question tool shows at most 4 options per question, so when the choices carry a `group` (for example `Apple phones` and `Android phones`), ask **one question per group** (header: the group's name), each with at most 4 options; the answers together are the platform's choice. Without groups, show the first 4; the rest are reachable through **Other**. A device the profile doesn't list is accepted through **Other**: a name plus a width and height; ask for the numbers if missing.
 
 **Saving.** Store each chosen choice's label and `size`. The **primary viewport** is the first of the chosen choices in the profile's own choice order (for example Desktop 1440 for a web page, iPhone 16 for a mobile app). Interaction states are designed at the primary viewport, and the user can change which one is primary when they confirm the spec.
 

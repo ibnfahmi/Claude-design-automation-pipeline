@@ -32,7 +32,7 @@ Each profile's `code_target` says what is built; the technology is always the pr
 | Platform | Built as |
 |---|---|
 | Web app, dashboard, landing page, e-commerce, docs, flow, design system | An app in the chosen stack. A design-system project is a documented component library with a docs route per component |
-| Mobile app, tablet app | The real app as a responsive web build in the chosen stack, at the device viewport and with no bezel at `/`. The device frame (status bar, notch or island, home indicator, safe areas) is drawn only on the frame routes (`/frames/<slug>`) and in `?capture=1`, for review and the Figma export. It is not native code |
+| Mobile app, tablet app | The real app as a responsive web build in the chosen stack, at the device viewport and with no bezel at `/`. The device frame (status bar, notch or island, home indicator, safe areas) is drawn on the frame routes (`/frames/<slug>`), in `?capture=1` (the Figma export), and around the whole app in the share build (the review artifact), never in the code project's own `/`. It is not native code |
 | Desktop app | A prototype in the chosen stack inside a window frame for each operating system. Not an Electron build unless asked |
 | Browser extension | A real Manifest V3 extension project (`manifest.json`, popup and options pages built with Vite), whatever the stack, plus preview routes that render each surface at its real size |
 | Email | HTML email templates (table layout, inline-friendly CSS) in `emails/`, whatever the stack, rendered by a preview route in light, dark and images-blocked views |
