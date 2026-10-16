@@ -12,7 +12,7 @@ Used by the Handoff Agent when it builds the Figma file from the running app. Th
 
 If the extraction or the build is not possible (no tools, the page can't be opened, a font can't be pinned), **do not fall back silently.** Say why in one line with the one fix (install the tools, start the app, pin or substitute the font), then ask (AskUserQuestion, header `Capture fallback`): **Fix it and retry (Recommended)** / **Use the capture tool for these frames** ("Lower quality: icons, text widths and spacing can break. They are labelled 'capture fallback'."). Only on the second answer use the capture tool, with sections 1 and 2 below.
 
-**Tag every frame by how it was built.** `figma-builder.js` sets `pipeline:source = spec` (and `pipeline:hash`) on each top-level frame it builds. A frame built by the capture tool gets `pipeline:source = capture-fallback` through a short `use_figma` call (`node.setPluginData`), is marked `Capture fallback` in the Status column of the Handoff status page, and is listed in the report with the reason. Re-exports use these tags (`figma-structure.md`, "Re-export").
+**Tag every frame by how it was built.** `figma-builder.js` sets `pipeline:source = spec` (and `pipeline:hash`) on each top-level frame it builds. A frame built by the capture tool gets `pipeline:source = capture-fallback` through a short `use_figma` call (`node.setPluginData`), and is listed in the report with the reason. Re-exports use these tags (`figma-structure.md`, "Re-export").
 
 ## 1. Final state (needed by the spec path and by the capture-tool fallback)
 

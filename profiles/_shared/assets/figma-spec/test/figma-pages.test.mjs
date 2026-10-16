@@ -21,7 +21,7 @@ let bad = 0;
 const check = (n, ok, extra = '') => { if (!ok) bad++; console.log((ok ? 'PASS ' : 'FAIL ') + n + (ok ? '' : '  ' + extra)); };
 
 const plan = { fileName: 'Demo — v1.0', features: [{ id: 'F-0', name: 'Foundation' }, { id: 'F-1', name: 'Challenges' }] };
-const expected = ['Cover', D('Overview'), 'Specs & Guidelines', 'Components', 'Handoff status', 'Changelog', D('Features'), 'F-0 · Foundation', 'F-1 · Challenges', D('Archive'), 'Archive'];
+const expected = ['Cover', D('Overview'), 'Specs & Guidelines', 'Components', 'Changelog', D('Features'), 'F-0 · Foundation', 'F-1 · Challenges', D('Archive'), 'Archive'];
 
 let r = await run(plan);
 check('first run creates the exact page order', JSON.stringify(names()) === JSON.stringify(expected), JSON.stringify(names()));
@@ -41,7 +41,7 @@ check('archived copy has the background', root.children.find(p => p.name === cop
 check('file renamed to the new version', root.name === 'Demo — v1.1');
 
 r = await run({ ...plan, fileName: 'Demo — v1.1', features: [{ id: 'F-0', name: 'Foundation' }, { id: 'F-1', name: 'Quests' }] });
-check('renamed feature keeps its page and order', names()[8] === 'F-1 · Quests' && names().length === expected.length + 1, JSON.stringify(names()));
+check('renamed feature keeps its page and order', names()[7] === 'F-1 · Quests' && names().length === expected.length + 1, JSON.stringify(names()));
 check('archived copy is not treated as unknown', r.unknownPages.length === 0, JSON.stringify(r.unknownPages));
 
 const hand = figma.createPage(); hand.name = 'Sandbox';

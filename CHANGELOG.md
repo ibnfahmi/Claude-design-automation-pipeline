@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.10.13] - 2026-10-17
+
+### Changed
+- **The Figma export no longer creates a Handoff status page.** The file now has Cover, Specs & Guidelines, Components, Changelog, the feature pages and the Archive. The per-frame status table (Draft, In review, Ready for dev), its re-export rules and the `Capture fallback` status mark are removed; capture-fallback frames are still tagged and listed in the report. Files exported by earlier versions keep their old Handoff status page, so delete it by hand if you don't want it.
+
 ## [0.10.12] - 2026-10-17
 
 ### Changed
