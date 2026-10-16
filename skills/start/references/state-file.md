@@ -95,7 +95,7 @@ Written to the client project folder after every stage. The client folder is nam
   "figma_frames": {"Home / Default": {"node": "12:34", "page": "F-1 · Chats", "hash": "ab12cd34", "source": "spec | capture-fallback"}},
   "figma_selection": null,
   "figma_library": "null | instances | frames",
-  "figma_calibration": "null | {\"file\": \"figma-spec/figma-calibration.json\", \"accepted\": true, \"fittedOn\": [\"Sign in / Default\"], \"medianBefore\": 3.1, \"medianAfter\": 1.9, \"pluginVersion\": \"0.11.0\"}",
+  "figma_pilot": "null | {\"frames\": 10, \"medianBefore\": 3.1, \"medianAfter\": 1.9, \"fixes\": \"figma-spec/pilot-fixes.md\"}",
   "figma_exports": [{"date": "13-October-2026", "version": "v1.0", "name": "Acme app — v1.0", "url": "https://www.figma.com/design/..."}],
   "notes": []
 }
