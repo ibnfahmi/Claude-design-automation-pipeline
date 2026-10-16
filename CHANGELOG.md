@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.10.16] - 2026-10-17
+
+### Changed
+- **The helper packages are installed and verified before any Figma screen is built.** When you choose to export to Figma, the pipeline now checks `playwright-core`, `pngjs` and `pixelmatch` itself in `~/.claude/design-pipeline/tools/figma` (a real `require` check that prints `tools ok`), installs them with your one-time consent if they are missing, runs the check again and shows the result, and only then starts the Handoff Agent. The Handoff Agent repeats the check first thing and stops if it fails, so a build can no longer start without them. Declining still leads to the ask-first capture-tool fallback. Not yet run on a machine without the packages.
+
 ## [0.10.15] - 2026-10-17
 
 ### Changed
