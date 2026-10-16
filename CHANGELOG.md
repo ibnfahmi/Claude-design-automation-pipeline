@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.10.10] - 2026-10-16
+
+### Fixed
+- The stack-conversion step still said the coverage report always runs. It now follows `skip_coverage`, like the build rounds.
+
 ## [0.10.9] - 2026-10-16
 
 ### Changed
