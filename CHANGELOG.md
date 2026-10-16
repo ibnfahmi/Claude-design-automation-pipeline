@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.11.2] - 2026-10-17
+
+### Changed
+- **Typography is exported to Figma as variables.** The Handoff Agent now creates a `Type` variable collection from the type styles in `tokens.css` (size, line height, letter spacing, family and weight for each style), binds every text node to it and adds a text style per type style, and reports `TYPE VARIABLES`. Previously only spacing, colours and radii were variables. Not yet run on a real Figma file.
+
 ## [0.11.1] - 2026-10-17
 
 ### Changed

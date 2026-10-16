@@ -70,7 +70,7 @@ The flow runs horizontally (entry point first, branches as extra columns after t
 | Row label | `Desktop · 1440` |
 | Label card | `Card / <Screen> / <State>` |
 | Component | `<Component> / <Variant>` (for example `Button / Primary / Hover`) |
-| Variables | `Space/<n>`, `Color/<role>`, `Radius/<n>`, `Type/<style>` |
+| Variables | `Space/<n>`, `Color/<role>`, `Radius/<n>`, `Type/<style>/<property>` (typography is always exported as variables) |
 | Layers | what the thing is (`Header`, `Nav / Link`, `Card / Title`), never `Frame 123`, `Group 4` or tool-made names |
 | Status table rows | `Row / <Frame>` |
 
