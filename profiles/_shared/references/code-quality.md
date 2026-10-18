@@ -43,11 +43,13 @@ The Design Agent builds to this, and the Auditor checks the source and the runni
 
 ## Motion
 
+- Motion is on by default: build to the "Motion baseline" in `polish.md`, unless the reference or design system does otherwise.
 - Transitions (not keyframes) for interactive state, so they can reverse mid-flight. Name the properties (`transition-property: opacity, translate`), never `all`.
-- Press scale 0.96 over 150ms ease-out, not on disabled controls. High-frequency interactions (typing, row hover, tab switches) get no animation, or 150ms or less on opacity or background.
+- Press scale 0.96 over 150ms ease-out, not on disabled controls. High-frequency interactions (typing, row hover, tab switches) get a minimal transition (150ms or less on opacity or background).
 - Gate movement, scale and blur behind `prefers-reduced-motion: no-preference`; under reduced motion use an opacity cross-fade.
 - Stagger only infrequent entrances (100ms apart, 12px up, 4px blur, 300ms). Exits are shorter and smaller than enters. Every animated change leaves a static cue.
 - `will-change` only after you see stutter, naming the property. Suppress transitions during a theme switch. Never listen to `scroll` for reveals: use `IntersectionObserver`.
+- With a scroll library present: no `scrub` together with `toggleActions`, and no debug markers in anything shared.
 
 ## Source checks the Auditor runs
 

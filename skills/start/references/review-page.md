@@ -40,6 +40,8 @@ A message that starts with `[Artifact comment sent to Claude]` is a comment from
 
 Comment fixes are small and fast: they re-run the build and the file-open test, not the full audit and coverage. The next full round (Stage 3b) covers them. Threads the user never sent to Claude don't reach the session; if the user asks, read them with `ArtifactComments` `read`, list them, and tell them which still need "Send to Claude".
 
+The published page keeps the app's motion (the same transitions and reveals as `share/`), with reduced motion respected.
+
 ## Resume
 
 On a resumed run with `review_page` set, read the open threads once (`ArtifactComments` `read`) to catch any comment that arrived while the session was closed, handle them as above, re-arm the watch with `action: "watch"` and the URL only if the user owns the page and gave you the link, and keep republishing after every round.

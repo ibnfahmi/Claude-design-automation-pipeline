@@ -12,6 +12,8 @@ The share build wraps the whole app in the same frame component the `/frames` ro
 - **Platforms:** phones, tablets, desktop apps, smart TVs and kiosks get a shell; web apps, dashboards and landing pages don't (a plain page).
 - **Inside the frame the app behaves normally:** the same routes, the demo prefill and the journeys. Rebuild it at the end of every build and revision round, and again at the production check.
 
+The published copy carries the same motion as the code project (transitions, enter and exit, entrance reveals); never strip it for size, and keep the reduced-motion handling.
+
 ## What `file://` blocks (design for it)
 
 | Problem | Why | Rule |

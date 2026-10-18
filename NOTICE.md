@@ -1,6 +1,6 @@
 # Notice and attributions
 
-Some guidance in `profiles/_shared/references/` is distilled and rewritten from the open-source skill collections below. All of them are MIT licensed. The files here are summaries written for this plugin, not copies, and they keep only what applies to design decisions. The original authors' licences apply to their work.
+Some guidance in `profiles/_shared/references/` is distilled and rewritten from the open-source skill collections below. They are MIT licensed, except where a row says otherwise. The files here are summaries written for this plugin, not copies, and they keep only what applies to design decisions. The original authors' licences apply to their work.
 
 | Source | Author | Used for |
 |---|---|---|
@@ -11,6 +11,10 @@ Some guidance in `profiles/_shared/references/` is distilled and rewritten from 
 | [Owl-Listener/designer-skills](https://github.com/Owl-Listener/designer-skills) (`visual-critique`, `design-ops`, `error-handling-ux`, `loading-states`, `feedback-patterns`, `form-design`, `data-visualization`, `dark-mode-design`, `localization-design`, `handoff-spec`, `user-flow-diagram`, `journey-map`, `experience-map`) | MC Dean | `visual-critique.md`, `states-and-feedback.md`, `forms.md`, `data-viz.md`, `dark-mode.md`, `localization.md`, `handoff-spec.md`, `user-flows.md` |
 | [codeswithroh/tastemaker](https://github.com/codeswithroh/tastemaker) | codeswithroh | `profiles/_shared/references/grounding.md` |
 | [ConardLi/garden-skills](https://github.com/ConardLi/garden-skills) (`web-design-engineer`) | ConardLi | `profiles/_shared/references/grounding.md`, `data-viz.md`, dashboard profile guidance |
+| [taste-skill](https://github.com/Leonxlnx/taste-skill) (`minimalist-ui`) | Leonxlnx | placeholder-content rules in `ui-defects.md` and `design-agent.md` (ideas rewritten, not copied) |
+| [ceorkm/mobile-app-ui-design](https://github.com/ceorkm/mobile-app-ui-design) | ceorkm | mobile patterns in `mobile.md` and `states-and-feedback.md` (ideas rewritten, not copied). Licence unverified: the README says MIT, GitHub shows none. |
+| [expo/skills](https://github.com/expo/skills), [hamen/material-3-skill](https://github.com/hamen/material-3-skill) | Expo, hamen | platform conventions in `mobile.md` (ideas rewritten, not copied) |
+| [greensock/gsap-skills](https://github.com/greensock/gsap-skills), [github/awesome-copilot](https://github.com/github/awesome-copilot) (`premium-frontend-ui`) | GreenSock, GitHub | motion craft in `polish.md`, `code-quality.md` and `design-agent.md` (ideas rewritten, not copied) |
 
 [MengTo/Skills](https://github.com/MengTo/Skills) was reviewed and nothing was used: it focuses on 3D, video and image generation.
 

@@ -21,7 +21,7 @@ Design the error path as carefully as the happy path.
 | 1 to 10s | A clear loading state, with progress if measurable |
 | Over 10s | Detailed progress, a time estimate, and a way to continue in the background |
 
-- Show something immediately; never a blank screen.
+- Show something immediately; never a blank screen. That includes search: before the user types, offer recents, suggestions or popular items (unless the chosen reference or design system does otherwise).
 - **Skeletons match the real layout's shapes**; use them for known structure. Use a small spinner only for short, unknown waits, and a progress bar when progress is measurable.
 - One loading indicator per area, not several competing ones. No layout shift when content arrives. Provide cancel or back on long loads.
 - **Optimistic UI** (show the expected result, reconcile, roll back on failure) needs a designed failure state.

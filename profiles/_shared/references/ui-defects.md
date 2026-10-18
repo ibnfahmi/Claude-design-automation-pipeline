@@ -60,10 +60,11 @@ Usability and accessibility are covered elsewhere. This file is the **visual bug
 - Longer translations still fit; dates, numbers and currency formatted for the language.
 
 **Content that shouldn't ship**
-- `lorem ipsum`, `undefined`, `null`, `NaN`, `[object Object]`, `TODO`, raw translation keys, duplicate or obviously fake placeholder names repeated across rows, broken links (`#` that does nothing where a destination is expected), dead buttons.
+- `lorem ipsum`, `undefined`, `null`, `NaN`, `[object Object]`, `TODO`, raw translation keys, duplicate or obviously fake placeholder names repeated across rows ("John Doe", "Acme"), filler marketing words ("Elevate", "Seamless", "Game-changer"), broken links (`#` that does nothing where a destination is expected), dead buttons.
 
 **Load and motion glitches**
 - Flash of unstyled or unthemed content, content that jumps as fonts or images load, animations that never settle or loop without purpose, transitions that stutter or cut, scroll that jerks, double scrollbars.
+- **Motion baseline gaps** (`polish.md`; minor, or major on a main control or screen), unless the reference or design system does otherwise: an interactive element with no state transition; a modal, menu or drawer that appears or disappears instantly; no route or screen transition; no entrance motion on a page of content; motion with no reduced-motion fallback; baseline motion that overrides the reference's tempo.
 
 **Component feel (interaction polish)**
 Distilled from Emil Kowalski's design-engineering guidance (see `NOTICE.md`). Check in the rendered app and in the CSS; report as minor unless noted.

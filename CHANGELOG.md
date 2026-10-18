@@ -2,6 +2,12 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.11.4] - 2026-10-18
+
+### Added
+- **Motion by default.** Every output (the code project, the style preview, the share build and the review page's app) now has transitions, interactions and motion, even when the reference shows none: state transitions on every interactive element, enter and exit motion for menus, dialogs, drawers and toasts, route and screen transitions, content entrance on load or scroll, and feedback micro-interactions, all in plain CSS and JavaScript with the motion tokens and a reduced-motion version. The reference's own tempo, easing and effects win; the baseline fills only what the reference doesn't show and never changes colours, fonts, icons or layout. The Auditor now flags a static app (no state transition, instant menus and dialogs, no route transition, motion with no reduced-motion fallback), and the Design Agent reports a `MOTION:` line. Not yet run on a real project; expect somewhat more build time and tokens.
+- **Content and mobile rules from outside skills, none of which limits the reference:** no fake names or filler marketing words in placeholder content; peak and closing moments, tappable choices before typing and no blank search screen on mobile; iOS and Android convention hints and navigation by window size, each "unless the reference does otherwise"; two scroll-library hygiene rules. Sources are listed in `NOTICE.md` (ideas rewritten, not copied; the licence of ceorkm/mobile-app-ui-design is unverified).
+
 ## [0.11.3] - 2026-10-18
 
 ### Changed

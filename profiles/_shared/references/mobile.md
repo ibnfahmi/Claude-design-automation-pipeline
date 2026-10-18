@@ -27,6 +27,11 @@ Used by `mobile-app`, `tablet-app` and the mobile breakpoints of web profiles. D
 - Status bar colour matches the top of the screen; design light and dark where dark mode is in scope.
 - Empty, loading (skeleton), offline and error states for every data screen.
 
+- Design the peak and closing moments of a journey (the success, the first win, the goodbye), not only the middle.
+- Offer tappable choices (chips, suggestions, defaults) before asking the user to type. Sliders are poor for precise entry; pair them with a number field.
+- Platform conventions, unless the chosen reference or design system does otherwise: iOS has no floating action button or ripple; Android has no iOS back chevron or iOS-style switch.
+- Navigation by window size, unless the chosen reference or design system does otherwise: a bar under 600, a rail from 600 to 839, a drawer from 840 up.
+
 ## Verify on a real device
 
 Emulators miss sticky hover, tap highlights, browser-chrome height changes, safe areas and the keyboard. When handoff includes the coded app, note that those behaviours need a phone.

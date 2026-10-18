@@ -69,6 +69,7 @@ NOTICE.md                attributions for the open-source guidance
 **Code and design accuracy**
 
 - **Numbered requirements, traced end to end.** The brief becomes numbered requirements; every frame lists the requirements and journey steps it covers, and, if you choose it at the start, a Coverage Agent reports Done, Missing and Added against the original brief or BRD after every round.
+- **Motion by default.** Every design and artifact has transitions, interactions and motion, each with a reduced-motion version. The reference's own motion wins; the baseline fills only what it doesn't show.
 - **A working app, not a mockup.** The output is code with real interactions, design tokens as CSS variables and a registry of every screen and state, so what is reviewed is what ships.
 - **Tested in the running app.** The Auditor resizes to each chosen screen size, clicks through every interaction and journey, reads the console and network, runs the build, and checks UI defects, accessibility, polish and code quality. Worst-case data stress tests are available on request.
 - **Look before build.** A quick style preview of your real product (a saved design system, or a reference such as a website, image or Figma file) is approved before the slow work runs. Website references are measured, including interactions, animations, transitions and scrolling effects.

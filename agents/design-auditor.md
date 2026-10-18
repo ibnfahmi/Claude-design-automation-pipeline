@@ -33,6 +33,7 @@ For each line of the interaction list (`Screen → trigger → Screen / State`),
 3. Check the resulting state: it shows the right content, realistic data, nothing clipped or overlapping, and the motion is the one the guidance describes.
 4. Check the way back: close, cancel, Escape or back works, and focus returns sensibly.
 5. Check the edge states the spec asks for: empty, loading, error, disabled, hover and focus where relevant. Also try the input paths: submit a form empty, with invalid data and with valid data.
+6. Motion baseline (`polish.md`), unless the reference or design system does otherwise. Report as findings: an interactive element with no state transition; a modal, menu or drawer that appears or disappears instantly; no route transition; no entrance motion on a page of content; motion with no reduced-motion fallback; baseline motion that overrides the reference's tempo.
 
 Walk each journey in `/journeys` from its first step to its end, and its branches, by clicking through the real app. Record pass or fail for each interaction and each journey, with a one-line reason for every fail.
 
@@ -93,6 +94,7 @@ Read `code-quality.md` and test the project against it:
 - Run `npm run build` (and `npm run lint` if it exists) in `code/`. A failing build is **critical**.
 - Read the browser console and the network panel on every frame route (`read_console_messages`, `read_network_requests`). Errors and failed requests are **major** (critical if they break a screen).
 - Search the source for the patterns in the "Source checks" table of `code-quality.md` (div click handlers, missing focus styles, ungated hover, `100vh` shells, `transition: all`, raw hex colours and pixel sizes in components, missing alt text, and so on) and report each with its file and line.
+- Check the motion baseline in the CSS and scripts: a transition on every interactive element, enter and exit motion on overlays, route transitions, entrance reveals via `IntersectionObserver`, and a reduced-motion fallback for each effect (findings as in `ui-defects.md`).
 - Check that tokens are used: colours, type, radii and spacing in components come from `tokens.css`, not raw values.
 - Confirm every frame in the registry renders, and every route in the manifest exists.
 - **Share build:** run the file-open test from `share-build.md` on `share/index.html` through `file://`, and report its result (pass, pass with issues, fail, not verified, or not supported) in the report. A blank or failing share build is a finding.
