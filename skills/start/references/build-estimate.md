@@ -38,3 +38,19 @@ Record the time of every part so the next estimate is better. With Bash, note `d
 When the build returns, tell the user the actual time in one line (*"Phase 1 took 73 minutes against an estimate of 45 to 80."*). From the second estimate on, **calibrate**: take the actual minutes per frame from the earlier rounds of this project (build time divided by frames) and use it, with a range of about plus or minus 25%, in place of the working defaults. The same goes for the audit and coverage times. Say that the estimate is based on the earlier rounds. If a part has no timing yet (a first audit, say), use the working default for that part and mark it as a guess.
 
 Time only counts what the agents run. Time spent waiting for the user to answer or review is not part of it, and neither is a pause when a usage limit is reached; mention that limit if the estimate is long.
+
+## Figma export (the `to-figma` skill)
+
+Tell the user this before the Figma build starts, as a range with its parts and the words "an estimate". **Frames to build = selected frames × screen sizes already in the manifest × languages chosen** (each language is a full set).
+
+**The only measurement so far** is one real export of a website: about 254 frames in a single long session took about 1,040 model turns, 3.2 hours of work (plus 1.6 hours of idle waiting) and about 11 million newly written tokens (about 557 million cache reads); the capture-tool route for a similar project took about 660 turns and 1.3 hours. Treat these as one data point, not a benchmark.
+
+| Part | Rough cost |
+|---|---|
+| Setup (file, pages, variables, fonts, extraction, library if on) | 15 to 40 turns; the library adds 40 to 120 turns |
+| Pilot (more than 10 frames) | 60 to 150 turns |
+| Per frame, measured-spec build with compare and fixes | about 2 to 4 turns, about 1 to 3 minutes |
+| Finish (changelog, cover, links, report) | 20 to 40 turns |
+| Single session (no split) | the same turns, but each turn re-reads the whole growing context, so tokens grow roughly with the square of the frame count; the split build keeps each job's context small |
+
+Say that languages and the library multiply the cost, that plain frames and one language are the cheap options, and that the real numbers will be recorded in the state file (`figma_progress` keeps the turns and minutes of each job) so the next estimate uses them.

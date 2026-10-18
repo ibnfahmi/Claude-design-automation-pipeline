@@ -36,6 +36,7 @@ skills/
   start/                 /design-pipeline:start — the Orchestrator
   journeys/              /design-pipeline:journeys — create user journeys on demand
   audit/                 /design-pipeline:audit — audit a running app or project on demand
+  to-figma/              /design-pipeline:to-figma — export a running app or project to Figma on demand
     SKILL.md
     references/
       preflight.md       tool checks, starting point and brief, platform scope and screen sizes
@@ -79,6 +80,7 @@ NOTICE.md                attributions for the open-source guidance
 - **Only the platforms you pick are built.** If the brief describes another platform (an admin console, say), the spec lists it as out of scope with the quote, and nothing is designed, journeyed or counted as missing for it.
 - **Bottom clearance on phones.** The last control or text ends at least 16 px above the bottom safe area, and the Auditor measures it.
 - **No silent low-quality Figma frames.** Frames are built from a measured spec. If that path can't run, the pipeline asks before using the capture tool and labels those frames; on a re-export it archives and rebuilds any frame it didn't build from a spec.
+- **A skill of its own for Figma: `/design-pipeline:to-figma`.** The export has its own command: it asks what to export, the language, the library and the destination, checks the helper tools, shows an estimate, and builds the file in short separate jobs (setup, a 10-screen pilot, one job per feature page, finish) instead of one very long session, so large exports cost far fewer tokens. It also resumes after a stop.
 - **Figma language, always asked.** Every Figma export asks which language to export (each of the project's languages, or all of them, which multiplies the cost); frames are built once per chosen language.
 - **Figma component library, on request.** When you export to Figma you are asked whether to build the Components page first, from the code's components, and then build every screen from instances of it, so a design change is one edit.
 - **Token costs are stated up front.** Any option that starts a step that uses a large number of tokens says so in bold in its description, and the cheaper choice says what it saves.
@@ -178,7 +180,7 @@ Or just open the plugin and click install. Then start a run with `/design-pipeli
 ## 🧑‍💻 Use (per client project)
 
 1. Create a new folder for the client and start a new Claude Code session in it.
-2. Run `/design-pipeline:start`. (The commands are `/design-pipeline:start`, `/design-pipeline:audit` and `/design-pipeline:journeys`.)
+2. Run `/design-pipeline:start`. (The commands are `/design-pipeline:start`, `/design-pipeline:audit`, `/design-pipeline:journeys` and `/design-pipeline:to-figma`.)
 3. Pass the Node check, then choose:
    - **where to start**: a brief or BRD, an existing code project, or a Figma file;
    - **the platforms** (one or several), the **screen sizes** by clicking (the code is plain HTML, CSS and JS by default; ask for a conversion to React, Next.js or another stack whenever you want one);

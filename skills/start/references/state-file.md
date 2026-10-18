@@ -96,6 +96,7 @@ Written to the client project folder after every stage. The client folder is nam
   "figma_selection": null,
   "figma_library": "null | instances | frames",
   "figma_languages": ["ar"],
+  "figma_progress": "null | {\"plan\": true, \"pilot\": true, \"features\": {\"F-0\": \"done\", \"F-1\": \"running\"}, \"finish\": false, \"turns\": 412, \"minutes\": 96}",
   "figma_pilot": "null | {\"frames\": 10, \"medianBefore\": 3.1, \"medianAfter\": 1.9, \"fixes\": \"figma-spec/pilot-fixes.md\"}",
   "figma_exports": [{"date": "13-October-2026", "version": "v1.0", "name": "Acme app — v1.0", "url": "https://www.figma.com/design/..."}],
   "notes": []

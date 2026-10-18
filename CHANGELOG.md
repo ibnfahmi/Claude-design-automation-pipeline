@@ -2,6 +2,17 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.12.0] - 2026-10-18
+
+### Added
+- **A skill for the Figma export: `/design-pipeline:to-figma`.** The Figma stage moved out of the start skill into its own skill, which the start skill now calls and which can also be run at any time, on its own, in a project folder (a pipeline project, or any running app, with a frame list you confirm). It holds the completeness check, the questions (what to export, which language, component library, destination), the connector and helper-tool checks, the estimate and the build.
+
+### Changed
+- **The Figma build is split into jobs.** Because every turn re-reads the whole conversation, one session building 254 frames took about 1,040 turns on a context of up to 900k tokens. Exports of more than 15 frames now run as separate short jobs, each in a fresh agent: `setup` (file, pages, variables, fonts, extraction, library), `pilot`, one `feature` job per feature page, and `finish` (changelog, cover, links, report). They share only files in `figma-spec/` (`handoff-plan.json`, `results/<F-n>.json`), and progress is saved as `figma_progress`, so a stopped export resumes at the next job instead of starting over. Exports of 15 frames or fewer stay in one session.
+- **Fewer turns per frame:** frames of a batch are compared in one command, images are looked at only for failing frames, simple frames are built several per `use_figma` call and their images uploaded together, and the extra screenshot of every frame is replaced by one overview per page (the pixel-diff is the per-frame proof).
+- **An estimate is shown before the Figma build starts** (frames x sizes x languages, with the parts and the words "an estimate"), based on the one real export measured so far, with a cheaper option.
+- Not yet run on a real project: the split, the batching and the estimates are untested, and the estimates come from a single data point.
+
 ## [0.11.5] - 2026-10-18
 
 ### Changed
