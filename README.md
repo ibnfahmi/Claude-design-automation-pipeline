@@ -42,6 +42,11 @@ skills/
       direction.md       style direction (design system, reference or creative) and the style preview
       state-file.md      design-pipeline-state.json and design-manifest.json formats, resume rules
       gitlab.md          hosting the code project on GitLab (ask once, push after each round)
+      build-estimate.md  time estimate shown before a build
+      convert.md         converting the finished project to another stack, on request
+      documents.md       turning Word, PDF, Excel and PowerPoint briefs into markdown
+      phases.md          building large projects in phases
+      review-page.md     the private review page: comment on the design and the code updates
 agents/
   design-system-agent.md reference (image, screenshot, URL, Figma) → tokens fast, then a design-system folder
   brief-agent.md         brief, BRD, existing code or Figma → spec with numbered requirements and interaction states
@@ -76,7 +81,7 @@ NOTICE.md                attributions for the open-source guidance
 - **Figma component library, on request.** When you export to Figma you are asked whether to build the Components page first, from the code's components, and then build every screen from instances of it, so a design change is one edit.
 - **Token costs are stated up front.** Any option that starts a step that uses a large number of tokens says so in bold in its description, and the cheaper choice says what it saves.
 - **The Figma export tests itself on 10 screens first.** On a project of more than 10 frames, 10 varied screens are built first and compared with the app by pixel-diff, whatever is wrong is fixed in the run's own copy of the builder, and only then are the rest built. What was fixed is written to `figma-spec/pilot-fixes.md`.
-- **Everything sits on a grid.** Spacing (gaps, padding, margins) comes only from a 4 px base scale: `0, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96, 128`. Fixed sizes are multiples of 4, and layouts follow column grids (12 on desktop, 8 on tablet, 4 on mobile, or the project's own container). The Auditor reports off-scale values such as 10, 14 or 46 px, and the Figma export snaps to the scale and binds it to variables.
+- **Everything sits on a grid.** Spacing (gaps, padding, margins) comes only from a 4 px base scale: `0, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96, 128`. Fixed sizes are multiples of 4, and layouts follow column grids (the Figma export sets 12 columns on desktop, 8 on tablet including iPad mini, 4 on mobile; TV, kiosk and slides use the project's own container). The Auditor reports off-scale values such as 10, 14 or 46 px, and the Figma export snaps to the scale and binds it to variables.
 - **One representative screen per type**, with all its states, instead of copies of every template instance.
 - **Quality gates** before delivery: clean build and lint, no console errors on any screen, a fresh install, and a double-click `share/` file that is tested from disk.
 - **Documents read as exact text.** Word, Excel, PowerPoint and PDF briefs are converted to markdown first, so values and wording are not guessed.
@@ -84,7 +89,7 @@ NOTICE.md                attributions for the open-source guidance
 - **Forms are prefilled with demo values.** In the running app, the share build and the review page, sign-in, sign-up, checkout and other forms hold realistic made-up values (reserved test emails, a fake password, test card numbers), so nobody types to click through. Frames and the Figma export still show their named states (empty, filled, error). Add `?prefill=0` to see the empty forms.
 - **Your edits are kept.** Revision rounds read `git diff` first and keep what you changed by hand; comments on the review page are applied automatically.
 - **The running app is published automatically.** The style preview and the app are published as a private page on claude.ai, with no question, and kept up to date at the same link after every round. It stays private until you share it. Say "no review page" to turn it off.
-- **Figma built from measurement, with three small helper tools.** Screens are measured from the settled page (final animation state, pinned fonts, spacing on a scale, layout grids), built as real auto layout and compared with a screenshot of the original. The measuring and comparing use three open-source packages, installed once with your consent into `~/.claude/design-pipeline/tools/figma`: **playwright-core** (opens each page in the Chrome or Edge you already have and measures every element, with no browser download), **pngjs** (reads and writes the screenshot PNG files) and **pixelmatch** (compares the app screenshot with the Figma screenshot and finds the regions that differ). If you decline them, the pipeline asks before falling back to the Figma connector's capture tool, whose frames are lower quality and are labelled `capture fallback`.
+- **Figma built from measurement, with three small helper tools.** Screens are measured from the settled page (final animation state, pinned fonts, spacing on a scale, layout grids), built as real auto layout and compared with a screenshot of the original. The measuring and comparing use three open-source packages, installed once with your consent into `~/.claude/design-pipeline/tools/figma`: **playwright-core** (opens each page in the Chrome or Edge you already have and measures every element, with no browser download), **pngjs** (reads and writes the screenshot PNG files) and **pixelmatch** (compares the app screenshot with the Figma screenshot and finds the regions that differ). If you decline them, the pipeline asks whether to use the Figma connector's capture tool instead, whose frames are lower quality and are labelled `capture fallback`.
 
 **Model and token usage**
 
@@ -177,9 +182,9 @@ Or just open the plugin and click install. Then start a run with `/design-pipeli
    - **the platforms** (one or several), the **screen sizes** by clicking (the code is plain HTML, CSS and JS by default; ask for a conversion to React, Next.js or another stack whenever you want one);
    - then paste the brief (or point to the BRD files).
 4. Answer any questions, and confirm the numbered requirements.
-5. Review the **user journeys** in `user-journeys.md`: flows with screens, decisions, error paths and exits, for every platform and across platforms (optional: the pipeline asks whether you want them, or pass `/design-pipeline:start --skip-journeys` to skip the question). The audit after each round is optional too (`--skip-audit`); both can use a lot of tokens.
+5. Review the **user journeys** in `user-journeys.md`: flows with screens, decisions, error paths and exits, for every platform and across platforms (optional: the pipeline asks whether you want them, or pass `/design-pipeline:start --skip-journeys` to skip the question). The audit after each round is optional too (`--skip-audit`), and so is the coverage check (`--skip-coverage`); all can use a lot of tokens.
 6. Choose the **style**: a saved design system (folder or artifact), a reference (image, screenshot, website URL or Figma file) with a live preview of your product in that look, or no design system.
-7. The Design Agent builds the project in `code/`. After each round the Auditor tests the running app (Nielsen's heuristics, WCAG 2.1 AA, platform checks, code checks, a click-through of every interaction) and saves `audit-round-<n>.md`. The Coverage Agent compares the app with your brief and saves `coverage-round-<n>.md` (Done / Missing / Added).
+7. The Design Agent builds the project in `code/`. After each round the Auditor tests the running app (Nielsen's heuristics, WCAG 2.2 AA, platform checks, code checks, a click-through of every interaction) and saves `audit-round-<n>.md`. The Coverage Agent compares the app with your brief and saves `coverage-round-<n>.md` (Done / Missing / Added).
 8. Try the app in the browser pane (frames at `/frames`, journeys at `/journeys`), and tell Claude what to change, or edit the code yourself: your edits are kept. Say which issues to fix and which unrequested additions to keep or remove.
 9. Reply **done** to send changes back, or say **approved** to finish. Unfixed critical audit issues and missing must-have requirements need an explicit "approve anyway". After approval you can optionally export the app to a Figma file.
 

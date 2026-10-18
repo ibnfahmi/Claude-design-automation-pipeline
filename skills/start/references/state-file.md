@@ -28,7 +28,7 @@ Written to the client project folder after every stage. The client folder is nam
     "design_system_path": "~/.claude/design-systems/acme-brand-ds or a folder path, or null",
     "design_system_status": "none | building | ready | failed",
     "design_system_agent_id": "background build agent id, or null",
-    "reference": ["brand-screens/home.png, a website URL, or a Figma link; empty unless direction is reference"],
+    "reference": ["brand-screens/home.png, a PDF, a website URL, or a Figma link; empty unless direction is reference"],
     "preview": {
       "route": "/style-preview",
       "approved": true,

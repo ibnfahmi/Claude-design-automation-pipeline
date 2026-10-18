@@ -28,7 +28,7 @@ v1.0 · F-1 · <Feature name>
 ```
 
 - **Dividers** are empty pages named `———  <Group>  ———` (em dashes, two spaces each side). They only group the page list. There are three: `Overview`, `Features`, `Archive`.
-- **Feature pages** are named `F-<n> · <Feature name>` from the spec's Features table, in feature order, only for features that were built. A project with one feature has one feature page. No page per platform.
+- **Feature pages** are named `F-<n> · <Feature name>` from the spec's Features table, in feature order, only for features that were built. A project with one feature has one feature page. No page per platform. Feature pages keep the `F-<n> · Name` name because the page script finds pages by it; no other F-numbers, requirement or source labels appear in the file.
 - **Archived pages** come after the `Archive` index page, newest first, each named `<version it came from> · <original page name>`.
 - A page the team added by hand (not in this list) is left alone and placed after the archive group.
 
@@ -72,7 +72,6 @@ The flow runs horizontally (entry point first, branches as extra columns after t
 | Component | `<Component> / <Variant>` (for example `Button / Primary / Hover`) |
 | Variables | `Space/<n>`, `Color/<role>`, `Radius/<n>`, `Type/<style>/<property>` (typography is always exported as variables) |
 | Layers | what the thing is (`Header`, `Nav / Link`, `Card / Title`), never `Frame 123`, `Group 4` or tool-made names |
-| Status table rows | `Row / <Frame>` |
 
 ## Re-export: update the same file
 

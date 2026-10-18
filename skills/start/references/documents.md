@@ -32,7 +32,7 @@ Tested with the converter on small synthetic files made for the test: a Word fil
 
 ## Fallbacks and OCR
 
-- **Pages that are garbled or need OCR:** render just those pages to images (PyMuPDF `page.get_pixmap(dpi=150)`, or the Read tool's PDF page support) and **read them visually with the Read tool**, transcribing the text, or use an OCR tool the user has connected (for example Adobe's `pdf_ocr`) after saying that the file will be processed by that service. Mark each transcribed page in the result as `(read from the page image)`.
+- **Pages that are garbled or need OCR:** render just those pages to images (PyMuPDF `page.get_pixmap(dpi=150)`, or the Read tool's PDF page support) and **read them visually with the Read tool**, transcribing the text, or use an OCR tool the user has connected (for example Adobe's `pdf_ocr`) only after telling the user that the file will be processed by that service, asking, and getting an explicit yes (wait for it; without a yes, read the page images instead). Mark each transcribed page in the result as `(read from the page image)`.
 - **A whole document that can't be converted:** read it with the Read tool page by page (up to 20 pages per read), as before, and say it was a slower route.
 - **Word without the converter:** `python-docx` or `pandoc` if available; otherwise ask for a PDF export.
 

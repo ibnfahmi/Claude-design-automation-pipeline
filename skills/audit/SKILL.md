@@ -19,7 +19,7 @@ Tell the user in one line what you found and will test.
 
 ## 2. Scope and screen sizes
 
-- Use `scope` from the state file when there is one. Otherwise ask which platform(s) this is, by clicking: AskUserQuestion with the families from `profiles/index.json`, then the platforms. For each chosen platform, ask its viewports from `profiles/<platform>/profile.json` (the option marked `viewport: true`: first four `choices`, others via Other). Skip a question the user already answered in their message.
+- Use `scope` from the state file when there is one. Otherwise ask which platform(s) this is, by clicking: AskUserQuestion with the families from `profiles/index.json`, then the platforms. For each chosen platform, ask its viewports from `profiles/<platform>/profile.json` (the option marked `viewport: true`), one question per group as in `../start/references/preflight.md` (check 4, Step B), so every device is a click. Skip a question the user already answered in their message.
 - The **primary viewport** is the first chosen one.
 - Collect the reference files: `../../profiles/_shared/references/code-conventions.md`, `share-build.md`, `ui-defects.md`, `stress-test.md` (only for the stress test), and every file listed in `auditor.references` of each chosen platform, as absolute paths.
 
@@ -35,7 +35,7 @@ If a spec or a manifest exists, the Auditor also checks required screens and sta
 
 ## 4. Run it
 
-Start `design-pipeline:design-auditor` with: the address, the code folder, the manifest and spec if any, the interaction list if any (or "discover them"), the design direction if known (else "none"), the platform scope with each platform's `auditor.checks` and the absolute reference paths, the chosen narrowing (`stress: true` for the stress test, after the Design Agent has added the worst-case fixtures: resume it in stress-fixtures mode, or edit the project's fixtures yourself outside the pipeline), and the round number (the next `audit-round-<n>.md` in the folder). It saves `audit-round-<n>.md` and returns its summary.
+Start `design-pipeline:design-auditor` with: the address, the code folder, the manifest and spec if any, the interaction list if any (or "discover them"), the design direction if known (else "none"), the platform scope with each platform's `auditor.checks` and the absolute reference paths, the chosen narrowing (`stress: true` for the stress test, after the Design Agent has added the worst-case fixtures: resume it in stress-fixtures mode, or edit the project's fixtures yourself outside the pipeline), and the round number (the current review round from the state file, or the next free number outside the pipeline; an extra on-demand run in the same round gets a suffix: `audit-round-<n>-b.md`, `-c` and so on). It saves that report file and returns its summary. If the Design Agent added stress fixtures, set `stress_fixtures: true` in the state file.
 
 Show the user: the result (pass / pass with issues / fail), interactions passed, platform checks passed, counts by severity, and the **critical and major issues one line each** with the screen and the recommended fix. Point to the full report file. If the app has a `share/` build, the file-open test result is included.
 
@@ -45,4 +45,4 @@ Ask what to do: **Fix critical and major (Recommended)**, **Fix everything**, **
 - If the project came from the pipeline (state file present), resume `design-pipeline:design-agent` in revision mode with the chosen issues, on the existing code, keeping the user's direct edits (`git diff`); then rerun the audit on the changed frames and report what is fixed.
 - Otherwise, edit the code yourself in small changes, keeping the project's own conventions, and rerun the audit on what you touched. Don't restyle beyond the issues.
 
-If a state file exists, record the result under `audits` (round, counts, report file) without changing `stage`.
+If a state file exists, record the result under `audits` (review round, counts, report file) without changing `stage`.

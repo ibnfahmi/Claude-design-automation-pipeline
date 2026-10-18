@@ -40,7 +40,7 @@ Save `phased: true|false` in the state file.
 
 When the user approves a phase (Stage 4), run Stage 5 (production check). Offer the Figma export (Stage 6) only after the **last** phase, or if the user asks. Then give a **short phase summary** instead of the full delivery: what was built, how to run it, the share file, the review page, the audit and coverage results. If features remain, set `stage: "phase_done"`, mark the phase `done`, and end with: *"Phase <n> is built. <k> features remain. Say 'continue' to plan Phase <n+1>."*
 
-**"Continue" means any wording with that sense**: "continue", "continue building", "next phase", "go on", "keep going", "what's next", "let's do the next one". When the stage is `phase_done` (also when the user says it during review of a finished phase, which counts as approving that phase):
+**"Continue" means any wording with that sense**: "continue", "continue building", "next phase" or similar (the same list as Stage 4 in `SKILL.md`). When the stage is `phase_done` (also when the user says it during review of a finished phase, which counts as approving that phase):
 1. Take the remaining features (not in any earlier phase). Show them in the same table and ask the selection questions above for Phase `n+1`, again recommending the best next slice.
 2. Ask about new journeys for these features only if journeys are on (they follow the saved answer; don't re-ask the optional-steps question).
 3. Run **add phase** mode, then Stage 3b, then Stage 4 as usual.

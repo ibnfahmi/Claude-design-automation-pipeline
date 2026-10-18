@@ -73,8 +73,8 @@ Distilled from Emil Kowalski's design-engineering guidance (see `NOTICE.md`). Ch
 - **Hover effects only where hover exists:** hover styling and hover-only reveals are gated behind `@media (hover: hover) and (pointer: fine)`; nothing important is reachable only by hover.
 - **Tooltips:** delay before the first one; the next tooltip next to it opens at once without the entrance animation.
 - **Only `transform` and `opacity` move** in animations; layout properties (`width`, `height`, `top`, `left`, `margin`) are not animated, and `transition: all` is not used. Rapidly triggered UI uses transitions (which retarget) rather than keyframes (which restart).
-- **Exits are faster than enters** for system responses (about 200ms out against 300ms or more in); deliberate, user-driven actions may be slower on press and quick on release.
-- **Staggered lists** use a short stagger (about 30–80ms per item), not everything at once and not a slow cascade.
+- **Exits are faster than enters** for system responses (about 150ms out against 300ms in); deliberate, user-driven actions may be slower on press and quick on release.
+- **Staggered lists** use a short stagger (about 100ms between items, on infrequent entrances), not everything at once and not a slow cascade.
 - **Reduced motion:** with `prefers-reduced-motion: reduce`, movement and position animation is removed or replaced by a fade; opacity and colour changes that aid understanding stay. Large movement that ignores the setting is **major**.
 
 **Reflow and zoom**
@@ -122,7 +122,8 @@ Run on each frame at each width. It only reads the page.
     const fs = parseFloat(s.fontSize);
     if (el.childNodes.length && [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) && fs < 12) add('tiny-text', el, fs + 'px');
     if (/^(a|button|input|select|textarea)$/i.test(el.tagName) || el.getAttribute('role') === 'button') {
-      const min = innerWidth < 768 ? 44 : 24;
+      const touch = matchMedia('(pointer: coarse)').matches || innerWidth < 768;
+      const min = touch ? (/android/i.test(navigator.userAgent) ? 48 : 44) : 24; // 44 iOS/touch layouts, 48 Android, 24 pointer desktop
       if (r.width < min || r.height < min) add('small-target', el, Math.round(r.width) + 'x' + Math.round(r.height) + ' (min ' + min + ')');
     }
   });

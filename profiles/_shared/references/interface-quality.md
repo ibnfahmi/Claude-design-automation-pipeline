@@ -51,7 +51,7 @@ These are a starting point when there is no design system; a design system's own
 - Emphasis is one weight step up, not a size change.
 - Inputs are at least 16px on mobile layouts (smaller makes iOS zoom the page).
 - Avoid orphaned single words on the last line of headings and short paragraphs.
-- Body text is at least 14px (16px preferred).
+- Body text is at least 14px (16px preferred). Captions (13px, see the type scale) are exempt from this minimum.
 
 ## Severity
 

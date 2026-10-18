@@ -158,7 +158,7 @@
     }
   ],
   "preview_screen": "The home screen at the first chosen device size, as the real app (no device frame), with its primary content and navigation.",
-  "code_target": "The real app as a responsive web build in the project's stack (plain HTML, CSS and JS by default) at the device viewport, with no bezel at `/`, with tab or stack navigation and touch interactions. The device frame (status bar, safe areas, home indicator) is drawn only on the frame routes and in capture mode. Not native code.",
+  "code_target": "The real app as a responsive web build in the project's stack (plain HTML, CSS and JS by default) at the device viewport, with no bezel at `/`, with tab or stack navigation and touch interactions. The device frame (status bar, safe areas, home indicator) is drawn only on the frame routes, in capture mode and in the share build. Not native code.",
   "required_screens": [
     "Splash or launch",
     "Onboarding (if the brief implies first-run)",
@@ -173,7 +173,7 @@
     "Bottom sheet open with its dismiss action"
   ],
   "design_guidance": [
-    "Draw the real device frame (status bar, notch or Dynamic Island, home indicator) on the frame routes. Keep content out of the safe areas; extend bar backgrounds into them.",
+    "Draw the real device frame (status bar, notch or Dynamic Island, home indicator) on the frame routes, in capture mode and in the share build. Keep content out of the safe areas; extend bar backgrounds into them.",
     "Bottom clearance: the last control or text ends at least 16 px above the bottom safe area (50 px from the screen edge on iOS, 40 px on Android). A CTA and the legal line under it are one block, 8 px apart.",
     "Targets 44x44 (iOS) or 48x48 (Android) at least; primary actions in the lower half.",
     "With 'both' selected, follow each platform's navigation and control conventions, and call out where the two designs differ.",

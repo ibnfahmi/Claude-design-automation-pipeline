@@ -17,7 +17,7 @@ These are **unmeasured starting values**, not benchmarks. They come from the sha
 
 | Part | Rough time |
 |---|---|
-| Scaffold the project (Phase 1 only) | 3 to 6 minutes |
+| Scaffold the project (Phase 1 only, and only when Stage 2c did not already scaffold it for a preview) | 3 to 6 minutes |
 | Build, per frame (a screen with its interactions counts as 3 to 5 minutes, a simple state as 1 to 2) | about 1.5 to 3 minutes on average |
 | Each extra viewport | adds about 10% of the build |
 | Each extra language | adds about 20% of the build |

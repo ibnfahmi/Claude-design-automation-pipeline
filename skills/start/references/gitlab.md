@@ -13,6 +13,12 @@ Ask with AskUserQuestion: *"Host the code on GitLab?"*
 
 If the user says "Other" with a link, use it. Accept only `gitlab.com` links; for any other host, say the plugin is set up for gitlab.com and ask whether to continue with that host anyway.
 
+## Before creating anything: check what would leave the machine
+
+Run this before creating the project and before any push, including with the paste option.
+
+In `code/`, check `git ls-files`: no `.env*` with values, private keys, `*.pem`, credentials or tokens (search the tracked files for `BEGIN PRIVATE KEY`, `api_key`, `secret`, `password=`, `token=`, long random strings), no file over 50 MB, and `node_modules/`, `dist/`, `.next/` and caches ignored by `.gitignore`. Never push the BRD, the brief or the client folder files: they live outside `code/`. If anything looks sensitive, stop and show the list; fix the ignore rules or remove the file in a new commit, and ask again. The user's own words win if they say a flagged file is fine.
+
 ## Creating the project (the default)
 
 Needs the **namespace** to create it in: the user's GitLab username or a group path (`my-team` or `my-team/design`). Ask once as free text if it isn't known (it is saved as `git_namespace` and reused by later projects, offered as the default). The project **name** is the project's name as a slug (`acme-onboarding-app`), and its visibility is **private**; ask only if the user wants internal or public, and confirm before creating anything public.
@@ -26,10 +32,9 @@ Never create a project in a namespace the user didn't name, and never reuse an e
 
 ## First push
 
-Before creating or pushing anything (including with the paste option):
+Before pushing anything (including with the paste option):
 
-
-1. **Check what would leave the machine** (in `code/`, `git ls-files`): no `.env*` with values, private keys, `*.pem`, credentials or tokens (search the tracked files for `BEGIN PRIVATE KEY`, `api_key`, `secret`, `password=`, `token=`, long random strings), no file over 50 MB, and `node_modules/`, `dist/`, `.next/` and caches ignored by `.gitignore`. Never push the BRD, the brief or the client folder files: they live outside `code/`. If anything looks sensitive, stop and show the list; fix the ignore rules or remove the file in a new commit, and ask again. The user's own words win if they say a flagged file is fine.
+1. **Check what would leave the machine**: done before the project was created (see "Before creating anything"); repeat it if the code changed since.
 2. Created by the plugin: add the remote after creation (`git remote add origin https://gitlab.com/<namespace>/<name>.git`; `set-url` when one exists), `git branch -M main`, and `git push -u origin main` if the creating command didn't already push. Pasted link: add that remote and run `git push -u origin main`.
 3. Authentication is the user's own git setup (SSH key or the credential manager). If the push asks for sign-in or is refused for authentication, **stop, don't retry in a loop**, and say what to do: run `git push -u origin main` once in a terminal in `code/` and sign in when prompted, or add an SSH key to GitLab, then say "retry".
 4. If the remote is **not empty** and the push is rejected, never force-push and never rewrite history. Tell the user the repository already has commits, and ask: use a different empty repository / push to a new branch (`design-pipeline`) / they will merge it themselves.

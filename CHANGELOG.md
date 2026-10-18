@@ -2,6 +2,15 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.11.3] - 2026-10-18
+
+### Changed
+A consistency pass over the skills, agents and references (three read-only audits found about 50 conflicting instructions). Text only; no scripts or thresholds changed. None of it has run on a real project yet.
+- **Figma export, automatic parts:** the Handoff Agent can no longer ask the user itself: when the helper tools are declined or the check fails it returns `BLOCKED: <reason, options>` and the Orchestrator asks (the option is now "No, ask me about the capture tool"). Frames built by the capture-tool fallback are listed as "not compared" instead of being a defect. `TYPE VARIABLES` is in the output block, `figma-layout.js` is in the agent's script list, and `frames` mode no longer promises instances. Layout grids are now an explicit step after the first builder call and are chosen by platform (12 desktop, 8 tablet including iPad mini, 4 mobile; TV, kiosk and slides use the project's container). The Design Agent's `FRAMES` lines now carry `feature` and `phase`.
+- **Start skill:** the project is scaffolded in the style step only when a preview is made; journeys, audit and coverage are described as per-project choices everywhere; with audit and coverage both off the Design Agent tests opening the share file; the review page is republished once per round; the default fix set is critical and major; audit reports are numbered by review round; cloud document processing needs an explicit yes; spec gaps found by journeys are reported to you.
+- **Platform and quality rules:** the desktop app is frameless at `/` like the other platforms (frame on the frame routes, capture mode and the share build); WCAG 2.2 AA everywhere; touch targets 44 (48 on Android); animation timings aligned; the coverage report carries requirement priority; the Auditor's inputs and scope are clarified.
+- **Cleanup:** removed the "Status table rows" naming row; README lists `--skip-coverage` and all reference files. Feature pages keep the `F-<n> · Name` page name because the page script finds them by it.
+
 ## [0.11.2] - 2026-10-17
 
 ### Changed

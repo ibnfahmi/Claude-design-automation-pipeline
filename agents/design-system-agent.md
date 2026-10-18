@@ -19,7 +19,7 @@ Colours and type alone don't make a look. A reference also has **signature eleme
 Read the `grounding.md` file the Orchestrator gives you first. Ground the tokens in real measurements, not impressions:
 
 - **Colours:** measure them. For images, sample with a short script (Python with Pillow, if available: quantise to the dominant colours, then read exact pixels from backgrounds, text, buttons and borders). For a URL, read the computed styles of key elements (body, headings, buttons, inputs, cards, links) with the built-in browser and its `javascript_tool`, or from the page's CSS custom properties. For Figma, read the variables and the styles used on key frames. Name colours by role (`bg-primary`, `text-primary`, `text-secondary`, `border-primary`, `brand-solid`, `brand-solid_hover` if a hover is visible, `error` and `success` only if shown). One theme unless the reference shows both.
-- **Type:** identify the family. If it is a Google Font, name it. If you can't identify it, choose the closest Google Font and say so. Measure sizes and line heights for 5-7 styles (display, headings, body, label, caption).
+- **Type:** identify the family. If it is a Google Font, name it. If you can't identify it, choose the closest Google Font and say so. Measure family, size, line height, weight and letter-spacing for 5-7 styles (display, headings, body, label, caption), so each style has all five properties for the Figma Type variables.
 - **Spacing and radii:** measure the repeated gaps and corner radii. Snap only to what the reference shows (keep 6px if it's 6px).
 - **Shadows:** only if clearly visible; describe what you measured.
 - **Contrast:** compute the ratio of every text and background pair. Keep a failing pair from the source, but flag it.
@@ -102,7 +102,7 @@ You are given the **approved tokens** (possibly with the user's tweaks), the ori
   components/         optional, from a Figma source
 ```
 
-- **tokens.json** holds colours by role per theme (`bg-primary`, `text-primary`, `text-secondary`, `border-primary`, `brand-solid`, hover and error or success only where seen), type styles (family, size, line height, weight), spacing, radii, shadows and motion (durations and easing, if measured). `meta` records `source` (`figma`, `reference-images` or `url`) with the link or file names.
+- **tokens.json** holds colours by role per theme (`bg-primary`, `text-primary`, `text-secondary`, `border-primary`, `brand-solid`, hover and error or success only where seen), type styles (family, size, line height, weight, letter-spacing), spacing, radii, shadows and motion (durations and easing, if measured). `meta` records `source` (`figma`, `reference-images` or `url`) with the link or file names.
 - **tokens.css** is the same data as CSS variables (`--color-bg-primary`, `--radius-md`), with a `[data-theme="dark"]` block when a dark theme exists. **tailwind.theme.ts** maps the Tailwind theme to those variables. Check that the three files agree and that `tokens.css` parses.
 - **README.md** is the brand book: the visual foundations in prose (palette roles and where each is used, type pairing, spacing and radius logic, shadows, the look of buttons, inputs, cards and navigation, motion), usage notes for every pair that fails contrast, and a **"Not extracted"** note for what the reference couldn't give (other themes, exact fonts, components, logos).
 

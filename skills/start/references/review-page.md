@@ -25,7 +25,7 @@ The review page is offered **at the style preview (Stage 2c)**, so the look can 
 2. Publish with the Artifact tool: `file_path` = the absolute path of `share/index.html`, `icon` = a generic word that fits the project (`dashboard`, `site`, `app`), a one-sentence `description`. For a multi-page plain HTML share build, publish `index.html` as the page and map every other file in `share/` through `files` (relative paths preserved).
 3. Save the returned URL as `review_page` and `review_published_round`. The result says whether this session now **watches** the artifact; tell the user only what it says. Never claim a watch it didn't confirm.
 4. Give the user the link, and tell them how to comment: *"Open the page, select the thing you want changed and leave a comment, then send the thread to Claude (reply with Send to Claude, or mention @claude in it). "* If auto-replies are armed, a thread sent to Claude may also wake this session by itself.
-5. After **every later round**, rebuild `share/` (the Design Agent does), then republish to the **same URL** (pass `url`) so the link and the threads stay. If the publish is refused because the page changed, follow the refusal (re-read, then publish).
+5. At the start of Stage 4 after **every revision round**, rebuild `share/` (the Design Agent does), then republish once to the **same URL** (pass `url`) so the link and the threads stay. If the publish is refused because the page changed, follow the refusal (re-read, then publish).
 
 ## Comments arrive on their own (handle each one when it lands)
 

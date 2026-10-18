@@ -33,7 +33,7 @@ Each profile's `code_target` says what is built; the technology is always the pr
 |---|---|
 | Web app, dashboard, landing page, e-commerce, docs, flow, design system | An app in the chosen stack. A design-system project is a documented component library with a docs route per component |
 | Mobile app, tablet app | The real app as a responsive web build in the chosen stack, at the device viewport and with no bezel at `/`. The device frame (status bar, notch or island, home indicator, safe areas) is drawn on the frame routes (`/frames/<slug>`), in `?capture=1` (the Figma export), and around the whole app in the share build (the review artifact), never in the code project's own `/`. It is not native code |
-| Desktop app | A prototype in the chosen stack inside a window frame for each operating system. Not an Electron build unless asked |
+| Desktop app | A prototype in the chosen stack. The app at `/` is frameless; the window frame for each operating system is drawn only on the frame routes (`/frames/*`), in capture mode (`?capture=1`) and in the share build. Not an Electron build unless asked |
 | Browser extension | A real Manifest V3 extension project (`manifest.json`, popup and options pages built with Vite), whatever the stack, plus preview routes that render each surface at its real size |
 | Email | HTML email templates (table layout, inline-friendly CSS) in `emails/`, whatever the stack, rendered by a preview route in light, dark and images-blocked views |
 | Presentation deck | Slide components with keyboard navigation at a fixed 16:9 or 4:3 stage that scales to fit |
@@ -61,7 +61,7 @@ code/
 
 ## Tokens
 
-- All colours, type styles, radii, spacing, shadows and motion values are CSS variables in `tokens.css` (names by role: `--color-text-primary`, `--color-border-subtle`, `--radius-md`). A dark theme redefines them under `[data-theme="dark"]` when dark mode is in scope.
+- All colours, type styles, radii, spacing, shadows and motion values are CSS variables in `tokens.css` (at the stack's path: `src/styles/tokens.css` or `styles/tokens.css`; names by role: `--color-text-primary`, `--color-border-subtle`, `--radius-md`). A dark theme redefines them under `[data-theme="dark"]` when dark mode is in scope.
 - Tailwind's theme maps to those variables. **No raw hex values, pixel sizes or font names in components**: they use tokens.
 - When a design system folder was chosen, copy its `tokens.css` in and extend it; don't invent a parallel set.
 
@@ -72,7 +72,7 @@ Frames are **one per screen type and state**, not per instance of a repeated scr
 
 The spec and the journeys name screens and states as `Screen / State` (for example `Home / Notifications open`). Each one is a **frame**:
 
-- Register it in `src/frames/registry.ts` with a slug (`home--notifications-open`), the exact name, the platform, the viewport(s), the component and the props that put it in that state.
+- Register it in the frame registry (`frames/registry.ts` for React stacks, `frames/index.html` for the default `html-css-js` stack) with a slug (`home--notifications-open`), the exact name, the platform, the viewport(s), the component and the props that put it in that state.
 - It renders at `/frames/<slug>` with no app chrome, at its natural size, **without any manual steps** (state comes from props and mock data).
 - The same component is also reachable in the real app through the real interaction (clicking the notification icon opens the dropdown).
 - `/frames` is a gallery grouped by platform, with a viewport selector and a link to every frame.
@@ -94,7 +94,7 @@ Viewports come from the scope: the primary viewport for states, and every chosen
 
 In the **running app** (`/` and its routes, the share build and the review page) every form field is **prefilled with realistic demo values**, so a reviewer can click straight through sign-in, sign-up, checkout, onboarding and search without typing anything.
 - **What:** emails (`demo@<project>.test` or `maria.hassan@example.com`, only the reserved `.test` and `example.com` domains), a made-up password (`Demo-pass-2026`, shown masked), names, phone numbers (`+1 555 0100`), addresses, one-time codes (`123456`), dates, search terms, and for payments only the public test card numbers (`4242 4242 4242 4242`). Never real emails, passwords, ID numbers or cards.
-- **Where from:** one `demo-values` module in `src/data/`, so the same person has the same email, name and phone in every form. Values are set as real values, not placeholders; demo password fields use `autocomplete="off"` so the browser doesn't offer to save them.
+- **Where from:** one `demo-values` module in the project's data folder (`src/data/` for React stacks), so the same person has the same email, name and phone in every form. Values are set as real values, not placeholders; demo password fields use `autocomplete="off"` so the browser doesn't offer to save them.
 - **It still behaves like a form:** submitting the prefilled form succeeds against the mock data, and clearing or breaking a field still shows its validation message.
 - **Off on the frame routes and in capture mode:** `/frames/<slug>` and `?capture=1` show exactly the state the frame is named for (`Empty`, `Filled`, `Error`), so the Figma export and the gallery match the spec. A `Filled` frame uses the demo values.
 - **`?prefill=0`** turns the prefill off on any route, to look at the empty forms.

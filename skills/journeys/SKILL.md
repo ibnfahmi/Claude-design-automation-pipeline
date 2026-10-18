@@ -22,7 +22,7 @@ If there is **no spec** (only a brief or code), create one first: start `design-
 
 - **Scope:** use `scope` from the state file. If there is none, ask which platforms the product has, by clicking: AskUserQuestion with the platform families from `profiles/index.json` (header `Platforms`, up to four families, multi-select), then the platforms inside each chosen family. Every chosen platform must end up in at least one journey.
 - **Subset (optional):** if the state file says the build is phased, default to the current phase's features. Otherwise, if the user named a feature or a screen ("journeys for checkout only"), cover only that. Otherwise cover the whole spec.
-- **Existing journeys:** if `user-journeys.md` already exists, ask once (AskUserQuestion): **Add to it** (keep existing `J` numbers, continue after the last one), **Redo it** (replace the file; keep a copy as `user-journeys.previous.md`) or **Cancel**.
+- **Existing journeys:** if `user-journeys.md` already exists, ask once (AskUserQuestion): **Add to it** (keep existing `J` numbers, continue after the last one), **Redo it** (replace the file; keep a copy as `user-journeys.previous.md`; journey numbers stay stable where journeys are kept) or **Cancel**.
 
 ## 3. Write them
 
@@ -30,7 +30,7 @@ Start `design-pipeline:journey-agent` with: the spec, the platform scope, `brief
 
 Then check, before showing anything:
 - **Every platform in the scope appears in at least one journey** (its `BY_PLATFORM` lines), and cross-platform journeys exist wherever the product spans platforms. If a platform is missing, resume the same agent to cover it.
-- If it lists **SPEC_GAPS** (screens or states the journeys need that the spec lacks): tell the user, and offer to add them to `design-spec.md` (new frame rows marked source `journey`, and a new `R-` ID at the end for a missing requirement) by resuming the Brief Agent. Never renumber existing requirement IDs.
+- If it lists **SPEC_GAPS** (screens or states the journeys need that the spec lacks): tell the user what is missing, and add them to `design-spec.md` (telling the user what was added) (new frame rows marked source `journey`, and a new `R-` ID at the end for a missing requirement) by resuming the Brief Agent. Never renumber existing requirement IDs.
 
 ## 4. Show and confirm
 
