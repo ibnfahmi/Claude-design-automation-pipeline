@@ -4,7 +4,7 @@
 //   node extract-spec.mjs --base http://localhost:5173 --frames frames.json --out figma-spec [--tools <dir>] [--channel auto|msedge|chrome]
 //   node extract-spec.mjs --url http://localhost:5173/frames/home --width 1440 --height 900 --name home --out figma-spec
 //
-// frames.json: [{ "slug": "home", "route": "/frames/home", "viewport": { "label": "Desktop 1440", "w": 1440, "h": 900 } }, ...]
+// frames.json (optional "lang": "ar" opens ?lang=ar): [{ "slug": "home", "route": "/frames/home", "viewport": { "label": "Desktop 1440", "w": 1440, "h": 900 } }, ...]
 // Each frame is opened at ITS OWN viewport width (never a fixed 1440), in capture mode (?capture=1), after
 // fonts, images, scroll-triggered effects and animations have settled and a stability check has passed.
 // Output per frame: <slug>@<w>.json (the spec), <slug>@<w>.png (full-page reference screenshot); plus index.json.
@@ -104,9 +104,9 @@ for (const f of frames) {
   const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 1, reducedMotion: 'no-preference' });
   const page = await ctx.newPage();
   const t0 = Date.now();
-  const entry = { slug: f.slug, label: f.viewport.label, width: w, height: h, url };
+  const entry = { lang: f.lang || null, slug: f.slug, label: f.viewport.label, width: w, height: h, url };
   try {
-    await page.goto(url + sep + 'capture=1', { waitUntil: 'networkidle', timeout: 60000 });
+    await page.goto(url + sep + 'capture=1' + (f.lang ? '&lang=' + encodeURIComponent(f.lang) : ''), { waitUntil: 'networkidle', timeout: 60000 });
     entry.stable = await settle(page);
     const name = `${f.slug}@${w}`;
     await page.screenshot({ path: path.join(outDir, name + '.png'), fullPage: true });

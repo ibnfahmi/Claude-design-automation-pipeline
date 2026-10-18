@@ -105,6 +105,7 @@ Every frame route accepts `?capture=1`, built into every project from the start 
 - the `html` element gets `data-capture`; all CSS animations and transitions jump to their end state (`animation-duration: 0s; animation-delay: 0s; animation-fill-mode: forwards`, `transition: none`), and reveal-on-scroll items are already revealed (no leftover `opacity` or entrance `transform`);
 - counters show their final numbers; scroll-linked and "active step" effects show their resting state (for example every step of a progress timeline fully drawn, not dimmed); carousels and marquees stop at the first position; sticky and fixed headers are in their top state; lazy images load eagerly; videos show their poster frame; a WebGL scene shows one settled frame; cookie banners and dev toggles are hidden;
 - when everything has settled (fonts ready, images decoded, animations finished), the script sets `document.documentElement.dataset.captureReady = "true"`.
+- **Language:** `?lang=<code>` (any language in `scope.languages`) makes that load show that language and direction without changing the remembered choice, so a Figma export can capture each language; without the parameter the remembered or default language applies.
 The normal page behaves as designed; capture mode only changes how it is shown.
 
 ## Layout that converts cleanly to Figma (and fonts that can be pinned)

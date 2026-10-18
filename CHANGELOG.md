@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.11.5] - 2026-10-18
+
+### Changed
+- **The Figma export always asks which language to export.** Whether Figma is the last step of a run or a later, separate request, you are now asked (even when the project has only one language): one option per project language, the default first, or all languages (which multiplies tokens and time, in bold). The choice is saved as `figma_languages` and offered as the default on a re-export. The Handoff Agent builds each selected frame once per language: the capture script opens `?capture=1&lang=<code>` (new `lang` option in `frames.json`, and a `?lang=` rule in capture mode), fonts are pinned per script, each language is compared with its own screenshot, and with several languages the frame name gets ` · <code>`. Projects built before 0.11.5 may not honour `?lang=`; the Handoff Agent then asks for a revision round instead of exporting the wrong language. Not yet run on a real project.
+
 ## [0.11.4] - 2026-10-18
 
 ### Added

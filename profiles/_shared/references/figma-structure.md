@@ -68,6 +68,7 @@ The flow runs horizontally (entry point first, branches as extra columns after t
 | Pages | as above |
 | Top-level frame | `<Screen> / <State> @ <size label>` (the size label only for non-primary sizes), exactly as in the manifest |
 | Row label | `Desktop · 1440` |
+| Frame, several languages | `Screen / State @ <viewport> · <code>` (one language: no suffix) |
 | Label card | `Card / <Screen> / <State>` |
 | Component | `<Component> / <Variant>` (for example `Button / Primary / Hover`) |
 | Variables | `Space/<n>`, `Color/<role>`, `Radius/<n>`, `Type/<style>/<property>` (typography is always exported as variables) |
