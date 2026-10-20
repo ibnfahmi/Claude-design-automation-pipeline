@@ -110,6 +110,23 @@ for (const f of frames) {
     entry.stable = await settle(page);
     const name = `${f.slug}@${w}`;
     await page.screenshot({ path: path.join(outDir, name + '.png'), fullPage: true });
+    // video and canvas content cannot be rebuilt as layers: save each one's pixels (everything else hidden) so it can fill its placeholder
+    const mediaEls = await page.$$('video, canvas');
+    if (mediaEls.length) {
+      fs.mkdirSync(path.join(outDir, 'assets'), { recursive: true });
+      await page.addStyleTag({ content: 'html[data-np-hide] body *{visibility:hidden!important}html[data-np-hide] [data-np-shot]{visibility:visible!important}' });
+      let mi = 0;
+      for (const el of mediaEls) {
+        const bb = await el.boundingBox(); if (!bb || bb.width < 8 || bb.height < 8) continue;
+        const file = `assets/${name}.media${mi}.png`;
+        try {
+          await el.evaluate((e) => { document.documentElement.setAttribute('data-np-hide', '1'); e.setAttribute('data-np-shot', '1'); });
+          await el.screenshot({ path: path.join(outDir, file) });
+          await el.evaluate((e, fl) => { e.setAttribute('data-np-file', fl); e.removeAttribute('data-np-shot'); document.documentElement.removeAttribute('data-np-hide'); }, file);
+          mi++;
+        } catch (e) { await el.evaluate((x) => { x.removeAttribute('data-np-shot'); document.documentElement.removeAttribute('data-np-hide'); }).catch(() => {}); }
+      }
+    }
     const spec = await page.evaluate(extractor);
     spec.frame = { slug: f.slug, label: f.viewport.label };
     fs.writeFileSync(path.join(outDir, name + '.json'), JSON.stringify(spec));

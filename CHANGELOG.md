@@ -2,6 +2,18 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.13.1] - 2026-10-21
+
+### Fixed
+The builder bugs found by the Shabab Masr test. Tested on mock data and on a live extraction of the frozen site; not yet run on a full Figma export.
+- **SVG images were grey squares.** `<img src="*.svg">` (131 of them in the 13 test screens, for example the notification bell) could not be filled by `upload_assets`. The extractor now reads the SVG markup and returns inline vector nodes: on the landing page 58 more icons are vectors and the image placeholders drop from 69 to 11. A `brightness(0) invert(1)` filter on such an image is applied to its colours.
+- **The hero video was a grey placeholder.** `extract-spec.mjs` now saves the pixels of every video and canvas (with everything else hidden) as `figma-spec/assets/<slug>@<w>.media<n>.png`, and the builder's image list gives it as `file` to upload instead of the source.
+- **Dialogs were covered by their own scrim.** An absolute backdrop that covers its parent and comes before the dialog was built on top of it, so a 62% dark scrim turned the white dialog grey (the cause of the 95% difference on the overlay-only frame). It is now painted behind.
+- **Inputs, textareas and selects were empty boxes.** They now show their value or placeholder as text (placeholder in its own colour, password dots).
+- **Icon buttons shrank to their icon.** A 44 x 44 button around a 24 px icon now keeps its box; buttons hug their content only when the measured box really is the content plus padding.
+- **Merged from the pilot's own patches of the builder:** grid rows are transparent (a new frame is white by default), top-level frames clip their content, decorations with a negative z-index go behind their siblings, a background with several layers uses its linear gradient and skips radial ones, gradient-clipped text (transparent colour) uses the gradient's first colour, a centred single-cell grid keeps its child in the middle, and wrapped text gets 4 px of width slack.
+- Not fixed: the scrim's background blur is invisible in an overlay-only frame (nothing behind it to blur), and the bell/menu button backgrounds were not compared again after the sizing fix.
+
 ## [0.13.0] - 2026-10-21
 
 ### Changed

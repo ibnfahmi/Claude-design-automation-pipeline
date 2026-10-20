@@ -26,6 +26,7 @@ class Node {
   get layoutMode() { return this._lm; }
   set layoutMode(v) { this._lm = v; }
   clone() { const n = new Node(this.type); Object.assign(n, { name: this.name, width: this.width, height: this.height, _lm: this._lm, _lsh: this._lsh, _lsv: this._lsv, fills: this.fills, _pd: { ...(this._pd || {}) } }); n.children = []; for (const c of this.children) { const cc = c.clone(); cc.parent = n; n.children.push(cc); } return n; }
+  insertChild(i, c) { if (c.parent) c.parent.children = c.parent.children.filter(x => x !== c); c.parent = this; this.children.splice(i, 0, c); }
   appendChild(c) { if (c.parent) c.parent.children = c.parent.children.filter(x => x !== c); c.parent = this; this.children.push(c); }
   resize(w, h) { this.width = w; this.height = h; this._lsh = 'FIXED'; this._lsv = 'FIXED'; if (this.type === 'TEXT') this.textAutoResize = 'NONE'; }
   _checkSizing(axis, v) {
@@ -121,6 +122,41 @@ check('buttons hug their content', all.some(n => n.name === 'Button' || n.name =
   const dlg = clone.children[clone.children.length - 1];
   check('the overlay was built last (on top), absolute, at its page position', dlg && dlg.name === 'Dialog' && dlg.x === 440 && dlg.y === 200 && r2.stats.overlays === 1, dlg && `${dlg.name} ${dlg.x},${dlg.y}`);
   check('the clone kept the base content (same child count plus the overlay)', clone.children.length === orig.children.length + 1, `${clone.children.length} vs ${orig.children.length}`);
+}
+// ---- fixes found by the Shabab Masr test: transparent grid rows, clipping, input text, media files, gradient layers, wrapped text
+{
+  const rows2 = all.filter(n => n.name === 'Row');
+  check('grid rows are transparent (a new frame is white by default)', rows2.length && rows2.every(r => Array.isArray(r.fills) && r.fills.length === 0));
+  check('top-level frames clip their content', topFrame.clipsContent === true);
+  const wrapped = all.filter(n => n.type === 'TEXT' && n.textAutoResize === 'HEIGHT');
+  check('wrapped text gets 4 px of width slack', wrapped.length >= 1);
+
+  const input = { k: 'f', n: 'Input', r: [0, 0, 300, 48], bd: { w: [1, 1, 1, 1], c: ['rgb(200, 200, 200)', 'rgb(200, 200, 200)', 'rgb(200, 200, 200)', 'rgb(200, 200, 200)'], s: 'solid' }, L: { d: 'block', pad: [12, 16, 12, 16] }, inp: 'text', ph: 'Your email', tp: { ff: 'Inter', fs: 16, fw: 400, col: 'rgb(120, 120, 120)', lh: 24, ls: 0 } };
+  const video = { k: 'i', n: 'video', r: [0, 0, 300, 200], kind: 'video', src: '', file: 'assets/home@1440.media0.png' };
+  const gradient = { k: 'f', n: 'Glow', r: [0, 0, 300, 100], bgi: 'radial-gradient(circle at 50% 0%, rgba(0, 112, 254, 0.4), rgba(0, 0, 0, 0) 60%), linear-gradient(rgb(11, 27, 61), rgb(20, 50, 110))', L: { d: 'block' } };
+  const iconBtn = { k: 'f', n: 'IconBtn', act: 'button', r: [0, 0, 44, 44], bg: 'rgba(255, 255, 255, 0.1)', rad: [12, 12, 12, 12], L: { d: 'grid', gap: [0, 0], cols: '44px', rows: '44px', ai: 'center' }, c: [{ k: 's', n: 'svg', r: [12, 12, 24, 24], svg: '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M4 6h16"/></svg>' }] };
+  const dlg = { k: 'f', n: 'Dialog', r: [100, 100, 200, 200], bg: 'rgb(255, 255, 255)', L: { d: 'block' } };
+  const scrim = { k: 'f', n: 'Scrim', r: [0, 0, 400, 500], bg: 'rgba(3, 12, 30, 0.62)', bf: 'blur(6px)', L: { d: 'block', pos: 'absolute' } };
+  const wrap = { k: 'f', n: 'Wrap', r: [0, 0, 400, 500], L: { d: 'grid', gap: [0, 0], cols: '400px', rows: '500px', ai: 'center', pos: 'fixed' }, c: [scrim, dlg] };
+  const holder = { k: 'f', n: 'Holder', r: [0, 0, 400, 800], L: { d: 'flex', dir: 'col', gap: [0, 0] }, c: [input, video, gradient, iconBtn, wrap] };
+  const section4 = { node: holder, parentId: null, name: 'Fix checks', x: 0, y: 6000 };
+  const code4 = fs.readFileSync(path.join(HERE, '..', 'figma-builder.js'), 'utf8').replace('__SPEC__', JSON.stringify(section4)).replace('__FONTMAP__', JSON.stringify(FONTMAP)).replace('__OPTS__', JSON.stringify({ fixedContainers: true }));
+  const run4 = new (Object.getPrototypeOf(async function () {}).constructor)('figma', code4);
+  let r4; try { r4 = await run4(figma); } catch (e) { console.error('FIX RUN THREW:', e.message); process.exit(1); }
+  const root4 = figma.currentPage.children[figma.currentPage.children.length - 1];
+  const kids4 = []; (function w(n) { kids4.push(n); n.children.forEach(w); })(root4);
+  const inputFrame = kids4.find(n => n.name === 'Input');
+  const inputText = inputFrame && inputFrame.children.find(c => c.type === 'TEXT');
+  check('an input shows its placeholder or value as text, inside its box', !!inputText && inputText.characters === 'Your email' && inputText.x === 17 && r4.stats.inputTexts === 1, inputText && `${inputText.characters} at ${inputText.x},${inputText.y}`);
+  check('an input text is vertically centred', !!inputText && inputText.y >= 0 && inputText.y <= 48);
+  check('a video keeps the file with its saved pixels for the image fill', r4.images.some(i => i.kind === 'video' && i.file === 'assets/home@1440.media0.png'));
+  const glow = kids4.find(n => n.name === 'Glow');
+  const wrapNode = kids4.find(n => n.name === 'Wrap');
+  const scrimIdx = wrapNode ? wrapNode.children.findIndex(c => c.name === 'Scrim') : -1;
+  check('a scrim that comes first and covers its parent is painted behind the dialog', scrimIdx === 0, `scrim at index ${scrimIdx} of ${wrapNode && wrapNode.children.map(c => c.name).join(',')}`);
+  const btn = kids4.find(n => n.name === 'Button');
+  check('an icon button keeps its 44 x 44 box instead of hugging its icon', !!btn && btn.width === 44 && btn.height === 44 && btn.layoutSizingHorizontal !== 'HUG', btn ? `${btn.width}x${btn.height} ${btn.layoutSizingHorizontal}` : kids4.map(n => n.name).join(','));
+  check('a multi-layer background keeps the linear gradient and skips the radial one', !!glow && glow.fills.some(f => f.type === 'GRADIENT_LINEAR') && r4.approximated.includes('radial gradient skipped') === false, JSON.stringify(glow && glow.fills.map(f => f.type)));
 }
 // ---- an overlay-only frame holds just the scrim and the dialog
 {

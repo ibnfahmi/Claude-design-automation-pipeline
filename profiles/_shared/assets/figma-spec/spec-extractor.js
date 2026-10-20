@@ -122,6 +122,28 @@
     return (h >>> 0).toString(16);
   }
 
+  // an <img> whose source is an SVG file (or data URL) cannot be filled into a Figma image placeholder, so read its markup and
+  // return it as an inline svg node. Returns '' when the markup can't be read (the image stays a placeholder).
+  function svgFromImg(el, box, cs) {
+    const src = el.currentSrc || el.src || '';
+    let markup = '';
+    try {
+      if (/^data:image\/svg\+xml/i.test(src)) { const m = /^data:image\/svg\+xml(;base64)?,([\s\S]*)$/i.exec(src); markup = m ? (m[1] ? atob(m[2]) : decodeURIComponent(m[2])) : ''; }
+      else if (/\.svg(\?|#|$)/i.test(src)) { const x = new XMLHttpRequest(); x.open('GET', src, false); x.send(); if (x.status >= 200 && x.status < 300) markup = x.responseText || ''; }
+    } catch (e) { return ''; }
+    markup = markup.replace(/<\?xml[^>]*\?>/i, '').replace(/<!--[\s\S]*?-->/g, '').trim();
+    if (!/<svg[\s>]/i.test(markup) || markup.length > 24000) return '';
+    // a CSS filter such as brightness(0) invert(1) turns a dark icon white: apply it to the colours
+    if (cs && /brightness\(0\)/.test(cs.filter || '') && /invert\((1|100%)\)/.test(cs.filter || '')) markup = markup.replace(/(fill|stroke)="(?!none)[^"]*"/g, '$1="#ffffff"').replace(/currentColor/g, '#ffffff');
+    else markup = markup.replace(/currentColor/g, 'rgb(0, 0, 0)');
+    return markup.replace(/<svg\b([^>]*)>/i, (m, attrs) => {
+      const ow = /\swidth="([\d.]+)/.exec(attrs), oh = /\sheight="([\d.]+)/.exec(attrs);
+      let a = attrs.replace(/\s(width|height)="[^"]*"/g, '');
+      if (!/\sviewBox=/.test(a) && ow && oh) a += ` viewBox="0 0 ${ow[1]} ${oh[1]}"`;
+      return `<svg${a} width="${r1(box.w)}" height="${r1(box.h)}">`;
+    });
+  }
+
   function visual(cs, o) {
     const bg = cs.backgroundColor; if (colorAlpha(bg) > 0) o.bg = bg;
     if (cs.backgroundImage && cs.backgroundImage !== 'none') o.bgi = cs.backgroundImage.slice(0, 600);
@@ -180,7 +202,9 @@
 
     if (tag === 'IMG' || tag === 'VIDEO' || tag === 'CANVAS' || tag === 'PICTURE') {
       if (box.w <= 0 || box.h <= 0) return [];
+      if (tag === 'IMG') { const sv = svgFromImg(el, box, cs); if (sv) { const so = { k: 's', n: nameOf(el), r: rel, svg: sv }; visual(cs, so); childFlex(cs, so); layout(cs, so); return [so]; } }
       const o = { k: 'i', n: nameOf(el), r: rel, kind: tag.toLowerCase() };
+      const mediaFile = el.getAttribute('data-np-file'); if (mediaFile) o.file = mediaFile; // pixels saved by extract-spec.mjs for a video or canvas
       const im = tag === 'PICTURE' ? el.querySelector('img') : el;
       if (tag === 'IMG' || im) { o.src = (im.currentSrc || im.src || '').slice(0, 400); o.alt = (im.alt || '').slice(0, 80); o.nw = im.naturalWidth; o.nh = im.naturalHeight; }
       if (tag === 'VIDEO') o.src = (el.poster || el.currentSrc || '').slice(0, 400);
@@ -203,7 +227,12 @@
     const compName = el.getAttribute('data-component'); if (compName) o.comp = compName;
     if (/^H[1-6]$/.test(tag)) o.h = +tag[1];
     if (tag === 'BUTTON' || tag === 'A' || el.getAttribute('role') === 'button') o.act = tag === 'A' ? 'link' : 'button';
-    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') { o.inp = (el.type || tag.toLowerCase()); o.ph = el.placeholder || el.value || ''; Object.assign(o, { tp: typo(cs) }); }
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') { o.inp = (el.type || tag.toLowerCase());
+      const val = tag === 'SELECT' ? ((el.selectedOptions && el.selectedOptions[0] && el.selectedOptions[0].text) || '') : (el.value || '');
+      o.ph = el.type === 'password' && val ? '\u2022'.repeat(val.length) : (val || el.placeholder || '');
+      let tp = typo(cs);
+      if (!val && el.placeholder) { try { const pc = getComputedStyle(el, '::placeholder').color; if (pc) tp = { ...tp, col: pc }; } catch (e) {} } // the placeholder has its own colour
+      o.tp = tp; }
     visual(cs, o); layout(cs, o); childFlex(cs, o);
 
     // inline formatting context -> one rich text node

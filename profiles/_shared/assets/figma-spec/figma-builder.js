@@ -51,6 +51,8 @@ function splitTop(s) { const out = []; let depth = 0, cur = ''; for (const ch of
 
 function invert(m00, m01, m10, m11, tx, ty) { const det = m00 * m11 - m01 * m10 || 1; const a = m11 / det, b = -m01 / det, c = -m10 / det, d = m00 / det; return [[a, b, -(a * tx + b * ty)], [c, d, -(c * tx + d * ty)]]; }
 function gradientPaint(str, w, h) {
+  // several layers (for example a radial glow over a linear gradient): use the last linear layer, skip radial ones
+  { const layers = splitTop(str); if (layers.length > 1) { const lin = layers.filter(l => /^(repeating-)?linear-gradient/.test(l.trim())); if (!lin.length) { approximated.add('radial gradient skipped'); return null; } str = lin[lin.length - 1]; } else if (/^radial-gradient/.test(str.trim())) { approximated.add('radial gradient skipped'); return null; } }
   const m = /^(repeating-)?linear-gradient\((.*)\)$/.exec(str.trim());
   if (!m) { approximated.add('non-linear gradient'); const c = /rgba?\([^)]+\)/.exec(str); return c ? solid(c[0]) : null; }
   const parts = splitTop(m[2]); let angle = 180, i = 0;
@@ -161,7 +163,7 @@ function sizeText(tx, t, parent, pinfo) {
   const inAuto = pinfo && pinfo.auto;
   if (t.clamp || t.ell) { tx.textTruncation = 'ENDING'; tx.maxLines = t.clamp || 1; }
   if (one && (t.nw || !t.ell) && !t.clamp) { tx.textAutoResize = 'WIDTH_AND_HEIGHT'; if (inAuto) tx.layoutSizingHorizontal = 'HUG'; return; }
-  tx.resize(Math.max(1, w), Math.max(1, t.r[3])); tx.textAutoResize = 'HEIGHT';
+  tx.resize(Math.max(1, w + (one ? 0 : 4)), Math.max(1, t.r[3])); tx.textAutoResize = 'HEIGHT'; // 4 px of slack so a wrapped line does not break mid-word
   if (inAuto && pinfo.contentW && near(w, pinfo.contentW, 2) && pinfo.dir === 'VERTICAL') tx.layoutSizingHorizontal = 'FILL';
   else if (inAuto && pinfo.dir === 'HORIZONTAL' && t.F && t.F.g) tx.layoutSizingHorizontal = 'FILL';
 }
@@ -201,10 +203,19 @@ function inferLayout(n) {
 }
 
 // ---------- sizing inside an auto-layout parent (frames and instances) ----------
+function fitsContent(n) {
+  const kids = (n.c || []).filter(inFlow);
+  if (!kids.length) return true;
+  const pad = (n.L && n.L.pad) || [0, 0, 0, 0];
+  const minX = Math.min(...kids.map(k => k.r[0])), maxX = Math.max(...kids.map(k => k.r[0] + k.r[2]));
+  const minY = Math.min(...kids.map(k => k.r[1])), maxY = Math.max(...kids.map(k => k.r[1] + k.r[3]));
+  return near(n.r[2], pad[1] + pad[3] + (maxX - minX), 4) && near(n.r[3], pad[0] + pad[2] + (maxY - minY), 4);
+}
 function applySizing(f, n, pinfo, auto, w, h) {
   if (!(pinfo && pinfo.auto)) return;
   const fixed = OPTS.fixedContainers !== false;
-  const hug = !!(n.L && n.L.inl) || n.act === 'button';
+  // a button or inline-flex box hugs its content only when its measured box really is the content plus padding; an icon button of 44 x 44 around a 24 px icon keeps its size
+  const hug = (!!(n.L && n.L.inl) || n.act === 'button') && fitsContent(n);
   const mainH = pinfo.dir === 'HORIZONTAL';
   if (n.L && n.L.pos === 'absolute') { /* handled by the caller */ }
   else if (hug && auto) { f.layoutSizingHorizontal = 'HUG'; f.layoutSizingVertical = 'HUG'; }
@@ -261,7 +272,7 @@ async function build(n, parent, pinfo, where) {
     r.fills = [{ type: 'SOLID', color: { r: 0.85, g: 0.85, b: 0.85 }, opacity: 1 }];
     if (n.rad) { const [a, b, c, d] = n.rad; if (a === b && b === c && c === d) r.cornerRadius = a; else { r.topLeftRadius = a; r.topRightRadius = b; r.bottomRightRadius = c; r.bottomLeftRadius = d; } }
     parent.appendChild(r); if (!pinfo || !pinfo.auto) { r.x = n.r[0]; r.y = n.r[1]; }
-    images.push({ id: r.id, src: n.src || '', kind: n.kind, fit: n.fit || 'fill', w: n.r[2], h: n.r[3] }); stats.images++; createdIds.push(r.id); return r;
+    images.push({ id: r.id, src: n.src || '', kind: n.kind, fit: n.fit || 'fill', w: n.r[2], h: n.r[3], file: n.file || undefined }); stats.images++; createdIds.push(r.id); return r; // file: pixels saved by extract-spec.mjs for a video or canvas (upload that file instead of the src)
   }
   if (n.k === 's') {
     if (!n.svg) { const r = figma.createRectangle(); r.name = 'Icon (too large)'; r.resize(n.r[2], n.r[3]); parent.appendChild(r); approximated.add('svg too large'); return r; }
@@ -298,6 +309,8 @@ async function build(n, parent, pinfo, where) {
   applySizing(f, n, pinfo, auto, w, h);
   if (!pinfo || !pinfo.auto) { f.x = n.r[0]; f.y = n.r[1]; }
   createdIds.push(f.id);
+  // gradient-clipped text (background-clip: text with a transparent colour) would be invisible: use the gradient's first colour
+  if (n.bgi && /gradient\(/.test(n.bgi)) { const cm = /rgba?\([^)]+\)/.exec(n.bgi); if (cm) for (const t of (n.c || [])) { if (t.k === 't' && /rgba\(0, 0, 0, 0\)/.test(t.col || '')) { t.col = cm[0]; if (t.runs) t.runs.forEach(r => r.col = cm[0]); } } }
   // children
   const isGrid = n.L && n.L.d === 'grid' && (n.c || []).some(inFlow);
   const kidsAbs = (n.c || []).filter(c => !inFlow(c));
@@ -309,7 +322,23 @@ async function build(n, parent, pinfo, where) {
   } else {
     for (const c of (n.c || []).filter(inFlow)) await build(c, f, { auto: false }, where + ' / ' + f.name);
   }
-  for (const c of kidsAbs) { const ch = await build(c, f, { auto: false }, where); placeAbsolute(ch, c, f, w, h); }
+  for (const c of kidsAbs) { const ch = await build(c, f, { auto: false }, where); placeAbsolute(ch, c, f, w, h); if (ch && c.L && c.L.z < 0) f.insertChild(0, ch);
+    // a scrim or backdrop that covers its parent and comes first in the page is painted behind the dialog that follows it
+    else if (ch && c.r[2] >= 0.95 * w && c.r[3] >= 0.95 * h && (n.c || []).some(s => inFlow(s) && (n.c || []).indexOf(s) > (n.c || []).indexOf(c))) f.insertChild(0, ch); }
+  // the value or placeholder of an input, textarea or select (the spec holds it as n.ph, with the field's typography in n.tp)
+  if (n.inp && n.ph && n.tp && !/^(checkbox|radio|range|color|file|hidden|image|reset)$/.test(n.inp)) {
+    const pad = (n.L && n.L.pad) || [0, 12, 0, 12], bw = (n.bd && n.bd.w) || [0, 0, 0, 0];
+    const pl = (pad[3] || 0) + (bw[3] || 0), pr = (pad[1] || 0) + (bw[1] || 0);
+    const multi = n.inp === 'textarea';
+    const tw = Math.max(10, w - pl - pr);
+    const lines = multi ? Math.max(1, Math.round((h - (pad[0] || 0) - (pad[2] || 0)) / (n.tp.lh || n.tp.fs * 1.4 || 20))) : 1;
+    const tspec = Object.assign({ k: 't', n: 'Input text', txt: n.ph, r: [pl, 0, tw, n.tp.lh ? n.tp.lh * lines : h], lines, ell: multi ? 0 : 1, nw: multi ? 0 : 1 }, n.tp);
+    const tx = await makeText(tspec, { auto: false });
+    f.appendChild(tx); sizeText(tx, tspec, f, { auto: false });
+    if (auto) { try { tx.layoutPositioning = 'ABSOLUTE'; } catch (e) {} }
+    tx.x = pl; tx.y = multi ? (pad[0] || 0) + (bw[0] || 0) : Math.max(0, Math.round((h - tx.height) / 2));
+    createdIds.push(tx.id); stats.inputTexts = (stats.inputTexts || 0) + 1;
+  }
   return f;
 }
 function placeAbsolute(node, c, parent, pw, ph) {
@@ -327,9 +356,10 @@ async function buildGrid(n, f, where) {
   [...kids].sort((a, b) => a.r[1] - b.r[1] || a.r[0] - b.r[0]).forEach(c => { const row = rows.find(r => Math.abs(r.y - c.r[1]) <= tol); if (row) row.items.push(c); else rows.push({ y: c.r[1], items: [c] }); });
   const L = n.L; const colGap = L.gap ? L.gap[1] : 0, rowGap = L.gap ? L.gap[0] : 0;
   f.itemSpacing = snap(rowGap); await bindSpace(f, 'itemSpacing', snap(rowGap));
+  if (L.ai && /center/.test(L.ai)) { f.primaryAxisAlignItems = 'CENTER'; } // a centred single-cell grid (a circle with a number) keeps its child in the middle
   const cw = n.r[2] - (L.pad ? L.pad[1] + L.pad[3] : 0);
   for (const row of rows) {
-    const rf = figma.createAutoLayout('HORIZONTAL'); rf.name = 'Row'; stats.gridRows++;
+    const rf = figma.createAutoLayout('HORIZONTAL'); rf.name = 'Row'; rf.fills = []; stats.gridRows++; // a new frame is white by default
     const items = row.items.sort((a, b) => a.r[0] - b.r[0]);
     rf.itemSpacing = snap(colGap); await bindSpace(rf, 'itemSpacing', snap(colGap));
     rf.counterAxisAlignItems = (L.ai && /center/.test(L.ai)) ? 'CENTER' : 'MIN';
@@ -382,5 +412,5 @@ if (sec.overlayOnly) {
 if (built && sec.name) built.name = sec.name;
 if (built && !sec.parentId && typeof sec.x === 'number') { built.x = sec.x; built.y = sec.y; }
 if (built && sec.asComponent && !sec.parentId) { const c = figma.createComponentFromNode(built); c.name = sec.asComponent.name || built.name; c.setSharedPluginData('pipeline', 'component', root.comp || ''); c.setSharedPluginData('pipeline', 'sig', root.sig || ''); built = c; }
-if (built && !sec.parentId) { built.setSharedPluginData('pipeline', 'source', 'spec'); if (sec.cloneOf) built.setSharedPluginData('pipeline', 'clonedFrom', String(sec.cloneOf)); if (sec.hash) built.setSharedPluginData('pipeline', 'hash', String(sec.hash)); }
+if (built && !sec.parentId) { if (!sec.overlayOnly) built.clipsContent = true; built.setSharedPluginData('pipeline', 'source', 'spec'); if (sec.cloneOf) built.setSharedPluginData('pipeline', 'clonedFrom', String(sec.cloneOf)); if (sec.hash) built.setSharedPluginData('pipeline', 'hash', String(sec.hash)); }
 return { createdNodeIds: createdIds, rootId: built && built.id, root: built && { name: built.name, w: Math.round(built.width), h: Math.round(built.height) }, stats, images, bgImages, missingFonts: [...missingFonts], approximated: [...approximated], deviations: deviations.slice(0, 60), deviationCount: deviations.length };
