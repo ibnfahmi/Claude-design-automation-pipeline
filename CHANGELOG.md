@@ -2,6 +2,14 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.14.6] - 2026-10-21
+
+### Fixed
+- **A huge SVG used as an image (a logo marquee with filters and masks, 1 MB) could not be captured and stayed a grey placeholder.** Inside the busy page its animations kept the capture from settling, and it timed out. A picture file is now rendered in a page of its own, at its size and with its `object-fit`, and keeps its transparency. On the test site the partner logos are captured, and the landing page's media step takes about 7 seconds instead of about 17. A capture inside the page remains the fallback.
+
+### Not yet verified in Figma
+- Checked on the extraction side only (a test with a masked SVG, and the real partner-logo SVG); not rebuilt in Figma.
+
 ## [0.14.5] - 2026-10-21
 
 ### Fixed (found by comparing the Impact page and the landing page with their builds, one cause at a time)

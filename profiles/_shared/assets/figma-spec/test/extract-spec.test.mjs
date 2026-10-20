@@ -34,10 +34,11 @@ h1{margin:0;background:linear-gradient(90deg,#1e40af,#3b82f6);-webkit-background
 <span id="cring" style="display:inline-block;width:60px;height:60px;border-radius:50%;background:conic-gradient(#2563eb 72%, #e5e7eb 0)"><b>72</b></span>
 <svg id="ring2" width="60" height="60" viewBox="0 0 60 60"><circle class="dashed" cx="30" cy="30" r="25" fill="none" stroke="#2563eb" stroke-width="6"/></svg>
 <svg id="plain" width="24" height="24" viewBox="0 0 24 24"><path d="M4 6h16" stroke="#000"/></svg>
-<img class="flip" src="arrow.svg" width="24" height="24"> <img class="flip2" src="arrow.svg" width="24" height="24" style="scale:-1 1"> <div class="hero"></div> <a class="u" href="#">underlined</a>
+<img class="flip" src="arrow.svg" width="24" height="24"> <img id="bigimg" src="big.svg" width="80" height="40"> <img class="flip2" src="arrow.svg" width="24" height="24" style="scale:-1 1"> <div class="hero"></div> <a class="u" href="#">underlined</a>
 <div id="row" style="display:flex;width:300px;gap:8px"><span id="ra">A</span><span id="rb" style="margin-left:auto;order:2">B</span><span id="rc">C</span></div>
 <div id="dlg">Dialog text <input id="email"></div>`],
   '/arrow.svg': ['image/svg+xml', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M4 12h12M10 6l6 6-6 6" stroke="#000" fill="none"/></svg>'],
+  '/big.svg': ['image/svg+xml', '<svg xmlns="http://www.w3.org/2000/svg" width="80" height="40" viewBox="0 0 80 40"><defs><mask id="m"><rect width="80" height="40" fill="white"/><circle cx="20" cy="20" r="10" fill="black"/></mask></defs><rect width="80" height="40" fill="#2563eb" mask="url(#m)"/></svg>'],
   '/bg.png': ['image/png', PNG1],
 };
 const server = http.createServer((req, res) => { const f = files[req.url.split('?')[0]]; if (!f) { res.writeHead(404); res.end(); return; } res.writeHead(200, { 'content-type': f[0] }); res.end(f[1]); });
@@ -74,6 +75,9 @@ check('an SVG Figma cannot import (dashed stroke) is saved as a picture', !!ring
 check('a dash pattern set by a stylesheet makes the SVG a picture too', plain.filter((n) => n.k === 'i' && n.kind === 'svg-picture').length >= 2, String(plain.filter((n) => n.kind === 'svg-picture').length));
 const transNode = plain.find((n) => n.bgfile && /conic-gradient\(rgba/.test('') ) || plain.filter((n) => n.bgfile).find((n) => { try { const { PNG } = createRequire(path.join(toolsDir, 'package.json'))('pngjs'); const png = PNG.sync.read(fs.readFileSync(path.join(tmp, 'out', n.bgfile))); return png.width <= 42 && png.data.some((v, i) => i % 4 === 3 && v === 0); } catch (e) { return false; } });
 check('a saved picture keeps its transparent parts transparent (not the page background)', !!transNode, transNode && transNode.bgfile);
+const bigPic = plain.find((n) => n.k === 'i' && n.file && n.r[2] === 80);
+let bigOk = false; try { const { PNG } = createRequire(path.join(toolsDir, 'package.json'))('pngjs'); const png = PNG.sync.read(fs.readFileSync(path.join(tmp, 'out', bigPic.file))); let clear = 0, blue = 0; for (let i = 0; i < png.data.length; i += 4) { if (png.data[i + 3] === 0) clear++; else if (png.data[i + 2] > 200) blue++; } bigOk = png.width === 80 && png.height === 40 && clear > 100 && blue > 1000; } catch (e) {}
+check('an image whose SVG has a mask is rendered alone, at its size, with its mask hole transparent', bigOk, bigPic && bigPic.file);
 const cring = plain.find((n) => n.bgfile && all(n).some((c) => c.k === 't' && /72/.test(c.txt || (c.runs || []).map((r) => r.txt).join(''))));
 check('an element painted by a conic gradient gets its pixels as its fill, with its text still a layer on top', !!cring && !cring.bgi && fs.existsSync(path.join(tmp, 'out', cring.bgfile)) && all(cring).some((c) => c.k === 't' && /72/.test(c.txt || (c.runs || []).map((r) => r.txt).join(''))), cring && JSON.stringify([cring.bgfile, !!cring.bgi, (cring.c || []).length]));
 const vec = plain.filter((n) => n.k === 's');

@@ -176,6 +176,20 @@ const work = async (f, idx, safe = false) => {
         const key = await el.evaluate((e) => (e.currentSrc || e.src || '') && e.tagName !== 'CANVAS' ? e.tagName + '|' + (e.currentSrc || e.src) + '|' + Math.round(e.getBoundingClientRect().width) + 'x' + Math.round(e.getBoundingClientRect().height) : '').catch(() => '');
         if (key && done.has(key)) { await el.evaluate((e, fl) => e.setAttribute('data-np-file', fl), done.get(key)); continue; }
         const file = `assets/${name}.media${mi}.png`;
+        // a picture file (a huge SVG with filters, a logo marquee) is rendered in a page of its own: inside the busy page its animations keep it from settling and the capture times out
+        const imgSrc = await el.evaluate((e) => e.tagName === 'IMG' ? (e.currentSrc || e.src || '') : '').catch(() => '');
+        if (imgSrc) {
+          let ok = false; const fit = await el.evaluate((e) => { const c = getComputedStyle(e); return { f: c.objectFit, p: c.objectPosition }; }).catch(() => ({ f: 'fill', p: '50% 50%' }));
+          const pg2 = await ctx.newPage();
+          try {
+            await pg2.setViewportSize({ width: Math.ceil(bb.width) + 2, height: Math.ceil(bb.height) + 2 });
+            await pg2.setContent(`<!doctype html><body style="margin:0;background:transparent"><img id="i" src="${imgSrc.replace(/"/g, '&quot;')}" style="display:block;width:${bb.width}px;height:${bb.height}px;object-fit:${fit.f};object-position:${fit.p}">`);
+            await pg2.waitForFunction(() => { const i = document.getElementById('i'); return i.complete && i.naturalWidth > 0; }, null, { timeout: 20000 });
+            await (await pg2.$('#i')).screenshot({ path: path.join(outDir, file), omitBackground: true, timeout: 20000 });
+            ok = true;
+          } catch (e) { /* falls back to a capture inside the page */ } finally { await pg2.close().catch(() => {}); }
+          if (ok) { await el.evaluate((e, fl) => e.setAttribute('data-np-file', fl), file); if (key) done.set(key, file); mi++; continue; }
+        }
         try {
           await el.evaluate((e) => { document.documentElement.setAttribute('data-np-hide', '1'); e.setAttribute('data-np-shot', '1'); });
           await el.screenshot({ path: path.join(outDir, file), animations: 'disabled', timeout: 3000, omitBackground: true }); // omitBackground: transparent parts stay transparent, so the picture does not bring the page's own background with it; // animations off: a marquee or a moving hero would never be "stable"
