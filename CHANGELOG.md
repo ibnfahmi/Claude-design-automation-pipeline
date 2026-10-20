@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.12.5] - 2026-10-20
+
+### Changed
+- **Overlay screens are always exported overlay-only; the `Figma overlays` question is gone.** The to-figma skill no longer asks how to export dialogs, menus, drawers and dropdowns: the frame holds just the scrim and the dialog, with no page behind it, compared in the dialog's box. A state that isn't eligible, or whose overlay-only frame fails its comparison, is built in full as before. `figma_overlay` is removed from the state file. The cropped-clone option stays in the builder but is no longer offered or documented as a choice.
+
 ## [0.12.4] - 2026-10-20
 
 ### Added
