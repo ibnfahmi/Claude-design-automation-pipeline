@@ -20,10 +20,12 @@ let nextId = 1;
 const errors = [];
 const fail = (m) => { errors.push(m); throw new Error(m); };
 const loadedFonts = new Set(['Inter|Regular']);
+const registry = new Map();
 class Node {
-  constructor(type) { this.id = '1:' + nextId++; this.type = type; this.children = []; this.parent = null; this.name = type; this.width = 100; this.height = 100; this.x = 0; this.y = 0; this._lm = 'NONE'; this._lsh = 'FIXED'; this._lsv = 'FIXED'; this.layoutPositioning = 'AUTO'; this.fills = []; this.strokes = []; this.effects = []; }
+  constructor(type) { this.id = '1:' + nextId++; registry.set(this.id, this); this.type = type; this.children = []; this.parent = null; this.name = type; this.width = 100; this.height = 100; this.x = 0; this.y = 0; this._lm = 'NONE'; this._lsh = 'FIXED'; this._lsv = 'FIXED'; this.layoutPositioning = 'AUTO'; this.fills = []; this.strokes = []; this.effects = []; }
   get layoutMode() { return this._lm; }
   set layoutMode(v) { this._lm = v; }
+  clone() { const n = new Node(this.type); Object.assign(n, { name: this.name, width: this.width, height: this.height, _lm: this._lm, _lsh: this._lsh, _lsv: this._lsv, fills: this.fills, _pd: { ...(this._pd || {}) } }); n.children = []; for (const c of this.children) { const cc = c.clone(); cc.parent = n; n.children.push(cc); } return n; }
   appendChild(c) { if (c.parent) c.parent.children = c.parent.children.filter(x => x !== c); c.parent = this; this.children.push(c); }
   resize(w, h) { this.width = w; this.height = h; this._lsh = 'FIXED'; this._lsv = 'FIXED'; if (this.type === 'TEXT') this.textAutoResize = 'NONE'; }
   _checkSizing(axis, v) {
@@ -58,7 +60,7 @@ const figma = {
   createRectangle() { return new Node('RECTANGLE'); },
   createNodeFromSvg(s) { if (!/<svg/.test(s)) fail('bad svg'); const n = new Node('FRAME'); n.name = 'svg'; return n; },
   async loadFontAsync(f) { loadedFonts.add(f.family + '|' + f.style); },
-  async getNodeByIdAsync(id) { return id === 'page' ? figma.currentPage : null; },
+  async getNodeByIdAsync(id) { return id === 'page' ? figma.currentPage : (registry.get(id) || null); },
   async setCurrentPageAsync() {},
   variables: { async getVariableByIdAsync() { return null; }, setBoundVariableForPaint(p) { return p; } },
 };
@@ -101,6 +103,25 @@ if (gf) {
 const topFrame = figma.currentPage.children[0];
 check('top-level frame is tagged as built from the spec, with its hash', topFrame.getSharedPluginData('pipeline', 'source') === 'spec' && topFrame.getSharedPluginData('pipeline', 'hash') === 'h123');
 check('buttons hug their content', all.some(n => n.name === 'Button' || n.name === 'Btn') );
+// ---- an overlay state is made by cloning the built frame, cropping it and adding the overlay on top
+{
+  const baseId = result.rootId;
+  const overlay = { k: 'f', n: 'Dialog', r: [440, 200, 560, 400], bg: 'rgb(255, 255, 255)', L: { d: 'flex', dir: 'column', pos: 'fixed' }, c: [{ k: 't', n: 'Title', r: [24, 24, 200, 30], txt: 'Apply', ff: 'Inter', fs: 20, fw: 600, col: 'rgb(0, 0, 0)', lines: 1 }] };
+  const section2 = { cloneOf: baseId, cropHeight: 900, add: [overlay], name: 'Home / Dialog @ Desktop 1440', x: 0, y: 2000, hash: 'h999' };
+  const code2 = fs.readFileSync(path.join(HERE, '..', 'figma-builder.js'), 'utf8').replace('__SPEC__', JSON.stringify(section2)).replace('__FONTMAP__', JSON.stringify(FONTMAP)).replace('__OPTS__', JSON.stringify({ fixedContainers: true }));
+  const run2 = new (Object.getPrototypeOf(async function () {}).constructor)('figma', code2);
+  const before = figma.currentPage.children.length;
+  let r2; try { r2 = await run2(figma); } catch (e) { console.error('CLONE RUN THREW:', e.message); process.exit(1); }
+  const clone = figma.currentPage.children[figma.currentPage.children.length - 1];
+  const orig = figma.currentPage.children[0];
+  check('the clone is a new frame next to the original', figma.currentPage.children.length === before + 1 && clone !== orig && r2.stats.cloned === 1);
+  check('the clone is cropped to the state height and clips its content', clone.height === 900 && clone.clipsContent === true && orig.height !== 900, `${clone.height} vs ${orig.height}`);
+  check('the original frame is untouched', orig.getSharedPluginData('pipeline', 'hash') === 'h123');
+  check('the clone has its own name, position and hash, and records its base', clone.name === 'Home / Dialog @ Desktop 1440' && clone.y === 2000 && clone.getSharedPluginData('pipeline', 'hash') === 'h999' && clone.getSharedPluginData('pipeline', 'clonedFrom') === baseId);
+  const dlg = clone.children[clone.children.length - 1];
+  check('the overlay was built last (on top), absolute, at its page position', dlg && dlg.name === 'Dialog' && dlg.x === 440 && dlg.y === 200 && r2.stats.overlays === 1, dlg && `${dlg.name} ${dlg.x},${dlg.y}`);
+  check('the clone kept the base content (same child count plus the overlay)', clone.children.length === orig.children.length + 1, `${clone.children.length} vs ${orig.children.length}`);
+}
 console.log('\nstats', JSON.stringify(result.stats), '\napproximated', JSON.stringify(result.approximated), '\ndeviations', result.deviationCount);
 if (errors.length) { console.error('\nFAILED:', errors.length); process.exit(1); }
 console.log('\nALL OK');

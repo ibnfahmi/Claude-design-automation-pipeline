@@ -13,6 +13,9 @@
  *   OPTS     { scale: [0,4,8,12,16,24,32,40,48,64,80,96,128], spaceVars: { "8": "VariableID:..." },
  *              colorVars: { "rgb(16, 42, 99)": "VariableID:..." }, fixedContainers: true,
  *              components: { "Button|1a2b3c": { id: "12:34" } } }   (library first: a node whose `comp|sig` is listed becomes an instance)
+ *   SPEC.cloneOf     "<figma node id of an already-built frame>": an overlay state is made by CLONING that frame instead of building the page
+ *                    again; SPEC.cropHeight (the state frame's height) resizes the clone and clips its content, and SPEC.add is the list of
+ *                    overlay nodes (from state-delta.mjs, positions in the page's coordinates) built on top of it as absolute children.
  *   SPEC.asComponent  { name: "Button / Primary" }: the built top-level frame is turned into a Figma component (library build)
  */
 const SPEC = __SPEC__;
@@ -341,14 +344,31 @@ async function buildGrid(n, f, where) {
 }
 
 // ---------- run ----------
-const sec = SPEC; const root = sec.node;
+const sec = SPEC; const root = sec.node || {};
 let parent;
 if (sec.parentId) { parent = await figma.getNodeByIdAsync(sec.parentId); }
 else { const page = sec.pageId ? await figma.getNodeByIdAsync(sec.pageId) : figma.currentPage; if (sec.pageId) await figma.setCurrentPageAsync(page); parent = page; }
 const pinfo = (parent && parent.layoutMode && parent.layoutMode !== 'NONE') ? { auto: true, dir: parent.layoutMode, stretch: true, contentW: parent.width, contentH: parent.height } : { auto: false };
-let built = await build(root, parent, pinfo, sec.name || root.n || 'Frame');
+let built;
+if (sec.cloneOf) {
+  const src = await figma.getNodeByIdAsync(sec.cloneOf);
+  if (!src) throw new Error('cloneOf: the base frame ' + sec.cloneOf + ' was not found');
+  built = src.clone(); stats.cloned = 1;
+  parent.appendChild(built);
+  if (sec.cropHeight) { built.clipsContent = true; built.resize(built.width, sec.cropHeight); }
+  const pi = (built.layoutMode && built.layoutMode !== 'NONE') ? { auto: true, dir: built.layoutMode, stretch: true, contentW: built.width, contentH: built.height } : { auto: false };
+  for (const a of (sec.add || [])) {
+    const ch = await build(a, built, pi, a.n || 'Overlay');
+    if (!ch) continue;
+    if (pi.auto) { try { ch.layoutPositioning = 'ABSOLUTE'; } catch (e) {} }
+    if (a.r) { ch.x = a.r[0]; ch.y = a.r[1]; }
+    stats.overlays = (stats.overlays || 0) + 1;
+  }
+} else {
+  built = await build(root, parent, pinfo, sec.name || root.n || 'Frame');
+}
 if (built && sec.name) built.name = sec.name;
 if (built && !sec.parentId && typeof sec.x === 'number') { built.x = sec.x; built.y = sec.y; }
 if (built && sec.asComponent && !sec.parentId) { const c = figma.createComponentFromNode(built); c.name = sec.asComponent.name || built.name; c.setSharedPluginData('pipeline', 'component', root.comp || ''); c.setSharedPluginData('pipeline', 'sig', root.sig || ''); built = c; }
-if (built && !sec.parentId) { built.setSharedPluginData('pipeline', 'source', 'spec'); if (sec.hash) built.setSharedPluginData('pipeline', 'hash', String(sec.hash)); }
+if (built && !sec.parentId) { built.setSharedPluginData('pipeline', 'source', 'spec'); if (sec.cloneOf) built.setSharedPluginData('pipeline', 'clonedFrom', String(sec.cloneOf)); if (sec.hash) built.setSharedPluginData('pipeline', 'hash', String(sec.hash)); }
 return { createdNodeIds: createdIds, rootId: built && built.id, root: built && { name: built.name, w: Math.round(built.width), h: Math.round(built.height) }, stats, images, bgImages, missingFonts: [...missingFonts], approximated: [...approximated], deviations: deviations.slice(0, 60), deviationCount: deviations.length };
