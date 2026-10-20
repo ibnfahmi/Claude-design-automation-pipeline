@@ -8,6 +8,7 @@ const T = (n, x, y, txt) => ({ k: 't', n, r: [x, y, 200, 24], txt });
 const header = { k: 'f', n: 'Header', r: [0, 0, 1440, 80], bg: 'rgb(11, 27, 61)', c: [T('Logo', 40, 20, 'Brand'), T('Nav', 600, 20, 'Ideas')] };
 const hero = { k: 'f', n: 'Hero', r: [0, 80, 1440, 600], c: [T('Title', 40, 40, 'Hello'), T('Sub', 40, 100, 'World')] };
 const footer = { k: 'f', n: 'Footer', r: [0, 5000, 1440, 400], c: [T('Copy', 40, 40, 'Footer text')] };
+const stickyHeader = { ...header, L: { pos: 'fixed' } };
 const base = { k: 'f', n: 'Page', r: [0, 0, 1440, 6000], bg: 'rgb(255, 255, 255)', L: { d: 'block' }, c: [header, hero, footer] };
 // the state frame: scroll-locked, so the page is viewport-sized and the footer is cut off
 const cropped = (children) => ({ k: 'f', n: 'Page', r: [0, 0, 1440, 900], bg: 'rgb(255, 255, 255)', L: { d: 'block' }, c: children });
@@ -31,6 +32,12 @@ check('no overlay nodes means nothing to clone', !r.reusable && /no overlay/.tes
 
 r = stateDelta(cropped([header, hero]), { ...base, c: [header, hero, dim, modal] });
 check('a state taller than the base is not reusable', !r.reusable && /taller/.test(r.reason), r.reason);
+
+// a sticky header that is in both pages is not an overlay to add; the compare box covers only the dialog
+const baseSticky = { ...base, c: [stickyHeader, hero, footer] };
+r = stateDelta(baseSticky, cropped([stickyHeader, hero, dim, modal]));
+check('a fixed header the base already has is not added again', r.reusable && r.add.length === 2 && !r.add.some((a) => a.n === 'Header'), JSON.stringify(r.add && r.add.map((a) => a.n)));
+check('the compare box covers the dialog, not the full-viewport scrim', JSON.stringify(r.compareBox) === JSON.stringify([440, 200, 560, 400]), JSON.stringify(r.compareBox));
 
 const frames = [
   { slug: 'home-d', route: '/index.html', viewport: { w: 1440, h: 900 } },

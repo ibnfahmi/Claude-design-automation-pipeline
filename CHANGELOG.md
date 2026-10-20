@@ -2,6 +2,15 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.12.4] - 2026-10-20
+
+### Added
+- **Overlay screens can hold only the overlay** (an idea from the user: drop the base layer, so the modal and the blurry layer are the only layers in that kind of screen). It is now the default for dialogs, menus, drawers and dropdowns that open over a page: the frame is transparent, clipped to the viewport, and contains just the scrim and the dialog, with no copy of the page behind it. The to-figma skill asks (`Figma overlays`): overlay only (recommended), with the page behind it (the cropped clone of 0.12.3) or built like any other screen. The pixel comparison for an overlay-only frame uses a new `compare-shots.mjs --crop x,y,w,h` option, so only the dialog's area is compared (the page behind it is not in the frame). On the Shabab Masr specs 37 of 198 frames qualify, and each was reduced to its dialog (`x-modal-wrap`, a menu or a panel) with the box to compare. A background blur has nothing to blur inside such a frame, so it is not visible on the canvas; the report says so.
+
+### Fixed
+- `state-delta.mjs` no longer counts a fixed element that the base page also has (a sticky header, an animated decoration) as a new overlay, which would have been duplicated on top of a clone.
+- Not yet run on a real Figma file.
+
 ## [0.12.3] - 2026-10-20
 
 ### Added

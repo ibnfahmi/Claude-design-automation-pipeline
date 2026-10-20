@@ -16,6 +16,8 @@
  *   SPEC.cloneOf     "<figma node id of an already-built frame>": an overlay state is made by CLONING that frame instead of building the page
  *                    again; SPEC.cropHeight (the state frame's height) resizes the clone and clips its content, and SPEC.add is the list of
  *                    overlay nodes (from state-delta.mjs, positions in the page's coordinates) built on top of it as absolute children.
+ *   SPEC.overlayOnly true: the frame holds ONLY the overlay (the scrim and the dialog): a transparent, clipped frame of SPEC.width x
+ *                    SPEC.cropHeight with SPEC.add built inside it, and no page behind it (the cheapest way to export an overlay state).
  *   SPEC.asComponent  { name: "Button / Primary" }: the built top-level frame is turned into a Figma component (library build)
  */
 const SPEC = __SPEC__;
@@ -350,7 +352,17 @@ if (sec.parentId) { parent = await figma.getNodeByIdAsync(sec.parentId); }
 else { const page = sec.pageId ? await figma.getNodeByIdAsync(sec.pageId) : figma.currentPage; if (sec.pageId) await figma.setCurrentPageAsync(page); parent = page; }
 const pinfo = (parent && parent.layoutMode && parent.layoutMode !== 'NONE') ? { auto: true, dir: parent.layoutMode, stretch: true, contentW: parent.width, contentH: parent.height } : { auto: false };
 let built;
-if (sec.cloneOf) {
+if (sec.overlayOnly) {
+  built = figma.createFrame(); stats.overlayOnly = 1;
+  built.fills = []; built.clipsContent = true; built.resize(sec.width, sec.cropHeight);
+  parent.appendChild(built);
+  for (const a of (sec.add || [])) {
+    const ch = await build(a, built, { auto: false }, a.n || 'Overlay');
+    if (!ch) continue;
+    if (a.r) { ch.x = a.r[0]; ch.y = a.r[1]; }
+    stats.overlays = (stats.overlays || 0) + 1;
+  }
+} else if (sec.cloneOf) {
   const src = await figma.getNodeByIdAsync(sec.cloneOf);
   if (!src) throw new Error('cloneOf: the base frame ' + sec.cloneOf + ' was not found');
   built = src.clone(); stats.cloned = 1;

@@ -122,6 +122,20 @@ check('buttons hug their content', all.some(n => n.name === 'Button' || n.name =
   check('the overlay was built last (on top), absolute, at its page position', dlg && dlg.name === 'Dialog' && dlg.x === 440 && dlg.y === 200 && r2.stats.overlays === 1, dlg && `${dlg.name} ${dlg.x},${dlg.y}`);
   check('the clone kept the base content (same child count plus the overlay)', clone.children.length === orig.children.length + 1, `${clone.children.length} vs ${orig.children.length}`);
 }
+// ---- an overlay-only frame holds just the scrim and the dialog
+{
+  const scrim = { k: 'f', n: 'Backdrop', r: [0, 0, 1440, 900], bg: 'rgba(0, 0, 0, 0.5)', bf: 'blur(8px)', L: { pos: 'fixed' } };
+  const dialog = { k: 'f', n: 'Dialog', r: [440, 200, 560, 400], bg: 'rgb(255, 255, 255)', L: { d: 'flex', dir: 'column', pos: 'fixed' }, c: [{ k: 't', n: 'Title', r: [24, 24, 200, 30], txt: 'Apply', ff: 'Inter', fs: 20, fw: 600, col: 'rgb(0, 0, 0)', lines: 1 }] };
+  const section3 = { overlayOnly: true, width: 1440, cropHeight: 900, add: [scrim, dialog], name: 'Sign in / Dialog @ Desktop 1440', x: 0, y: 4000, hash: 'h777' };
+  const code3 = fs.readFileSync(path.join(HERE, '..', 'figma-builder.js'), 'utf8').replace('__SPEC__', JSON.stringify(section3)).replace('__FONTMAP__', JSON.stringify(FONTMAP)).replace('__OPTS__', JSON.stringify({ fixedContainers: true }));
+  const run3 = new (Object.getPrototypeOf(async function () {}).constructor)('figma', code3);
+  let r3; try { r3 = await run3(figma); } catch (e) { console.error('OVERLAY RUN THREW:', e.message); process.exit(1); }
+  const ov = figma.currentPage.children[figma.currentPage.children.length - 1];
+  check('an overlay-only frame has the scrim and the dialog and nothing else', ov.children.length === 2 && ov.children[0].name === 'Backdrop' && ov.children[1].name === 'Dialog', ov.children.map(c => c.name).join(','));
+  check('an overlay-only frame is transparent, clipped, and viewport-sized', ov.fills.length === 0 && ov.clipsContent === true && ov.width === 1440 && ov.height === 900);
+  check('the dialog sits at its page position, the scrim keeps its blur', ov.children[1].x === 440 && ov.children[1].y === 200 && (ov.children[0].effects || []).some(e => e.type === 'BACKGROUND_BLUR'), JSON.stringify((ov.children[0].effects || []).map(e => e.type)));
+  check('an overlay-only frame is named and tagged', ov.name === 'Sign in / Dialog @ Desktop 1440' && ov.getSharedPluginData('pipeline', 'hash') === 'h777' && r3.stats.overlayOnly === 1);
+}
 console.log('\nstats', JSON.stringify(result.stats), '\napproximated', JSON.stringify(result.approximated), '\ndeviations', result.deviationCount);
 if (errors.length) { console.error('\nFAILED:', errors.length); process.exit(1); }
 console.log('\nALL OK');

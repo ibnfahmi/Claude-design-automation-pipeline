@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Compare a reference screenshot (from the running app) with a screenshot of the Figma frame.
-//   node compare-shots.mjs --a reference.png --b figma.png [--out diff.png] [--tools <dir>] [--grid 12x8] [--threshold 0.1] [--max-diff 2] [--max-cell 10]
+//   node compare-shots.mjs --a reference.png --b figma.png [--out diff.png] [--tools <dir>] [--grid 12x8] [--crop x,y,w,h] [--threshold 0.1] [--max-diff 2] [--max-cell 10]
 // Prints JSON: { size, sizeMismatch, diffPercent, worst: [{ x, y, w, h, diffPercent }], pass, thresholds, diffImage }.
 // `pass` is true when the sizes match, the whole-screen difference is at most --max-diff percent (default 2) AND no single grid cell
 // differs by more than --max-cell percent (default 10): a wrong-sized button barely moves the whole-screen number but fills its cell.
@@ -26,8 +26,14 @@ try {
   const pm = await import(pathToFileURL(req.resolve('pixelmatch')).href); pixelmatch = pm.default || pm;
 } catch (e) { console.error('pngjs and pixelmatch are needed in ' + toolsDir + ' (npm install pngjs pixelmatch).'); process.exit(2); }
 
-const A = PNG.sync.read(fs.readFileSync(args.a)), B = PNG.sync.read(fs.readFileSync(args.b));
+let A = PNG.sync.read(fs.readFileSync(args.a)), B = PNG.sync.read(fs.readFileSync(args.b));
 const sizeMismatch = Math.abs(A.width - B.width) > 8 || Math.abs(A.height - B.height) > 8;
+// --crop x,y,w,h compares only that region of both images (used for overlay-only frames, where the page behind the dialog is not in the Figma frame)
+if (args.crop) {
+  const [cx, cy, cw0, ch0] = String(args.crop).split(',').map(Number);
+  const sub = (img) => { const x1 = Math.max(0, Math.min(cx, img.width - 1)), y1 = Math.max(0, Math.min(cy, img.height - 1)); const ww = Math.max(1, Math.min(cw0, img.width - x1)), hh = Math.max(1, Math.min(ch0, img.height - y1)); const o = new PNG({ width: ww, height: hh }); PNG.bitblt(img, o, x1, y1, ww, hh, 0, 0); return o; };
+  A = sub(A); B = sub(B);
+}
 const w = Math.min(A.width, B.width), h = Math.min(A.height, B.height);
 const crop = (img) => { if (img.width === w && img.height === h) return img.data; const out = Buffer.alloc(w * h * 4); for (let y = 0; y < h; y++) img.data.copy(out, y * w * 4, y * img.width * 4, y * img.width * 4 + w * 4); return out; };
 const da = crop(A), db = crop(B);

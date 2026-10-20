@@ -58,11 +58,28 @@ export function stateDelta(baseRoot, stateRoot, height) {
   for (const [k, n] of bm) if ((sm.get(k) || 0) < n) missing += n - (sm.get(k) || 0);
   for (const [k, n] of sm) if ((bm.get(k) || 0) < n) extra += n - (bm.get(k) || 0);
   const tol = Math.max(2, Math.round(0.05 * bf.length));
-  const add = overlays(stateRoot);
+  // overlays the base page already has (a sticky header, a skip link) are not new: they are in the clone, or not wanted in an overlay-only frame
+  // (same name and kind: an animated decoration or a header whose look changed a little counts as the same one)
+  const baseOv = overlays(baseRoot);
+  const known = (n) => baseOv.some((b) => b.k === n.k && b.n === n.n);
+  const add = overlays(stateRoot).filter((n) => !known(n));
   const base = { missing, extra, cropHeight: Math.round(stateRoot.r[3]), baseNodes: bf.length };
   if (!add.length) return { reusable: false, reason: 'no overlay nodes to add', ...base };
   if (missing > tol || extra > tol) return { reusable: false, reason: `the page behind it differs (${missing} base nodes missing, ${extra} new)`, ...base };
-  return { reusable: true, reason: `${add.length} overlay node(s) over the cropped base`, ...base, add };
+  // the region to compare when the frame holds only the overlay: the box around the dialog, menu or panel. A node that covers the whole
+  // viewport is the scrim (or a wrapper holding the scrim and the dialog), so only its smaller descendants count.
+  const W = Math.round(stateRoot.r[2]);
+  const isFull = (r) => r[2] >= 0.95 * W && r[3] >= 0.95 * H;
+  const boxes = [];
+  const walkBox = (n, ox, oy) => {
+    const x = ox + n.r[0], y = oy + n.r[1];
+    if (!isFull([x, y, n.r[2], n.r[3]])) { boxes.push([x, y, n.r[2], n.r[3]]); return; }
+    (n.c || []).forEach((c) => walkBox(c, x, y));
+  };
+  add.forEach((n) => walkBox(n, 0, 0));
+  let compareBox = null;
+  if (boxes.length) { const x1 = Math.max(0, Math.min(...boxes.map((b) => b[0]))), y1 = Math.max(0, Math.min(...boxes.map((b) => b[1]))), x2 = Math.min(W, Math.max(...boxes.map((b) => b[0] + b[2]))), y2 = Math.min(H, Math.max(...boxes.map((b) => b[1] + b[3]))); if (x2 > x1 && y2 > y1) compareBox = [Math.floor(x1), Math.floor(y1), Math.ceil(x2 - x1), Math.ceil(y2 - y1)]; }
+  return { reusable: true, reason: `${add.length} overlay node(s) over the cropped base`, ...base, compareBox, width: W, add };
 }
 
 // pairs each state frame with an earlier frame of the same page and width that is not itself a clone
