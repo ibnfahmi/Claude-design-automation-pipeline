@@ -50,7 +50,7 @@ check('hand-made page is kept after the archive group', names()[names().length -
 
 
 // ---- frames the pipeline did not build are found and their pages archived
-const mkFrame = (name, source) => ({ id: '9:' + nextId++, type: 'FRAME', name, getPluginData: (k) => (k === 'pipeline:source' ? source : '') });
+const mkFrame = (name, source) => ({ id: '9:' + nextId++, type: 'FRAME', name, getSharedPluginData: (ns, k) => (ns === 'pipeline' && k === 'source' ? source : '') });
 const pageF1 = root.children.find(p => p.name === 'F-1 · Quests'), pageF0 = root.children.find(p => p.name === 'F-0 · Foundation');
 pageF0.children.push(mkFrame('Home / Default', 'spec'));
 pageF1.children.push(mkFrame('Chat / Default', 'capture-fallback'), mkFrame('Chat / Empty', ''), mkFrame('Chat / Spec', 'spec'));

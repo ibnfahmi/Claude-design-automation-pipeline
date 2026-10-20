@@ -34,7 +34,7 @@ Ask each once; on a re-export offer the saved answer as the default.
 
 ## 5. The estimate (before anything is built)
 
-Count the frames selected, times the screen sizes already in the manifest, times the languages chosen, and use `skills/start/references/build-estimate.md`, section "Figma export". Tell the user in three lines: the number of frames, the expected time and tokens as ranges for the split build, what multiplies it (languages, library), and that it is an estimate. Then ask once (header `Figma start`): **Start the export (Recommended)** / **Cheaper: fewer frames, one language or plain frames** (back to the questions) / **Cancel**.
+Count the frames selected, times the screen sizes already in the manifest, times the languages chosen, and use `skills/start/references/build-estimate.md`, section "Figma export". Tell the user in three lines: the number of frames, the expected time and tokens as ranges for the split build, what multiplies it (languages, library), and that it is an estimate. The manifest count can be too low (a test export estimated 115 to 150 frames and measured 198). So after the `setup` job, which measures the real number of frames, **show the estimate again with the measured count**, and if it is more than 25% above the first one, ask again (header `Figma continue`): **Continue (Recommended)** / **Cheaper: fewer frames, one language or plain frames** / **Stop here** (the file and plan are kept; the export can be resumed). Then ask once (header `Figma start`): **Start the export (Recommended)** / **Cheaper: fewer frames, one language or plain frames** (back to the questions) / **Cancel**.
 
 ## 6. Run the jobs
 

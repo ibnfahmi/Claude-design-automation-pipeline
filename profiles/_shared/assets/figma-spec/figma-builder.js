@@ -349,6 +349,6 @@ const pinfo = (parent && parent.layoutMode && parent.layoutMode !== 'NONE') ? { 
 let built = await build(root, parent, pinfo, sec.name || root.n || 'Frame');
 if (built && sec.name) built.name = sec.name;
 if (built && !sec.parentId && typeof sec.x === 'number') { built.x = sec.x; built.y = sec.y; }
-if (built && sec.asComponent && !sec.parentId) { const c = figma.createComponentFromNode(built); c.name = sec.asComponent.name || built.name; c.setPluginData('pipeline:component', root.comp || ''); c.setPluginData('pipeline:sig', root.sig || ''); built = c; }
-if (built && !sec.parentId) { built.setPluginData('pipeline:source', 'spec'); if (sec.hash) built.setPluginData('pipeline:hash', String(sec.hash)); }
+if (built && sec.asComponent && !sec.parentId) { const c = figma.createComponentFromNode(built); c.name = sec.asComponent.name || built.name; c.setSharedPluginData('pipeline', 'component', root.comp || ''); c.setSharedPluginData('pipeline', 'sig', root.sig || ''); built = c; }
+if (built && !sec.parentId) { built.setSharedPluginData('pipeline', 'source', 'spec'); if (sec.hash) built.setSharedPluginData('pipeline', 'hash', String(sec.hash)); }
 return { createdNodeIds: createdIds, rootId: built && built.id, root: built && { name: built.name, w: Math.round(built.width), h: Math.round(built.height) }, stats, images, bgImages, missingFonts: [...missingFonts], approximated: [...approximated], deviations: deviations.slice(0, 60), deviationCount: deviations.length };

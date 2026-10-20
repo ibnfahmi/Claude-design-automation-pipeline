@@ -2,6 +2,16 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.12.1] - 2026-10-20
+
+### Fixed
+- **The Figma builder no longer fails on plugin data.** This Figma host rejects `setPluginData`, so the builder's frame tags (`pipeline:source`, `pipeline:hash`, and the component tags) could not be written. The builder now uses shared plugin data (`setSharedPluginData('pipeline', ...)`), and `figma-pages.js` reads it the same way (falling back to the old call). Found by a real export (Shabab Masr); the tests now reject `setPluginData` like the host does.
+
+### Changed
+- **The pilot batch has limits.** In a test export the pilot ran for 575 turns on ten screens, reached a context of 950k tokens and was stopped by the usage limit before it reported anything. It is now capped at 2 rounds and about 150 turns of fixing, it may use only the plugin's own scripts (no new helper scripts), and it writes `pilot-fixes.md` and `pilot-result.json` after every round, so a stop loses nothing.
+- **The estimate is corrected after setup.** The `setup` job measures the real frame count (the test estimated 115 to 150 and measured 198); the estimate is shown again and you are asked before continuing if it is more than 25% higher. The cost table uses the measured numbers (about 4 turns per frame; the pilot 150 to 300 turns).
+- Honest note: this does not make the measured-spec export cheap. It costs about 4 turns per screen however it is split; the cheaper routes are fewer screens or languages, plain frames, or the capture tool for the less important screens.
+
 ## [0.12.0] - 2026-10-18
 
 ### Added

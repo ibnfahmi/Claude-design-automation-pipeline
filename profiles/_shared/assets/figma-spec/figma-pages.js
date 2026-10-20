@@ -50,7 +50,7 @@ if (PLAN.manifestFrames) {
     await p.loadAsync();
     const bad = [];
     for (const fr of p.findAll(n => n.type === 'FRAME' && names.has(n.name))) {
-      const src = fr.getPluginData('pipeline:source');
+      let src = ''; try { src = fr.getSharedPluginData('pipeline', 'source'); } catch (e) { /* host without shared data */ } if (!src) { try { src = fr.getPluginData('pipeline:source'); } catch (e) { /* the host rejects getPluginData: untagged */ } }
       if (src === 'spec') report.specFrames++; else bad.push({ name: fr.name, id: fr.id, source: src || 'untagged' });
     }
     if (bad.length) {

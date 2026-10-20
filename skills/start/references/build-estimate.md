@@ -48,8 +48,8 @@ Tell the user this before the Figma build starts, as a range with its parts and 
 | Part | Rough cost |
 |---|---|
 | Setup (file, pages, variables, fonts, extraction, library if on) | 15 to 40 turns; the library adds 40 to 120 turns |
-| Pilot (more than 10 frames) | 60 to 150 turns |
-| Per frame, measured-spec build with compare and fixes | about 2 to 4 turns, about 1 to 3 minutes |
+| Pilot (more than 10 frames) | 150 to 300 turns (measured: one unlimited pilot took 575 turns and ran into the usage limit; it is now capped at 2 rounds and about 150 turns of fixing) |
+| Per frame, measured-spec build with compare and fixes | about 4 turns, about 1 to 3 minutes (measured: 1,040 turns for 254 frames) |
 | Finish (changelog, cover, links, report) | 20 to 40 turns |
 | Single session (no split) | the same turns, but each turn re-reads the whole growing context, so tokens grow roughly with the square of the frame count; the split build keeps each job's context small |
 

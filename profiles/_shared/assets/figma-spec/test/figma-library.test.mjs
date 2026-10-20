@@ -21,8 +21,9 @@ class Node {
   resize(w, h) { this.width = w; this.height = h; }
   findAll(fn) { const out = []; (function w(n) { for (const c of n.children) { if (fn(c)) out.push(c); w(c); } })(this); return out; }
   setBoundVariable() {}
-  setPluginData(k, v) { this._pd[k] = v; }
-  getPluginData(k) { return this._pd[k] || ''; }
+  setSharedPluginData(ns, k, v) { this._pd[ns + ':' + k] = v; }
+  getSharedPluginData(ns, k) { return this._pd[ns + ':' + k] || ''; }
+  setPluginData() { throw new Error('setPluginData is not supported in this host'); }
   createInstance() {
     const clone = (n, type) => { const c = n.type === 'TEXT' ? new Text() : new Node(type || n.type); Object.assign(c, { name: n.name, width: n.width, height: n.height, layoutMode: n.layoutMode }); if (n.type === 'TEXT') { c._chars = n._chars; c.fontName = n.fontName; } c.children = n.children.map(k => { const kc = clone(k); kc.parent = c; return kc; }); return c; };
     return clone(this, 'INSTANCE');
@@ -66,8 +67,8 @@ const check = (n, ok, extra = '') => { if (!ok) bad++; console.log((ok ? 'PASS '
 let r = await run({ node: button('Join', 140), parentId: null, name: 'Button', x: 0, y: 0, asComponent: { name: 'Button / Primary' } });
 const comp = registry.get(r.rootId);
 check('the canonical spec becomes a component', comp && comp.type === 'COMPONENT' && comp.name === 'Button / Primary', JSON.stringify(r.root));
-check('the component is tagged with its name and signature', comp.getPluginData('pipeline:component') === 'Button' && comp.getPluginData('pipeline:sig') === 'S1');
-check('the component is tagged as built from a spec', comp.getPluginData('pipeline:source') === 'spec');
+check('the component is tagged with its name and signature', comp.getSharedPluginData('pipeline', 'component') === 'Button' && comp.getSharedPluginData('pipeline', 'sig') === 'S1');
+check('the component is tagged as built from a spec', comp.getSharedPluginData('pipeline', 'source') === 'spec');
 const compTexts = comp.findAll(n => n.type === 'TEXT');
 check('the component holds its text', compTexts.length === 1 && compTexts[0].characters === 'Join');
 
