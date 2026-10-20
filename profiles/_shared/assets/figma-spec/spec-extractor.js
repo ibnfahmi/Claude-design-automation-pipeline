@@ -136,17 +136,35 @@
     // a CSS filter such as brightness(0) invert(1) turns a dark icon white: apply it to the colours
     if (cs && /brightness\(0\)/.test(cs.filter || '') && /invert\((1|100%)\)/.test(cs.filter || '')) markup = markup.replace(/(fill|stroke)="(?!none)[^"]*"/g, '$1="#ffffff"').replace(/currentColor/g, '#ffffff');
     else markup = markup.replace(/currentColor/g, 'rgb(0, 0, 0)');
-    return markup.replace(/<svg\b([^>]*)>/i, (m, attrs) => {
+    let vb = null;
+    markup = markup.replace(/<svg\b([^>]*)>/i, (m, attrs) => {
       const ow = /\swidth="([\d.]+)/.exec(attrs), oh = /\sheight="([\d.]+)/.exec(attrs);
       let a = attrs.replace(/\s(width|height)="[^"]*"/g, '');
       if (!/\sviewBox=/.test(a) && ow && oh) a += ` viewBox="0 0 ${ow[1]} ${oh[1]}"`;
+      const v = /\sviewBox="([^"]+)"/.exec(a); if (v) vb = v[1].trim().split(/[\s,]+/).map(Number);
       return `<svg${a} width="${r1(box.w)}" height="${r1(box.h)}">`;
     });
+    // a CSS transform that mirrors the image (a back arrow flipped for the other direction) is applied to the drawing itself
+    const tm = /^matrix\(([^)]+)\)$/.exec((cs && cs.transform) || '');
+    if (tm && vb && vb.length === 4 && vb.every(Number.isFinite)) {
+      const [a, b, c, d] = tm[1].split(',').map(Number);
+      if (Math.abs(b) < 1e-6 && Math.abs(c) < 1e-6 && (a < 0 || d < 0)) {
+        const [vx, vy, vw, vh] = vb;
+        const t = `matrix(${a < 0 ? -1 : 1} 0 0 ${d < 0 ? -1 : 1} ${a < 0 ? 2 * vx + vw : 0} ${d < 0 ? 2 * vy + vh : 0})`;
+        markup = markup.replace(/(<svg\b[^>]*>)([\s\S]*)(<\/svg>)/i, (m, o, inner, cl) => o + '<g transform="' + t + '">' + inner + '</g>' + cl);
+      }
+    }
+    return markup;
   }
 
   function visual(cs, o) {
     const bg = cs.backgroundColor; if (colorAlpha(bg) > 0) o.bg = bg;
-    if (cs.backgroundImage && cs.backgroundImage !== 'none') o.bgi = cs.backgroundImage.slice(0, 600);
+    if (cs.backgroundImage && cs.backgroundImage !== 'none') {
+      // a gradient drawn as a hair-thin strip or at zero size (an animated link underline) is not a fill of the whole box
+      const sz = (cs.backgroundSize || '').split(/\s+/);
+      const strip = /gradient/.test(cs.backgroundImage) && (sz.some(v => /^0(px|%)?$/.test(v)) || (sz.length === 2 && /px$/.test(sz[1]) && parseFloat(sz[1]) <= 4));
+      if (!strip) o.bgi = cs.backgroundImage.slice(0, 600);
+    }
     const bw = [cs.borderTopWidth, cs.borderRightWidth, cs.borderBottomWidth, cs.borderLeftWidth].map(px);
     if (bw.some(Boolean) && cs.borderTopStyle !== 'none') {
       o.bd = { w: bw, c: [cs.borderTopColor, cs.borderRightColor, cs.borderBottomColor, cs.borderLeftColor], s: cs.borderTopStyle };

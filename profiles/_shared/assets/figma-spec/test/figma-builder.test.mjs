@@ -138,7 +138,14 @@ check('buttons hug their content', all.some(n => n.name === 'Button' || n.name =
   const dlg = { k: 'f', n: 'Dialog', r: [100, 100, 200, 200], bg: 'rgb(255, 255, 255)', L: { d: 'block' } };
   const scrim = { k: 'f', n: 'Scrim', r: [0, 0, 400, 500], bg: 'rgba(3, 12, 30, 0.62)', bf: 'blur(6px)', L: { d: 'block', pos: 'absolute' } };
   const wrap = { k: 'f', n: 'Wrap', r: [0, 0, 400, 500], L: { d: 'grid', gap: [0, 0], cols: '400px', rows: '500px', ai: 'center', pos: 'fixed' }, c: [scrim, dlg] };
-  const holder = { k: 'f', n: 'Holder', r: [0, 0, 400, 800], L: { d: 'flex', dir: 'col', gap: [0, 0] }, c: [input, video, gradient, iconBtn, wrap] };
+  const gradText = { k: 'f', n: 'GradHeading', r: [0, 0, 300, 40], bgi: 'linear-gradient(90deg, rgb(30, 64, 175), rgb(59, 130, 246))', L: { d: 'block' }, c: [{ k: 't', n: 'Title', r: [0, 0, 300, 40], txt: 'Every idea', ff: 'Inter', fs: 32, fw: 700, col: 'rgba(0, 0, 0, 0)', lines: 1 }] };
+  const dlg2 = { k: 'f', n: 'CenteredDialog', r: [170, 40, 160, 200], bg: 'rgb(255, 255, 255)', L: { d: 'block' } };
+  const centerWrap = { k: 'f', n: 'CenterWrap', r: [0, 0, 500, 300], L: { d: 'grid', gap: [0, 0], cols: '468px', rows: '268px', ai: 'center', pad: [16, 16, 16, 16], pos: 'fixed' }, c: [dlg2] };
+  const btnA = { k: 'f', n: 'BtnA', act: 'link', r: [0, 0, 263, 72], bg: 'rgb(255, 255, 255)', L: { d: 'flex', dir: 'row', jc: 'center', ai: 'center', gap: [20, 20], pad: [18, 36, 18, 36] }, c: [{ k: 't', n: 'A', r: [36, 24, 190, 24], txt: 'Share an idea', ff: 'Inter', fs: 16, fw: 600, col: 'rgb(0, 0, 0)', lines: 1, nw: 1 }] };
+  const btnB = { ...btnA, n: 'BtnB', r: [278, 0, 272, 72] };
+  const ctas = { k: 'f', n: 'Ctas', r: [0, 0, 550, 72], L: { d: 'flex', dir: 'row', wrap: 1, jc: 'center', ai: 'center', gap: [15, 15] }, c: [btnA, btnB] };
+  const wrapRow = { k: 'f', n: 'Wrapped', r: [0, 0, 300, 160], L: { d: 'flex', dir: 'row', wrap: 1, gap: [8, 8] }, c: [{ ...btnA, n: 'W1', r: [0, 0, 140, 72] }, { ...btnA, n: 'W2', r: [150, 0, 140, 72] }, { ...btnA, n: 'W3', r: [0, 80, 140, 72] }] };
+  const holder = { k: 'f', n: 'Holder', r: [0, 0, 550, 1500], L: { d: 'flex', dir: 'col', gap: [0, 0] }, c: [input, video, gradient, iconBtn, wrap, gradText, centerWrap, ctas, wrapRow] };
   const section4 = { node: holder, parentId: null, name: 'Fix checks', x: 0, y: 6000 };
   const code4 = fs.readFileSync(path.join(HERE, '..', 'figma-builder.js'), 'utf8').replace('__SPEC__', JSON.stringify(section4)).replace('__FONTMAP__', JSON.stringify(FONTMAP)).replace('__OPTS__', JSON.stringify({ fixedContainers: true }));
   const run4 = new (Object.getPrototypeOf(async function () {}).constructor)('figma', code4);
@@ -156,6 +163,15 @@ check('buttons hug their content', all.some(n => n.name === 'Button' || n.name =
   check('a scrim that comes first and covers its parent is painted behind the dialog', scrimIdx === 0, `scrim at index ${scrimIdx} of ${wrapNode && wrapNode.children.map(c => c.name).join(',')}`);
   const btn = kids4.find(n => n.name === 'Button');
   check('an icon button keeps its 44 x 44 box instead of hugging its icon', !!btn && btn.width === 44 && btn.height === 44 && btn.layoutSizingHorizontal !== 'HUG', btn ? `${btn.width}x${btn.height} ${btn.layoutSizingHorizontal}` : kids4.map(n => n.name).join(','));
+  const gh = kids4.find(n => n.name === 'GradHeading');
+  const ghText = gh && gh.children.find(c => c.type === 'TEXT');
+  check('gradient-clipped text paints the gradient on the glyphs, not as a box behind them', !!gh && gh.fills.length === 0 && !!ghText && ghText.fills.some(f => f.type === 'GRADIENT_LINEAR'), gh && JSON.stringify([gh.fills.length, ghText && ghText.fills.map(f => f.type)]));
+  const cw2 = kids4.find(n => n.name === 'CenterWrap');
+  const crow = cw2 && cw2.children.find(c => c.name === 'Row');
+  check('a lone dialog centred by its grid wrapper stays centred (row is centre-aligned)', !!crow && crow.primaryAxisAlignItems === 'CENTER', crow && String(crow.primaryAxisAlignItems));
+  const ctasNode = kids4.find(n => n.name === 'Ctas'), wrappedNode = kids4.find(n => n.name === 'Wrapped');
+  check('a row marked wrap whose children fit on one line does not wrap', !!ctasNode && ctasNode.layoutWrap !== 'WRAP', ctasNode && String(ctasNode.layoutWrap));
+  check('a row whose children really sit on two lines still wraps', !!wrappedNode && wrappedNode.layoutWrap === 'WRAP', wrappedNode && String(wrappedNode.layoutWrap));
   check('a multi-layer background keeps the linear gradient and skips the radial one', !!glow && glow.fills.some(f => f.type === 'GRADIENT_LINEAR') && r4.approximated.includes('radial gradient skipped') === false, JSON.stringify(glow && glow.fills.map(f => f.type)));
 }
 // ---- an overlay-only frame holds just the scrim and the dialog

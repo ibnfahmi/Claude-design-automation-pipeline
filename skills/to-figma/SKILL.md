@@ -34,7 +34,7 @@ Ask each once; on a re-export offer the saved answer as the default.
 
 ## 5. The estimate (before anything is built)
 
-Count the frames selected, times the screen sizes already in the manifest, times the languages chosen, and use `skills/start/references/build-estimate.md`, section "Figma export". Tell the user in three lines: the number of frames, the expected time and tokens as ranges for the whole build, what multiplies it (languages, library), and that it is an estimate. Then ask once (header `Figma start`): **Start the export (Recommended)** / **Cheaper: fewer frames, one language or plain frames** (back to the questions) / **Cancel**.
+Count the frames selected, times the screen sizes already in the manifest, times the languages chosen, and use `skills/start/references/build-estimate.md`, section "Figma export". Tell the user in three lines: the number of frames, the expected Figma tool calls (about the number of frames plus 10; the Full seat limit is 200 a day) and time as ranges for the whole build, what multiplies it (languages, library), and that it is an estimate; if the calls would exceed what is left of the day, offer to split the export by feature or to compare a sample of frames. Then ask once (header `Figma start`): **Start the export (Recommended)** / **Cheaper: fewer frames, one language or plain frames** (back to the questions) / **Cancel**.
 
 ## 6. Run the export
 

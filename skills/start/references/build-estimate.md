@@ -43,11 +43,17 @@ Time only counts what the agents run. Time spent waiting for the user to answer 
 
 Tell the user this before the Figma build starts, as a range with its parts and the words "an estimate". **Frames to build = selected frames × screen sizes already in the manifest × languages chosen** (each language is a full set).
 
-**The only measurement so far** is one real export of a website: about 254 frames in a single long session took about 1,040 model turns, 3.2 hours of work (plus 1.6 hours of idle waiting) and about 11 million newly written tokens (about 557 million cache reads); the capture-tool route for a similar project took about 660 turns and 1.3 hours. Treat these as one data point, not a benchmark.
+**What the export costs, and what limits it.** Two things are counted: model turns (tokens) and **Figma tool calls**. A Full seat on a Professional plan is limited to **200 Figma tool calls per day and 10 per minute** (Figma's rate limits; the daily window appeared to be rolling 24 hours when it was reached), so the number of calls decides how big an export can be in a day.
 
-| Part | Rough cost |
+| Part | Rough cost (measured on the 13-screen test, with the payload runner) |
 |---|---|
-| Per frame, measured-spec build with compare and fixes | about 4 turns, about 1 to 3 minutes (measured: 1,040 turns for 254 frames) |
-| Overlay states (dialogs, menus, dropdowns over a page; 37 of 198 frames in the one project checked) | exported overlay-only: about 1 to 2 turns instead of 4; on a cropped clone (the fallback): about 2 to 3 |
+| Setup (file, pages, variables, fonts) | a few calls |
+| Packing, one `upload_assets` call for the payload, then the runner | 1 upload + 1 runner call for 13 frames (1,683 nodes in about 20 seconds); a bigger export needs one runner call per 15 to 30 seconds of work |
+| Filling images | 1 `upload_assets` call per 60 pictures |
+| Compare each frame (a Figma screenshot per frame, then the pixel difference) | **1 Figma call per frame**: the largest remaining part |
+| Fixing failing frames | a few calls and turns per failing cause, not per frame |
+| Overlay states (dialogs, menus over a page) | exported overlay-only: no extra build, one screenshot |
 
-Say that languages and the library multiply the cost, that plain frames and one language are the cheap options, and that one long session re-reads its whole growing conversation on every turn, so a big export costs more per frame than a small one.
+So an export of N frames needs roughly **N + 10 Figma calls** and a few dozen model turns. A 150-frame export fits in a day's allowance; a 200-frame one does not, so say so and offer to split it across days (by feature) or to compare a sample. Before the payload runner existed (builder and spec pasted into every call), one real export took about 1,040 turns and about 450 Figma calls.
+
+Say that languages and the library multiply the cost, and that plain frames and one language are the cheap options.

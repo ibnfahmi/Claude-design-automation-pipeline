@@ -154,6 +154,7 @@ async function makeText(t, parentInfo) {
       const rc = { uppercase: 'UPPER', lowercase: 'LOWER', capitalize: 'TITLE' }[r.tt]; tx.setRangeTextCase(a, b, rc || 'ORIGINAL');
     }
   }
+  if (t.grad) { const g = gradientPaint(t.grad, t.r[2], t.r[3]); if (g) { try { tx.fills = [g]; } catch (e) {} } }
   stats.texts++;
   return tx;
 }
@@ -182,7 +183,7 @@ function inferLayout(n) {
     const spaced = /space-/.test(L.jc || '');
     let gap = spaced ? 0 : (gaps.length && Math.abs(median(gaps) - gapMain) > 1 ? Math.max(0, median(gaps)) : gapMain);
     const pad = L.pad || [0, 0, 0, 0];
-    return { mode: dir, gap, wrap: !!L.wrap, crossGap: L.gap ? (dir === 'HORIZONTAL' ? L.gap[0] : L.gap[1]) : 0, pad, pj: spaced ? 'SPACE_BETWEEN' : (/center/.test(L.jc || '') ? 'CENTER' : /end/.test(L.jc || '') ? 'MAX' : 'MIN'), ca: AL[L.ai] || 'MIN', stretch: !L.ai || L.ai === 'normal' || L.ai === 'stretch', order: L.rev ? [...kids].reverse() : kids, approx: /around|evenly/.test(L.jc || '') };
+    return { mode: dir, gap, wrap: !!L.wrap && (dir !== 'HORIZONTAL' || new Set(kids.map(k => Math.round(k.r[1] / 4))).size > 1), crossGap: L.gap ? (dir === 'HORIZONTAL' ? L.gap[0] : L.gap[1]) : 0, pad, pj: spaced ? 'SPACE_BETWEEN' : (/center/.test(L.jc || '') ? 'CENTER' : /end/.test(L.jc || '') ? 'MAX' : 'MIN'), ca: AL[L.ai] || 'MIN', stretch: !L.ai || L.ai === 'normal' || L.ai === 'stretch', order: L.rev ? [...kids].reverse() : kids, approx: /around|evenly/.test(L.jc || '') };
   }
   if (!kids.length) return null;
   // block-like: infer a stack from the children's positions
@@ -304,13 +305,13 @@ async function build(n, parent, pinfo, where) {
     if (lay.varGaps) approximated.add('uneven gaps between siblings (median used)');
   } else { stats.plainFrames++; if (lay && lay.mode === 'NONE' && (n.c || []).length > 1) approximated.add('overlapping children kept as absolute'); }
   f.resize(w, h);
+  // gradient-clipped text (background-clip: text with a transparent colour): the gradient is the colour of the glyphs, not a box behind them
+  if (n.bgi && /gradient\(/.test(n.bgi) && (n.c || []).length && (n.c || []).every(t => t.k === 't' && /^(rgba\(0, 0, 0, 0\)|transparent)$/.test(String(t.col || '').trim()))) { for (const t of n.c) t.grad = n.bgi; n = { ...n, bgi: '' }; }
   await applyVisual(f, n, w, h);
   parent.appendChild(f);
   applySizing(f, n, pinfo, auto, w, h);
   if (!pinfo || !pinfo.auto) { f.x = n.r[0]; f.y = n.r[1]; }
   createdIds.push(f.id);
-  // gradient-clipped text (background-clip: text with a transparent colour) would be invisible: use the gradient's first colour
-  if (n.bgi && /gradient\(/.test(n.bgi)) { const cm = /rgba?\([^)]+\)/.exec(n.bgi); if (cm) for (const t of (n.c || [])) { if (t.k === 't' && /rgba\(0, 0, 0, 0\)/.test(t.col || '')) { t.col = cm[0]; if (t.runs) t.runs.forEach(r => r.col = cm[0]); } } }
   // children
   const isGrid = n.L && n.L.d === 'grid' && (n.c || []).some(inFlow);
   const kidsAbs = (n.c || []).filter(c => !inFlow(c));
@@ -363,6 +364,8 @@ async function buildGrid(n, f, where) {
     const items = row.items.sort((a, b) => a.r[0] - b.r[0]);
     rf.itemSpacing = snap(colGap); await bindSpace(rf, 'itemSpacing', snap(colGap));
     rf.counterAxisAlignItems = (L.ai && /center/.test(L.ai)) ? 'CENTER' : 'MIN';
+    // the spec has no justify-items, so read it from the measured position: a lone item centred or right-aligned in the row stays so (a dialog centred by its grid wrapper)
+    if (items.length === 1) { const it = items[0], pl = L.pad ? L.pad[3] : 0; const left = it.r[0] - pl, right = cw - left - it.r[2]; if (left > 4 && near(left, right, 2)) rf.primaryAxisAlignItems = 'CENTER'; else if (left > 4 && right > -2 && right < left - 4) rf.primaryAxisAlignItems = 'MAX'; }
     f.appendChild(rf); rf.layoutSizingHorizontal = 'FILL'; rf.layoutSizingVertical = 'HUG';
     const equal = items.every(c => near(c.r[2], items[0].r[2], 2));
     const rowH = Math.max(...items.map(c => c.r[3]));

@@ -2,6 +2,22 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.14.0] - 2026-10-21
+
+### Added
+- **The builder and the specs now travel as files, not as text in every call (the payload runner).** A test showed that pasting the 27 KB builder and a spec into each `use_figma` call cost about 9,000 tokens of input per call, and every call also counts against the seat's Figma tool-call limit (a Full seat on a Professional plan: 200 calls a day, 10 a minute). The idea came from the v21.1 export, which kept code and data as text inside the Figma file. `pack-payload.mjs` packs the builder, the runner, a plan and one spec per frame into SVG files (base64 in one text element); one `upload_assets` call sends them; and `figma-runner.js`, stored in the file, builds the frames from a bootstrap of about 370 characters, a frame section by section (overlay-only frames in one step) within a time budget. On the 13-screen Shabab Masr test, **one runner call built all 13 frames (1,683 nodes) in about 17 to 22 seconds with no errors**, where the old way took dozens of calls. `pack-payload.mjs fill-plan` and `fill-post` fill the pictures (the runner returns its image list grouped by picture). If the host refuses the upload or the code from the file, the old section-by-section calls remain as the fallback.
+- **Extraction that no longer needs hand work:** `<img src="*.svg">` becomes inline vectors (and a mirrored arrow stays mirrored); the pixels of a video or canvas are saved (videos paused first, so the reference screenshot shows the same frame); a frame's `local` settings (for example the site's language) are applied before the page loads; hair-thin gradient strips (animated link underlines) are dropped instead of becoming boxes.
+
+### Fixed
+- **A dialog centred by its grid wrapper landed at the left edge** (the overlay-only frame was 96% off): a lone grid item centred in the measured layout stays centred.
+- **Gradient-clipped headings** (`background-clip: text`) painted a dark box behind the text; the gradient is now the colour of the glyphs.
+- **A row marked `flex-wrap` stacked its buttons** when Figma measured them a fraction wider than the browser: it wraps only when the measured children really sit on more than one line.
+- Earlier in this release line (0.13.1): SVG images as vectors, the scrim painted behind its dialog, input text, icon-button sizing, and the pilot's builder patches.
+
+### Measured on the 13-screen test (the cached specs, re-extracted where the page needs no clicks)
+- Landing page (`home-default-d`): 31% to about 14 to 15% pixel difference; the overlay-only dialog 96% to 5.4%; the 7 pilot screens that were 24 to 74% off are now about 11 to 25%. None passes the 2% rule yet. What is left: progress rings and bar gradients on the Impact page, a marquee of partner logos (an SVG too large to inline), small layout offsets.
+- Figma calls for a whole cycle (clear, upload, build, fill images, five screenshots): about 9.
+
 ## [0.13.1] - 2026-10-21
 
 ### Fixed

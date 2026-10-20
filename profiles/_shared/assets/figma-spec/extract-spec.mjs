@@ -4,7 +4,7 @@
 //   node extract-spec.mjs --base http://localhost:5173 --frames frames.json --out figma-spec [--tools <dir>] [--channel auto|msedge|chrome]
 //   node extract-spec.mjs --url http://localhost:5173/frames/home --width 1440 --height 900 --name home --out figma-spec
 //
-// frames.json (optional "lang": "ar" opens ?lang=ar): [{ "slug": "home", "route": "/frames/home", "viewport": { "label": "Desktop 1440", "w": 1440, "h": 900 } }, ...]
+// frames.json (optional "lang": "ar" opens ?lang=ar, optional "local": {"key": "value"} sets localStorage before the page loads): [{ "slug": "home", "route": "/frames/home", "viewport": { "label": "Desktop 1440", "w": 1440, "h": 900 } }, ...]
 // Each frame is opened at ITS OWN viewport width (never a fixed 1440), in capture mode (?capture=1), after
 // fonts, images, scroll-triggered effects and animations have settled and a stability check has passed.
 // Output per frame: <slug>@<w>.json (the spec), <slug>@<w>.png (full-page reference screenshot); plus index.json.
@@ -102,6 +102,8 @@ for (const f of frames) {
   const url = /^https?:/.test(f.route) ? f.route : base + f.route;
   const sep = url.includes('?') ? '&' : '?';
   const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 1, reducedMotion: 'no-preference' });
+  // a frame can set localStorage before the page loads (for example the site's language or a signed-in user): "local": { "key": "value" }
+  if (f.local && typeof f.local === 'object') await ctx.addInitScript((kv) => { for (const [k, v] of Object.entries(kv)) { try { localStorage.setItem(k, String(v)); } catch (e) {} } }, f.local);
   const page = await ctx.newPage();
   const t0 = Date.now();
   const entry = { lang: f.lang || null, slug: f.slug, label: f.viewport.label, width: w, height: h, url };
@@ -109,9 +111,13 @@ for (const f of frames) {
     await page.goto(url + sep + 'capture=1' + (f.lang ? '&lang=' + encodeURIComponent(f.lang) : ''), { waitUntil: 'networkidle', timeout: 60000 });
     entry.stable = await settle(page);
     const name = `${f.slug}@${w}`;
+    // a playing video would show a different frame in the reference screenshot and in the saved picture of the video: pause it first
+    await page.evaluate(() => document.querySelectorAll('video').forEach((v) => { try { v.pause(); } catch (e) {} }));
     await page.screenshot({ path: path.join(outDir, name + '.png'), fullPage: true });
     // video and canvas content cannot be rebuilt as layers: save each one's pixels (everything else hidden) so it can fill its placeholder
-    const mediaEls = await page.$$('video, canvas');
+    // an <img> whose SVG is too large to inline as vectors (more than 24,000 characters) is saved as a picture too
+    await page.evaluate(() => { document.querySelectorAll('img').forEach((img) => { const s = img.currentSrc || img.src || ''; if (!/\.svg(\?|#|$)/i.test(s)) return; try { const x = new XMLHttpRequest(); x.open('GET', s, false); x.send(); if (x.status >= 200 && x.status < 300 && (x.responseText || '').length > 24000) img.setAttribute('data-np-big', '1'); } catch (e) {} }); });
+    const mediaEls = await page.$$('video, canvas, img[data-np-big]');
     if (mediaEls.length) {
       fs.mkdirSync(path.join(outDir, 'assets'), { recursive: true });
       await page.addStyleTag({ content: 'html[data-np-hide] body *{visibility:hidden!important}html[data-np-hide] [data-np-shot]{visibility:visible!important}' });
@@ -121,7 +127,7 @@ for (const f of frames) {
         const file = `assets/${name}.media${mi}.png`;
         try {
           await el.evaluate((e) => { document.documentElement.setAttribute('data-np-hide', '1'); e.setAttribute('data-np-shot', '1'); });
-          await el.screenshot({ path: path.join(outDir, file) });
+          await el.screenshot({ path: path.join(outDir, file), animations: 'disabled', timeout: 3000 }); // animations off: a marquee or a moving hero would never be "stable"
           await el.evaluate((e, fl) => { e.setAttribute('data-np-file', fl); e.removeAttribute('data-np-shot'); document.documentElement.removeAttribute('data-np-hide'); }, file);
           mi++;
         } catch (e) { await el.evaluate((x) => { x.removeAttribute('data-np-shot'); document.documentElement.removeAttribute('data-np-hide'); }).catch(() => {}); }
