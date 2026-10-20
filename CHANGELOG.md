@@ -2,6 +2,11 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.12.6] - 2026-10-20
+
+### Changed
+- **The overlay fallback is the overlay on a cropped clone of the base, not a full rebuild.** An overlay state is exported overlay-only first. If that frame fails its comparison, or the page behind the overlay differs a little from its base (`state-delta.mjs` now marks these states `near`: for example a signed-in header, within 25% of the page's nodes), the frame is made as a clone of the already-built base, cropped to the state's height with clip content on, with the overlay built on top. If the clone also fails, the frame is not rebuilt in full: it is listed as failing in the report with its worst regions and the cause. A state that is really a different screen is still built in full like any other frame.
+
 ## [0.12.5] - 2026-10-20
 
 ### Changed

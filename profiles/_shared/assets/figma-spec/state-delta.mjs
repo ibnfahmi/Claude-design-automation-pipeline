@@ -6,7 +6,10 @@
 //   node state-delta.mjs --base figma-spec/home@1440.json --state figma-spec/home-menu@1440.json [--height 900]
 //
 // frames.json: [{ "slug", "route", "viewport": {"w","h"}, "lang"? }, ...]; specs are figma-spec/<slug>@<w>.json (the extractor's names).
-// Result per state frame: { slug, base, reusable, reason, missing, extra, cropHeight, add: [overlay nodes] }.
+// Result per state frame: { slug, base, reusable, near?, reason, missing, extra, cropHeight, width, compareBox, add: [overlay nodes] }.
+// reusable: the page behind the overlay matches the base (within 5%): export it overlay-only.
+// near: the page behind matches the base only roughly (within 25%): there is no exact base, so export it as the overlay on a cropped clone
+// of the base. Anything further away is a different screen and is not listed (it is built in full like any other frame).
 // `add` holds the top-most overlay subtrees (fixed or absolute positioned) with `r` already converted to the page's coordinates,
 // so they can be built directly under the cloned root.
 //
@@ -65,7 +68,8 @@ export function stateDelta(baseRoot, stateRoot, height) {
   const add = overlays(stateRoot).filter((n) => !known(n));
   const base = { missing, extra, cropHeight: Math.round(stateRoot.r[3]), baseNodes: bf.length };
   if (!add.length) return { reusable: false, reason: 'no overlay nodes to add', ...base };
-  if (missing > tol || extra > tol) return { reusable: false, reason: `the page behind it differs (${missing} base nodes missing, ${extra} new)`, ...base };
+  const nearTol = Math.max(4, Math.round(0.25 * bf.length));
+  const tooFar = missing > nearTol || extra > nearTol;
   // the region to compare when the frame holds only the overlay: the box around the dialog, menu or panel. A node that covers the whole
   // viewport is the scrim (or a wrapper holding the scrim and the dialog), so only its smaller descendants count.
   const W = Math.round(stateRoot.r[2]);
@@ -79,6 +83,8 @@ export function stateDelta(baseRoot, stateRoot, height) {
   add.forEach((n) => walkBox(n, 0, 0));
   let compareBox = null;
   if (boxes.length) { const x1 = Math.max(0, Math.min(...boxes.map((b) => b[0]))), y1 = Math.max(0, Math.min(...boxes.map((b) => b[1]))), x2 = Math.min(W, Math.max(...boxes.map((b) => b[0] + b[2]))), y2 = Math.min(H, Math.max(...boxes.map((b) => b[1] + b[3]))); if (x2 > x1 && y2 > y1) compareBox = [Math.floor(x1), Math.floor(y1), Math.ceil(x2 - x1), Math.ceil(y2 - y1)]; }
+  if (tooFar) return { reusable: false, reason: `a different screen (${missing} base nodes missing, ${extra} new)`, ...base };
+  if (missing > tol || extra > tol) return { reusable: false, near: true, reason: `the page behind it differs a little (${missing} base nodes missing, ${extra} new)`, ...base, compareBox, width: W, add };
   return { reusable: true, reason: `${add.length} overlay node(s) over the cropped base`, ...base, compareBox, width: W, add };
 }
 
@@ -101,7 +107,7 @@ export function planDeltas(frames, load) {
       let best = null;
       for (const b of bases) {
         const r = stateDelta(b.spec.root, spec.root, f.viewport && f.viewport.h);
-        if (r.reusable && (!best || r.missing + r.extra < best.missing + best.extra)) best = { ...r, base: b.f.slug };
+        if ((r.reusable || r.near) && (!best || (r.reusable && !best.reusable) || (r.reusable === best.reusable && r.missing + r.extra < best.missing + best.extra))) best = { ...r, base: b.f.slug };
       }
       if (best) out.push({ slug: f.slug, ...best }); else bases.push({ f, spec });
     }

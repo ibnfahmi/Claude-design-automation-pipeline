@@ -25,7 +25,10 @@ r = stateDelta(base, cropped([header, nested]));
 check('a nested overlay is found and moved to page coordinates', r.reusable && r.add.length === 1 && r.add[0].r[0] === 100 && r.add[0].r[1] === 140, JSON.stringify(r.add && r.add[0].r));
 
 r = stateDelta(base, cropped([{ ...header, c: [T('Logo', 40, 20, 'Brand'), T('Nav', 600, 20, 'Ideas'), T('User', 1200, 20, 'Signed in as Sara'), T('Bell', 1100, 20, '3 new'), T('Avatar', 1300, 20, 'SA'), T('Menu', 1350, 20, 'Menu'), T('Brand', 40, 20, 'Brand 2')] }, hero, dim, modal]));
-check('a page that really differs behind the overlay is not reusable', !r.reusable && /differs/.test(r.reason), r.reason);
+check('a page that really differs behind the overlay is not reusable', !r.reusable && !r.near && /different screen/.test(r.reason), r.reason);
+
+r = stateDelta(base, cropped([{ ...header, c: [T('Logo', 40, 20, 'Brand'), T('Nav', 600, 20, 'Ideas'), T('User', 1200, 20, 'Signed in as Sara'), T('Bell', 1100, 20, '3 new'), T('Avatar', 1300, 20, 'SA')] }, hero, dim, modal]));
+check('a page that differs a little behind the overlay is near: export it on a cropped clone', !r.reusable && r.near === true && r.add.length === 2 && !!r.compareBox, r.reason);
 
 r = stateDelta(base, cropped([header, hero]));
 check('no overlay nodes means nothing to clone', !r.reusable && /no overlay/.test(r.reason), r.reason);

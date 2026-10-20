@@ -51,7 +51,7 @@ Tell the user this before the Figma build starts, as a range with its parts and 
 | Pilot (more than 10 frames) | 150 to 300 turns (measured: one unlimited pilot took 575 turns and ran into the usage limit; it is now capped at 2 rounds and about 150 turns of fixing) |
 | Per frame, measured-spec build with compare and fixes | about 4 turns, about 1 to 3 minutes (measured: 1,040 turns for 254 frames) |
 | Finish (changelog, cover, links, report) | 20 to 40 turns |
-| Overlay states (dialogs, menus, dropdowns over a page; 37 of 198 frames in the one project checked) | exported overlay-only: about 1 to 2 turns instead of 4 |
+| Overlay states (dialogs, menus, dropdowns over a page; 37 of 198 frames in the one project checked) | exported overlay-only: about 1 to 2 turns instead of 4; on a cropped clone (the fallback): about 2 to 3 |
 | Single session (no split) | the same turns, but each turn re-reads the whole growing context, so tokens grow roughly with the square of the frame count; the split build keeps each job's context small |
 
 Say that languages and the library multiply the cost, that plain frames and one language are the cheap options, and that the real numbers will be recorded in the state file (`figma_progress` keeps the turns and minutes of each job) so the next estimate uses them.
