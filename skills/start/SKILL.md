@@ -55,7 +55,7 @@ Look for `design-pipeline-state.json` in the current folder (format in `referenc
 - Found and `stage` is not `done` → summarise where the run stopped and ask: resume, or start over? On resume, jump to that stage:
   - `review` → run the "When the user returns" steps of Stage 4. Anything the user typed with the command (for example `/design-pipeline:start approved`) counts as review feedback.
   - `phase_done` → a phase is finished and features remain: show the next phase's feature selection (`references/phases.md`).
-  - `design` → restart the round at Stage 3 (check `git log` in `code/` for what was already committed, and start a fresh Design Agent if the old one can't be resumed). `handoff` → run the `to-figma` skill again: it reuses the saved answers and `figma_progress` and continues at the next unfinished job.
+  - `design` → restart the round at Stage 3 (check `git log` in `code/` for what was already committed, and start a fresh Design Agent if the old one can't be resumed). `handoff` → run the `to-figma` skill again: it reuses the saved answers, updates the same file in place and builds only the missing frames.
   - `audit` → rerun Stage 3b. `journeys` → continue the journeys review (Stage 2b). `direction` → continue the style step (Stage 2c).
   - In a new session, first re-run the tool check (Node, npm and Git), keep the saved scope and direction (telling the user which are in use, and letting them change them), restart the dev server with the preview tool, and start a fresh Design Agent if one is needed (the old agent ID won't work). The code in `code/` is the source of truth; read `git log` and `git status` to see where it stands.
 - Not found → name the session (see above) and start a new run at Stage 1.
@@ -175,9 +175,9 @@ Run the quality gates from `_shared/references/code-conventions.md` one last tim
 
 ## Stage 6 — Optional Figma export
 
-Ask once with AskUserQuestion: *"Export the approved app to a Figma file?"* — **No, the code is enough (Recommended)** — "Nothing is exported. Saves tokens." / **Yes, export to Figma** — "A Figma file with a page per feature, a components page and a changelog. **Uses a large number of tokens and takes a long time**; a project of more than 10 frames first builds 10 screens as a test, fixes what the pixel comparison shows is wrong, then builds the rest in short separate jobs. You choose the language and get an estimate before it starts."
+Ask once with AskUserQuestion: *"Export the approved app to a Figma file?"* — **No, the code is enough (Recommended)** — "Nothing is exported. Saves tokens." / **Yes, export to Figma** — "A Figma file with a page per feature, a components page and a changelog. **Uses a large number of tokens and takes a long time**; the whole file is built in one session and every screen is compared with the app. You choose the language and get an estimate before it starts."
 
-On yes, run the **`to-figma` skill** (invoke it with the Skill tool, `design-pipeline:to-figma`, and follow it): it does the completeness check, the questions (what to export, **which language**, component library, destination), the connector and helper-tool checks, the estimate, and the build in jobs, and it works on its own when the user asks for a Figma export later. When it returns, it has saved `figma_url`, `figma_file`, `figma_pilot`, `figma_frames`, `figma_exports` and the answers (`figma_selection`, `figma_library`, `figma_languages`, `figma_tools`) in the state file; continue to Stage 7.
+On yes, run the **`to-figma` skill** (invoke it with the Skill tool, `design-pipeline:to-figma`, and follow it): it does the completeness check, the questions (what to export, **which language**, component library, destination), the connector and helper-tool checks, the estimate, and the build in jobs, and it works on its own when the user asks for a Figma export later. When it returns, it has saved `figma_url`, `figma_file`, `figma_frames`, `figma_exports` and the answers (`figma_selection`, `figma_library`, `figma_languages`, `figma_tools`) in the state file; continue to Stage 7.
 
 ## Stage 7 — Deliver
 

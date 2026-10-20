@@ -2,6 +2,13 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.13.0] - 2026-10-21
+
+### Changed
+- **Back to building the whole file in one go: the split build and the pilot batch are removed.** A real test of the 0.12.x split (Shabab Masr, 13 screens) showed they did not pay off: setup was cheap, but the pilot took 163 turns and a context of 916k tokens for 7 screens, all of which failed the pixel rule, and no feature job ever ran. The to-figma skill now starts one Handoff Agent that builds the whole file in one session (file, pages, variables, fonts, every screen with its pixel check, Components, Changelog, cover, report). Removed: the `setup`, `pilot`, `feature` and `finish` jobs, the 10-screen pilot and its checkpoint, `handoff-plan.json` and `results/<F-n>.json`, the `PILOT` report line, and the `figma_progress` and `figma_pilot` state fields. Running the skill again still updates the same file and builds only missing or changed frames.
+- **Kept:** the `/design-pipeline:to-figma` skill with its questions (what to export, language, component library, destination), the helper-tool checks and the estimate before the build; **overlay screens exported overlay-only by default** (just the scrim and the dialog, no base layer), compared in the dialog's box, with the overlay on a cropped clone of the base as the fallback; the progress log (now stamped with the real clock, because the agent wrote invented times in the last test); typography as Figma variables; the `setSharedPluginData` fix.
+- Not changed: the builder itself. The test also found bugs in it (grid rows with a white fill, multi-layer background images, gradient text, wrapping slack, centred grid cells, SVG images, input values, the video placeholder); they are not fixed here.
+
 ## [0.12.6] - 2026-10-20
 
 ### Changed
