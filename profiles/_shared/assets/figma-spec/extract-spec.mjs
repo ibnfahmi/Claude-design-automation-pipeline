@@ -147,13 +147,29 @@ const work = async (f, idx, safe = false) => {
     // foreignObject) and the extractor keeps no vector over 24,000 characters: those SVGs are saved as pictures too
     await page.evaluate(() => {
       const BAD = /stroke-dasharray|<mask[\s>]|<filter[\s>]|<foreignObject|<pattern[\s>]|<image[\s>]/i;
-      document.querySelectorAll('svg').forEach((el) => { if (el.parentElement && el.parentElement.closest('svg')) return; const m = el.outerHTML; if (m.length > 24000 || BAD.test(m)) el.setAttribute('data-np-big', '1'); });
+      document.querySelectorAll('svg').forEach((el) => {
+        if (el.parentElement && el.parentElement.closest('svg')) return;
+        const m = el.outerHTML; let bad = m.length > 24000 || BAD.test(m);
+        // a progress ring's dash pattern is usually set by a stylesheet, so the computed style of the shapes inside is what counts
+        if (!bad) for (const s of el.querySelectorAll('*')) { const cs = getComputedStyle(s); if ((cs.strokeDasharray && cs.strokeDasharray !== 'none') || (cs.mask && cs.mask !== 'none' && cs.mask !== 'match-source') || /url\(/.test(cs.filter || '')) { bad = true; break; } }
+        if (bad) el.setAttribute('data-np-big', '1');
+      });
       document.querySelectorAll('img').forEach((img) => { const s = img.currentSrc || img.src || ''; if (!/\.svg(\?|#|$)/i.test(s)) return; try { const x = new XMLHttpRequest(); x.open('GET', s, false); x.send(); const t = x.responseText || ''; if (x.status >= 200 && x.status < 300 && (t.length > 24000 || BAD.test(t))) img.setAttribute('data-np-big', '1'); } catch (e) {} });
     });
-    const mediaEls = await page.$$('video, canvas, img[data-np-big], svg[data-np-big]');
+    // an element painted by a conic gradient (a progress ring) or a CSS mask is something Figma cannot draw: its own pixels (children hidden) become its fill, the children stay editable on top
+    await page.evaluate(() => {
+      document.querySelectorAll('body *').forEach((el) => {
+        if (el instanceof SVGElement) return;
+        const cs = getComputedStyle(el); const r = el.getBoundingClientRect();
+        if (r.width < 8 || r.height < 8 || r.width > 400 || r.height > 400) return;
+        const masked = (cs.maskImage && cs.maskImage !== 'none') || (cs.webkitMaskImage && cs.webkitMaskImage !== 'none');
+        if (/conic-gradient/.test(cs.backgroundImage) || masked) el.setAttribute('data-np-css', '1');
+      });
+    });
+    const mediaEls = await page.$$('video, canvas, img[data-np-big], svg[data-np-big], [data-np-css]');
     if (mediaEls.length) {
       fs.mkdirSync(path.join(outDir, 'assets'), { recursive: true });
-      await page.addStyleTag({ content: 'html[data-np-hide] body *{visibility:hidden!important}html[data-np-hide] [data-np-shot]{visibility:visible!important}' });
+      await page.addStyleTag({ content: 'html[data-np-hide] body *{visibility:hidden!important}html[data-np-hide] [data-np-shot]{visibility:visible!important}html[data-np-hide],html[data-np-hide] body{background:transparent!important}' });
       let mi = 0; const done = new Map(); // a source used several times (a repeated logo strip) is captured once, at its first size
       for (const el of mediaEls) {
         const bb = await el.boundingBox(); if (!bb || bb.width < 8 || bb.height < 8) continue;
@@ -162,7 +178,7 @@ const work = async (f, idx, safe = false) => {
         const file = `assets/${name}.media${mi}.png`;
         try {
           await el.evaluate((e) => { document.documentElement.setAttribute('data-np-hide', '1'); e.setAttribute('data-np-shot', '1'); });
-          await el.screenshot({ path: path.join(outDir, file), animations: 'disabled', timeout: 3000 }); // animations off: a marquee or a moving hero would never be "stable"
+          await el.screenshot({ path: path.join(outDir, file), animations: 'disabled', timeout: 3000, omitBackground: true }); // omitBackground: transparent parts stay transparent, so the picture does not bring the page's own background with it; // animations off: a marquee or a moving hero would never be "stable"
           await el.evaluate((e, fl) => { e.setAttribute('data-np-file', fl); e.removeAttribute('data-np-shot'); document.documentElement.removeAttribute('data-np-hide'); }, file);
           if (key) done.set(key, file); mi++;
         } catch (e) { await el.evaluate((x) => { x.removeAttribute('data-np-shot'); document.documentElement.removeAttribute('data-np-hide'); }).catch(() => {}); }

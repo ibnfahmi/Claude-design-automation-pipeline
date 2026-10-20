@@ -152,7 +152,8 @@ async function bindFill(node, cssColor, paint) { const id = OPTS.colorVars && OP
 async function applyVisual(node, n, w, h) {
   const fills = [];
   if (n.bg) { let p = solid(n.bg); if (p) { p = await bindFill(node, n.bg, p); fills.push(p); } }
-  if (n.bgi) {
+  if (n.bgfile) { images.push({ id: node.id, src: '', file: n.bgfile, kind: 'css-picture', fit: 'fill', w, h }); fills.push({ type: 'SOLID', color: { r: 0.8, g: 0.8, b: 0.8 }, opacity: 1 }); }
+  else if (n.bgi) {
     if (/gradient\(/.test(n.bgi)) { for (const g of gradientPaints(n.bgi, w, h)) fills.push(g); }
     else { const u = /url\(["']?([^"')]+)["']?\)/.exec(n.bgi); if (u) { bgImages.push({ id: node.id, url: u[1] }); fills.push({ type: 'SOLID', color: { r: 0.8, g: 0.8, b: 0.8 }, opacity: 1 }); } else approximated.add('background-image'); }
   }
@@ -241,6 +242,23 @@ function unevenGaps(lay) {
   if (gs.some(g => g < -0.5)) return null;
   const m = median(gs); if (!gs.some(g => Math.abs(g - m) > 1.5)) return null;
   return gs.map(g => Math.max(0, Math.round(g * 2) / 2));
+}
+
+// siblings that overlap along the main axis (a negative margin pulls one over the other) have no auto-layout equivalent: Figma has no margins, and a spacer cannot be negative
+function overlappingSiblings(lay) {
+  if (!lay || lay.mode === 'NONE' || lay.wrap || lay.grid || lay.pj === 'SPACE_BETWEEN' || (lay.order || []).length < 2) return false;
+  const mainH = lay.mode === 'HORIZONTAL', o = lay.order;
+  if (o.some(c => c.F && c.F.ma)) return false;
+  // a first child that starts before the padding (a negative margin-top on it) cannot be placed by auto layout either
+  const pad = lay.pad || [0, 0, 0, 0], first = o[0];
+  if ((mainH ? first.r[0] - pad[3] : first.r[1] - pad[0]) < -2) return true;
+  for (let i = 1; i < o.length; i++) {
+    const a = o[i - 1], b = o[i];
+    // the measured box of a text is the font's content area, which is taller than its line: a text may overlap a neighbour by part of its height without any negative margin
+    const tol = (a.k === 't' || b.k === 't') ? 0.4 * Math.min(mainH ? a.r[2] : a.r[3], mainH ? b.r[2] : b.r[3]) : 2;
+    if ((mainH ? b.r[0] - (a.r[0] + a.r[2]) : b.r[1] - (a.r[1] + a.r[3])) < -tol) return true;
+  }
+  return false;
 }
 
 // ---------- layout inference ----------
@@ -362,7 +380,8 @@ async function build(n, parent, pinfo, where) {
     if (inst) return inst;
   }
   // frame
-  const lay = inferLayout(n);
+  let lay = inferLayout(n);
+  if (overlappingSiblings(lay)) { approximated.add('negative margins: children keep their measured positions'); lay = { mode: 'NONE', pad: [0, 0, 0, 0], order: lay.order }; }
   const w = Math.max(1, n.r[2]), h = Math.max(1, n.r[3]);
   const auto = lay && lay.mode !== 'NONE';
   const f = auto ? figma.createAutoLayout(lay.mode) : figma.createFrame();
@@ -449,8 +468,21 @@ function placeAbsolute(node, c, parent, pw, ph) {
 async function buildGrid(n, f, where) {
   // f is a vertical auto-layout frame we created from the grid container: rows become horizontal frames
   const kids = (n.c || []).filter(inFlow); const rows = []; const tol = 3;
-  [...kids].sort((a, b) => a.r[1] - b.r[1] || a.r[0] - b.r[0]).forEach(c => { const row = rows.find(r => Math.abs(r.y - c.r[1]) <= tol); if (row) row.items.push(c); else rows.push({ y: c.r[1], items: [c] }); });
   const L = n.L; const colGap = L.gap ? L.gap[1] : 0, rowGap = L.gap ? L.gap[0] : 0;
+  // an item belongs to the row TRACK that holds its vertical centre: items of one row do not share a top edge when align-items centres them (a bar between two lines of text)
+  const tracks = String(L.rows || '').split(/\s+/).map(parseFloat);
+  if (tracks.length && tracks.every(Number.isFinite)) {
+    let y0 = L.pad ? L.pad[0] : 0; const ranges = tracks.map(h => { const r = [y0, y0 + h]; y0 += h + rowGap; return r; });
+    const byTrack = new Map();
+    for (const c of [...kids].sort((a, b) => a.r[1] - b.r[1] || a.r[0] - b.r[0])) {
+      const cy = c.r[1] + c.r[3] / 2; let ti = ranges.findIndex(r => cy >= r[0] - 0.5 && cy <= r[1] + 0.5);
+      if (ti < 0) ti = ranges.reduce((best, r, i) => Math.abs(cy - (r[0] + r[1]) / 2) < Math.abs(cy - (ranges[best][0] + ranges[best][1]) / 2) ? i : best, 0);
+      if (!byTrack.has(ti)) byTrack.set(ti, { y: c.r[1], items: [] }); byTrack.get(ti).items.push(c);
+    }
+    for (const ti of [...byTrack.keys()].sort((a, b) => a - b)) rows.push(byTrack.get(ti));
+  } else {
+    [...kids].sort((a, b) => a.r[1] - b.r[1] || a.r[0] - b.r[0]).forEach(c => { const row = rows.find(r => Math.abs(r.y - c.r[1]) <= tol); if (row) row.items.push(c); else rows.push({ y: c.r[1], items: [c] }); });
+  }
   f.itemSpacing = snap(rowGap); await bindSpace(f, 'itemSpacing', snap(rowGap));
   const cw = n.r[2] - (L.pad ? L.pad[1] + L.pad[3] : 0);
   const trackH = String(L.rows || '').split(/\s+/).map(parseFloat); // the used row track heights (px)

@@ -277,6 +277,7 @@
       if (!val && el.placeholder) { try { const pc = getComputedStyle(el, '::placeholder').color; if (pc) tp = { ...tp, col: pc }; } catch (e) {} } // the placeholder has its own colour
       o.tp = tp; }
     visual(cs, o); layout(cs, o); childFlex(cs, o, el);
+    if (el.hasAttribute('data-np-css') && el.getAttribute('data-np-file')) { o.bgfile = el.getAttribute('data-np-file'); delete o.bgi; } // painted by something Figma cannot draw: its saved picture is the fill
 
     // inline formatting context -> one rich text node
     if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT' && isInlineFlow(el)) {

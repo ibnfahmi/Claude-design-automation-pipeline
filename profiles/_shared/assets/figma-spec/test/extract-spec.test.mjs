@@ -23,13 +23,16 @@ const check = (name, ok, extra = '') => { if (!ok) errors.push(name); console.lo
 const PNG1 = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
 const files = {
   '/index.html': ['text/html', `<!doctype html><meta charset="utf-8"><title>t</title>
-<style>body{margin:0;font:16px Arial;width:600px} #dlg{display:none;position:fixed;left:100px;top:80px;width:300px;height:160px;background:#fff;border:1px solid #ccc} #dlg.on{display:block}
+<style>.dashed{stroke-dasharray:100 200} body{margin:0;font:16px Arial;width:600px} #dlg{display:none;position:fixed;left:100px;top:80px;width:300px;height:160px;background:#fff;border:1px solid #ccc} #dlg.on{display:block}
 h1{margin:0;background:linear-gradient(90deg,#1e40af,#3b82f6);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
 .flip{transform:scaleX(-1)} .hero{width:200px;height:80px;background-image:url(bg.png)} .u{display:inline-block;background:linear-gradient(currentColor,currentColor) no-repeat 0 100%/0 2px}</style>
 <h1>Title</h1> <button id="open" onclick="document.getElementById('dlg').className='on'">Open</button>
 <div id="lang"></div><script>document.getElementById('lang').textContent=localStorage.getItem('lang')||'none'</script>
 <input id="name" placeholder="Your name">
 <svg id="ring" width="60" height="60" viewBox="0 0 60 60"><circle cx="30" cy="30" r="25" fill="none" stroke="#2563eb" stroke-width="6" stroke-dasharray="100 200"/></svg>
+<span id="trans" style="display:inline-block;width:40px;height:40px;background:conic-gradient(rgba(37,99,235,.5) 50%, transparent 0)"></span>
+<span id="cring" style="display:inline-block;width:60px;height:60px;border-radius:50%;background:conic-gradient(#2563eb 72%, #e5e7eb 0)"><b>72</b></span>
+<svg id="ring2" width="60" height="60" viewBox="0 0 60 60"><circle class="dashed" cx="30" cy="30" r="25" fill="none" stroke="#2563eb" stroke-width="6"/></svg>
 <svg id="plain" width="24" height="24" viewBox="0 0 24 24"><path d="M4 6h16" stroke="#000"/></svg>
 <img class="flip" src="arrow.svg" width="24" height="24"> <img class="flip2" src="arrow.svg" width="24" height="24" style="scale:-1 1"> <div class="hero"></div> <a class="u" href="#">underlined</a>
 <div id="row" style="display:flex;width:300px;gap:8px"><span id="ra">A</span><span id="rb" style="margin-left:auto;order:2">B</span><span id="rc">C</span></div>
@@ -68,6 +71,11 @@ const name = plain.find((n) => n.inp === 'text' && n.ph === 'Your name');
 check('an input\'s placeholder is kept with its own colour', !!name && !!name.tp && !!name.tp.col, name && JSON.stringify(name.tp && name.tp.col));
 const ring = plain.find((n) => n.k === 'i' && n.kind === 'svg-picture');
 check('an SVG Figma cannot import (dashed stroke) is saved as a picture', !!ring && fs.existsSync(path.join(tmp, 'out', ring.file)), ring && ring.file);
+check('a dash pattern set by a stylesheet makes the SVG a picture too', plain.filter((n) => n.k === 'i' && n.kind === 'svg-picture').length >= 2, String(plain.filter((n) => n.kind === 'svg-picture').length));
+const transNode = plain.find((n) => n.bgfile && /conic-gradient\(rgba/.test('') ) || plain.filter((n) => n.bgfile).find((n) => { try { const { PNG } = createRequire(path.join(toolsDir, 'package.json'))('pngjs'); const png = PNG.sync.read(fs.readFileSync(path.join(tmp, 'out', n.bgfile))); return png.width <= 42 && png.data.some((v, i) => i % 4 === 3 && v === 0); } catch (e) { return false; } });
+check('a saved picture keeps its transparent parts transparent (not the page background)', !!transNode, transNode && transNode.bgfile);
+const cring = plain.find((n) => n.bgfile && all(n).some((c) => c.k === 't' && /72/.test(c.txt || (c.runs || []).map((r) => r.txt).join(''))));
+check('an element painted by a conic gradient gets its pixels as its fill, with its text still a layer on top', !!cring && !cring.bgi && fs.existsSync(path.join(tmp, 'out', cring.bgfile)) && all(cring).some((c) => c.k === 't' && /72/.test(c.txt || (c.runs || []).map((r) => r.txt).join(''))), cring && JSON.stringify([cring.bgfile, !!cring.bgi, (cring.c || []).length]));
 const vec = plain.filter((n) => n.k === 's');
 check('a plain inline SVG stays a vector', vec.some((n) => /M4 6h16/.test(n.svg || '')), vec.length + ' svg nodes');
 const arrow = vec.find((n) => /M4 12h12/.test(n.svg || ''));

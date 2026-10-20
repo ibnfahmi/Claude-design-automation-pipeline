@@ -153,11 +153,17 @@ check('buttons hug their content', all.some(n => n.name === 'Button' || n.name =
   // search has margin-left: auto; bell comes second in the page but has order: 1, so it is shown last
   const gtext = (n, y) => ({ k: 'f', n, r: [0, y, 200, 20], bg: 'rgb(10, 10, 10)', L: { d: 'block' } });
   const gappy = { k: 'f', n: 'Gappy', r: [0, 0, 200, 90], L: { d: 'block' }, c: [gtext('G1', 0), gtext('G2', 25), gtext('G3', 70)] };
+  const overlap = { k: 'f', n: 'Overlap', r: [0, 0, 200, 90], L: { d: 'block' }, c: [{ k: 'f', n: 'O1', r: [0, 0, 200, 40], bg: 'rgb(0, 0, 0)', L: { d: 'block' } }, { k: 'f', n: 'O2', r: [10, 25, 180, 40], bg: 'rgb(200, 0, 0)', L: { d: 'block' } }, { k: 'f', n: 'O3', r: [0, 70, 200, 20], bg: 'rgb(0, 0, 200)', L: { d: 'block' } }] };
+  const bt = (n, x, y, w, h) => ({ k: 'f', n, r: [x, y, w, h], bg: 'rgb(30, 30, 30)', L: { d: 'block' } });
+  const barRow = { k: 'f', n: 'BarRow', r: [0, 0, 400, 24], L: { d: 'grid', gap: [12, 12], cols: '24px 90px 200px', rows: '24px', ai: 'center', jc: 'normal' }, c: [bt('Rank', 0, 0, 24, 24), bt('Label', 36, 2.5, 90, 19), bt('Bar', 138, 6, 200, 12)] };
+  const ringNode = { k: 'f', n: 'RingBox', r: [0, 0, 60, 60], bgfile: 'assets/x.media0.png', rad: [30, 30, 30, 30], L: { d: 'block' }, c: [{ k: 't', n: '72', r: [18, 20, 24, 20], txt: '72', ff: 'Inter', fs: 16, fw: 700, col: 'rgb(0, 0, 0)', lines: 1 }] };
+  const pulled = { k: 'f', n: 'Pulled', r: [0, 0, 200, 140], L: { d: 'flex', dir: 'col', gap: [10, 10], pad: [40, 0, 0, 0] }, c: [{ k: 'f', n: 'P1', r: [0, -36, 200, 100], bg: 'rgb(0, 0, 0)', L: { d: 'block' } }, { k: 'f', n: 'P2', r: [0, 74, 200, 60], bg: 'rgb(9, 9, 9)', L: { d: 'block' } }] };
+  const textStack = { k: 'f', n: 'TextStack', r: [0, 0, 200, 50], L: { d: 'flex', dir: 'col', gap: [0, 0] }, c: [{ k: 't', n: 'T1', r: [0, 0, 150, 33], txt: 'Title', ff: 'Inter', fs: 24, fw: 700, lh: 26.4, col: 'rgb(0, 0, 0)', lines: 1 }, { k: 't', n: 'T2', r: [0, 30.4, 150, 17], txt: 'Sub', ff: 'Inter', fs: 12, fw: 400, lh: 17, col: 'rgb(0, 0, 0)', lines: 1 }] };
   const clamped = { k: 'f', n: 'ClampBox', r: [0, 0, 300, 60], L: { d: 'flex', dir: 'col', gap: [0, 0] }, c: [{ k: 't', n: 'ClampText', r: [0, 0, 294, 46], lines: 2, clamp: 2, ff: 'Inter', fs: 14, fw: 400, lh: 24, col: 'rgb(0, 0, 0)', txt: 'A very long description that the page shows on two lines only and cuts off with an ellipsis after that, so the rest never appears on the page at all.' }] };
   const actions = { k: 'f', n: 'Actions', r: [0, 0, 500, 44], L: { d: 'flex', dir: 'row', jc: 'normal', ai: 'center', gap: [10, 10] }, c: [mk('Search', 300, 44, { ma: 'l' }), mk('Bell', 454, 27, { o: 1 }), mk('Btn', 354, 90)] };
   const tile = (n, x) => ({ k: 'f', n, r: [x, 0, 200, 240], L: { d: 'flex', dir: 'row', ai: 'flex-end', gap: [0, 0], pos: 'relative' }, c: [{ k: 'i', n: 'img', r: [0, 0, 200, 240], src: 'a.jpg', fit: 'cover', L: { pos: 'absolute' } }, { k: 'f', n: 'cap', r: [0, 160, 150, 80], L: { d: 'block', pos: 'relative' }, c: [{ k: 't', n: 'Cap', r: [10, 10, 100, 20], txt: 'Caption', ff: 'Inter', fs: 14, fw: 400, col: 'rgb(0, 0, 0)', lines: 1 }] }] });
   const tiles = { k: 'f', n: 'Tiles', r: [0, 0, 416, 240], L: { d: 'grid', gap: [16, 16], cols: '200px 200px', rows: '240px', ai: 'normal', jc: 'normal' }, c: [tile('TileA', 0), tile('TileB', 216)] };
-  const holder = { k: 'f', n: 'Holder', r: [0, 0, 550, 1900], L: { d: 'flex', dir: 'col', gap: [0, 0] }, c: [gappy, clamped, tiles, actions, input, video, gradient, iconBtn, wrap, wrap2, gradText, centerWrap, noJiWrap, ctas, wrapRow] };
+  const holder = { k: 'f', n: 'Holder', r: [0, 0, 550, 1900], L: { d: 'flex', dir: 'col', gap: [0, 0] }, c: [pulled, textStack, ringNode, barRow, overlap, gappy, clamped, tiles, actions, input, video, gradient, iconBtn, wrap, wrap2, gradText, centerWrap, noJiWrap, ctas, wrapRow] };
   const section4 = { node: holder, parentId: null, name: 'Fix checks', x: 0, y: 6000 };
   const code4 = fs.readFileSync(path.join(HERE, '..', 'figma-builder.js'), 'utf8').replace('__SPEC__', JSON.stringify(section4)).replace('__FONTMAP__', JSON.stringify(FONTMAP)).replace('__OPTS__', JSON.stringify({ fixedContainers: true }));
   const run4 = new (Object.getPrototypeOf(async function () {}).constructor)('figma', code4);
@@ -187,6 +193,14 @@ check('buttons hug their content', all.some(n => n.name === 'Button' || n.name =
   check('a grid without justify-items does not centre by guessing from the measured position', !!njrow && njrow.primaryAxisAlignItems === 'MIN', njrow && String(njrow.primaryAxisAlignItems));
   check('align-items: center keeps the row track height so the item can be centred inside it', !!crow && crow.height === 268, crow && String(crow.height));
   const act = kids4.find(n => n.name === 'Actions');
+  check('an element with a saved picture is listed for the picture fill', r4.images.some((i) => i.kind === 'css-picture' && i.file === 'assets/x.media0.png'), JSON.stringify(r4.images.map((i) => i.kind)));
+  const pl = kids4.find(n => n.name === 'Pulled'), ts = kids4.find(n => n.name === 'TextStack');
+  check('a first child pulled above the padding by a negative margin keeps its measured position', !!pl && pl.layoutMode === 'NONE' && pl.children.find(c => c.name === 'P1').y === -36, pl && pl.layoutMode);
+  check('texts whose content boxes overlap a little are still an auto-layout stack', !!ts && ts.layoutMode === 'VERTICAL', ts && ts.layoutMode);
+  const br = kids4.find(n => n.name === 'BarRow'); const brows = br ? br.children.filter(c => c.name === 'Row') : [];
+  check('items centred in one grid row track stay in one row (the bar is not pushed to a second row)', brows.length === 1 && brows[0].children.length === 3, br && brows.map(r => r.children.length).join('+'));
+  const ov = kids4.find(n => n.name === 'Overlap'); const o2 = ov && ov.children.find(c => c.name === 'O2');
+  check('children that overlap through a negative margin keep their measured positions (no auto layout)', !!ov && ov.layoutMode === 'NONE' && !!o2 && o2.y === 25, ov && [ov.layoutMode, o2 && o2.y].join(' '));
   const gp = kids4.find(n => n.name === 'Gappy');
   const gnames = gp && gp.children.map(c => c.name + (c.name === 'gap' ? Math.round(c.height) : '')).join(',');
   check('siblings with different gaps keep their exact gaps (fixed spacers, item spacing 0), not one median gap', !!gp && gnames === 'G1,gap5,G2,gap25,G3' && gp.itemSpacing === 0, gnames);

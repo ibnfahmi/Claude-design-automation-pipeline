@@ -2,6 +2,17 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.14.5] - 2026-10-21
+
+### Fixed (found by comparing the Impact page and the landing page with their builds, one cause at a time)
+- **A first child pulled above its parent's padding by a negative margin** (stat cards overlapping a hero with `margin-top: -76px`) was placed by auto layout 76 px too low, and so was everything below it. A container whose children overlap, or whose first child starts before the padding, now keeps its children's measured positions. A text's measured box is the font's content area, which may overlap its neighbour a little without any negative margin, so that does not count.
+- **One grid row was split into two** when its items were centred (a bar between two lines of text has another top edge than the text): the bar became a row of its own and the rows below squeezed together. Grid items are now assigned to rows by the row track that holds their centre.
+- **Progress rings drawn by `conic-gradient` (and anything painted by a CSS mask) were missing.** Figma cannot draw them: the element's own pixels (its children hidden) become its fill, and its text stays an editable layer on top. A dashed stroke, mask or filter that comes from a stylesheet makes an SVG a picture too (the extractor only looked at the markup before).
+- **A picture captured from the page brought the page's white background with it** (a dark map became a white block): captured pictures are now transparent where the page is.
+
+### Measured (live, after these fixes; 13-screen test site)
+- **Landing page (benchmark) 12.4% to 6.9%** (15.4% in 0.14.0); Impact 23.4% to 10.6%. The other eleven screens were last measured on 0.14.4 (3.1% to 11.8%) and not rebuilt with these fixes. Nothing passes 2% yet; the progress rings and bars of Impact now match.
+
 ## [0.14.4] - 2026-10-21
 
 ### Fixed (each found by comparing a built screen with its page, in page order)
