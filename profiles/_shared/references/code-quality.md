@@ -51,6 +51,29 @@ The Design Agent builds to this, and the Auditor checks the source and the runni
 - `will-change` only after you see stutter, naming the property. Suppress transitions during a theme switch. Never listen to `scroll` for reveals: use `IntersectionObserver`.
 - With a scroll library present: no `scrub` together with `toggleActions`, and no debug markers in anything shared.
 
+## Export-friendly authoring
+
+Code is written so a later Figma export is faithful, without changing how it looks. The export measures the running page; these habits keep what it measures simple. **They constrain how the code is written, never the design: when the reference or the design system needs an effect below, build it, and isolate it as the last rule says.**
+
+**Layout**
+- Centre with flex or grid on the parent (`place-items`, `justify-content`, `align-items`). Do not centre with `transform: translate(-50%)`, `margin: auto` tricks or absolute offsets.
+- Use `position: absolute` for overlays, badges and decoration only, never to lay out content that flows. Give a dialog one clear structure: scrim, wrapper, dialog.
+- Space siblings with `gap` (or padding), not margins between them; no negative margins and no `float`.
+- Give fixed-size things (icons, avatars, logos) an explicit width and height. Let a row wrap only where it really wraps.
+
+**Text and graphics**
+- Put every visible word in a real element, never in `::before` or `::after` `content`.
+- Draw icons as simple inline SVG with `currentColor`. Use `<img>` for photos, with `object-fit` stated.
+- Dashed strokes (progress rings), masks, filters, patterns and `foreignObject` are not imported by Figma and become pictures. When the design needs one, keep the whole effect inside its own `svg` element with nothing editable inside it, so only that element becomes a picture.
+- Keep a marquee or ticker as a normal row of items with the motion added on top, so its first frame is a clean row; a gradient heading (`background-clip: text`) gets its own element with nothing else inside.
+
+**Structure**
+- Give every section and repeated component a `data-name` (`data-name="Hero"`), so the Figma layers have readable names. Build states of one component from the same class names.
+- Take every colour, size and space from `tokens.css`; the Figma variables come from it.
+- Make each state reachable by a route, or by steps the extractor can replay (`steps` in the frame list); respect `?capture=1` (animations frozen, carousels on slide 1, no autoplay).
+
+The Auditor runs `node <assets>/figma-spec/export-lint.mjs --dir code` and lists what it finds as minor findings, with an estimate of which screens will drift. A finding is advice, not a blocker.
+
 ## Source checks the Auditor runs
 
 | Look for in the source | Problem |
@@ -68,5 +91,6 @@ The Design Agent builds to this, and the Auditor checks the source and the runni
 | `width: 100vw`, or a fixed `height` on a text box | Overflow or clipping |
 | `tabIndex` above 0 | Breaks tab order |
 | `<img>` with no `alt` | Missing alt |
+| `translate(-50%)` centring, visible text in `::before`/`::after`, negative margins, `float`, a dashed/masked/filtered SVG, a section with no `data-name` | Export-friendly authoring above (`export-lint.mjs` finds them) |
 
 Report findings as in `interface-quality.md`: critical when it blocks a task or fails WCAG on primary content, major when it makes an interaction harder, minor for polish.

@@ -2,6 +2,20 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.14.1] - 2026-10-21
+
+### Added
+- **Export-friendly authoring** (`code-quality.md`): habits for how the code is written so the Figma export is faithful, without limiting the design (flex or grid centring, `gap`, real text instead of pseudo-element content, simple inline SVG, `data-name` on sections, tokens, states reachable by route or steps). An effect the reference needs is still built, isolated in its own element.
+- **`export-lint.mjs`**: finds the patterns the export draws badly, with file and line; the Auditor reports them as minor findings and says which screens will drift. On the Shabab Masr site it finds the causes we had met (a 1 MB masked and filtered logo marquee, 18 dashed strokes, 11 `translate(-50%)` centrings).
+- **`steps` and `local` in the frame list**, so a state that needs clicks, typing or a language is measured by the extractor itself. Remote pictures are downloaded by `fill-plan`, which also picks FIT or FILL.
+- **SVG Figma cannot import** (dashed strokes, masks, filters, patterns, embedded bitmaps, `foreignObject`) is saved as a picture instead of arriving blank; CSS background images are filled; a text `drift` figure is returned per frame.
+
+### Changed
+- **The causes are modelled, not the symptoms.** 0.14.0 centred a lone grid item that was measured as centred and put a full-size first child behind its sibling. Both are replaced: the spec now carries `justify-items`, `justify-self`, `align-*`, row track heights, `position` and `z-index`, and the builder aligns and stacks the way CSS does.
+
+### Not yet verified
+- The rewrite is covered by the unit tests (8 test files pass) but has not been run live in Figma, and a full re-extraction of the 13 test screens took more than 4 minutes (large media captures), so extraction speed is open. Nothing here has been measured to reduce time or tokens yet.
+
 ## [0.14.0] - 2026-10-21
 
 ### Added

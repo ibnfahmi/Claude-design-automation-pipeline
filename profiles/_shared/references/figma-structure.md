@@ -4,7 +4,7 @@ Used by the Handoff Agent. This file is the one place that says how the Figma fi
 
 ## File name
 
-`<Project> — v<version>`, for example `Shabab Masr — v1.2` (an em dash with spaces). The project name is the project's name exactly; the version follows the version rule below. Apply it with `figma.root.name` (the `figma-pages.js` template does this). If the plugin API refuses to rename the file, say so in the result and give the exact name to type (File menu, Rename); the version and the date are also on the cover thumbnail, so the file stays identifiable.
+`<Project> — v<version>`, for example `Acme — v1.2` (an em dash with spaces). The project name is the project's name exactly; the version follows the version rule below. Apply it with `figma.root.name` (the `figma-pages.js` template does this). If the plugin API refuses to rename the file, say so in the result and give the exact name to type (File menu, Rename); the version and the date are also on the cover thumbnail, so the file stays identifiable.
 
 **Version rule:** the version the brief or BRD states (for example `V2.0` becomes `v2.0`), otherwise `v1.0` for the first export of the project and `v1.1`, `v1.2`... for each later export of the same project (count them in `figma_exports` in the state file). The same version goes on the thumbnail's Version pill, in the Changelog entry, and in the names of archived pages.
 

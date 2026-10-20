@@ -95,6 +95,7 @@ Read `code-quality.md` and test the project against it:
 - Read the browser console and the network panel on every frame route (`read_console_messages`, `read_network_requests`). Errors and failed requests are **major** (critical if they break a screen).
 - Search the source for the patterns in the "Source checks" table of `code-quality.md` (div click handlers, missing focus styles, ungated hover, `100vh` shells, `transition: all`, raw hex colours and pixel sizes in components, missing alt text, and so on) and report each with its file and line.
 - Check the motion baseline in the CSS and scripts: a transition on every interactive element, enter and exit motion on overlays, route transitions, entrance reveals via `IntersectionObserver`, and a reduced-motion fallback for each effect (findings as in `ui-defects.md`).
+- Run `node <assets>/figma-spec/export-lint.mjs --dir code` and report its findings as minor (see "Export-friendly authoring" in `code-quality.md`), naming the screens a finding would make drift in a Figma export.
 - Check that tokens are used: colours, type, radii and spacing in components come from `tokens.css`, not raw values.
 - Confirm every frame in the registry renders, and every route in the manifest exists.
 - **Share build:** run the file-open test from `share-build.md` on `share/index.html` through `file://`, and report its result (pass, pass with issues, fail, not verified, or not supported) in the report. A blank or failing share build is a finding.

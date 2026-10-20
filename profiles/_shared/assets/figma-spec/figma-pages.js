@@ -6,7 +6,7 @@
  * every id returned).
  *
  * PLAN = {
- *   fileName: "Shabab Masr — v1.2",
+ *   fileName: "Acme — v1.2",
  *   background: { r: 0.153, g: 0.153, b: 0.153 },                          // #272727
  *   features: [ { id: "F-0", name: "Foundation" }, { id: "F-1", name: "Challenges" } ],   // built features, in order
  *   archive: [ { pageId: "12:3", fromVersion: "v1.0" } ],                   // pages to copy into the archive group, this run

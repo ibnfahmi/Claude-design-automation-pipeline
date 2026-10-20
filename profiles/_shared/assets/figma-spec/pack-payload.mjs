@@ -4,6 +4,7 @@
 // build call is a few hundred characters instead of the 27 KB builder plus a spec.
 //
 //   node pack-payload.mjs pack --dir figma-spec --frames frames.json --pages pages.json [--deltas state-deltas.json] [--fonts fontmap.json] [--opts opts.json] [--out figma-spec/payload]
+//   node pack-payload.mjs fill-plan --dir figma-spec --images images.json [--assets "dirA;dirB"]   then   fill-post --plan figma-spec/payload/fill-plan.json [--group FIT] --urls '[...]'
 //   node pack-payload.mjs post --dir figma-spec/payload --urls '["https://mcp.figma.com/mcp/upload/.../submit?...", ...]'
 //
 // pack: writes figma-spec/payload/<name>.svg for the builder (builder.js), the runner (runner.js), the plan (plan.json) and one file per frame
@@ -84,14 +85,26 @@ if (cmd === 'pack') {
   for (const g of groups) {
     let file = null;
     if (g.file && fs.existsSync(path.join(dir, g.file))) file = path.join(dir, g.file);
-    else if (g.src && !/\.svg(\?|$)/i.test(g.src)) { const base = decodeURIComponent(g.src.split('?')[0].split('/').pop()); for (const d of assetDirs) { const p = path.join(d, base); if (fs.existsSync(p)) { file = p; break; } } }
+    else if (g.src && !/\.svg(\?|$)/i.test(g.src) && !/\.(mp4|webm|mov)(\?|$)/i.test(g.src)) {
+      const base = decodeURIComponent(g.src.split('?')[0].split('/').pop());
+      for (const d of assetDirs) { const p = path.join(d, base); if (fs.existsSync(p)) { file = p; break; } }
+      // not on disk: download it from the address (the page's own server or any public URL) into figma-spec/assets
+      if (!file && /^https?:\/\//i.test(g.src_full || g.src)) {
+        try { const r = await fetch(g.src_full || g.src); if (r.ok) { const ct = r.headers.get('content-type') || ''; const ext = /png/.test(ct) ? '.png' : /webp/.test(ct) ? '.webp' : /gif/.test(ct) ? '.gif' : '.jpg'; const target = path.join(dir, 'assets', (/\.(png|jpe?g|webp|gif)$/i.test(base) ? base : base + ext)); fs.mkdirSync(path.dirname(target), { recursive: true }); fs.writeFileSync(target, Buffer.from(await r.arrayBuffer())); file = target; } } catch (e) { /* listed as missing below */ }
+      }
+    }
     if (!file) { missing.push(g.file || g.src); continue; }
-    for (const id of g.ids) plan.push({ id, file });
+    // object-fit: contain / scale-down keep the whole picture (FIT); cover, fill and a background image fill the box
+    const scaleMode = /^(contain|scale-down)$/.test(g.fit || '') ? 'FIT' : 'FILL';
+    for (const id of g.ids) plan.push({ id, file, scaleMode });
   }
+  plan.sort((a, b) => (a.scaleMode > b.scaleMode ? 1 : a.scaleMode < b.scaleMode ? -1 : 0));
   fs.writeFileSync(arg('out', path.join(dir, 'payload', 'fill-plan.json')), JSON.stringify(plan, null, 1));
-  console.log(JSON.stringify({ count: plan.length, nodeIds: plan.map((p) => p.id), missing: [...new Set(missing)] }));
+  // one upload_assets call per scale mode (nearly always just FILL): {scaleMode, nodeIds} in the order each call needs
+  const calls = ['FILL', 'FIT'].map((m) => ({ scaleMode: m, nodeIds: plan.filter((p) => p.scaleMode === m).map((p) => p.id) })).filter((c) => c.nodeIds.length);
+  console.log(JSON.stringify({ count: plan.length, calls, missing: [...new Set(missing)] }));
 } else if (cmd === 'fill-post') {
-  const plan = JSON.parse(fs.readFileSync(arg('plan'), 'utf8')); const urls = JSON.parse(arg('urls', '[]'));
+  const all = JSON.parse(fs.readFileSync(arg('plan'), 'utf8')); const group = arg('group', 'FILL'); const plan = all.filter((p) => (p.scaleMode || 'FILL') === group); const urls = JSON.parse(arg('urls', '[]'));
   if (urls.length < plan.length) { console.error(`need ${plan.length} upload URLs, got ${urls.length}`); process.exit(2); }
   let ok = 0;
   await Promise.all(plan.map(async (p, i) => {

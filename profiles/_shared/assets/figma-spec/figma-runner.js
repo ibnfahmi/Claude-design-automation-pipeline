@@ -41,7 +41,7 @@ const readText = (name) => {
 const builderSrc = readText('builder.js');
 const plan = JSON.parse(readText('plan.json'));
 
-const agg = { built: [], images: [], missingFonts: new Set(), approximated: new Set(), deviations: 0, stats: {}, errors: [] };
+const agg = { drift: { texts: 0, off: 0, worst: [] }, built: [], images: [], missingFonts: new Set(), approximated: new Set(), deviations: 0, stats: {}, errors: [] };
 async function runBuilder(spec) {
   // function replacements, because a spec can contain "$" sequences that String.replace would read as patterns
   const code = builderSrc
@@ -50,9 +50,11 @@ async function runBuilder(spec) {
     .replace('__OPTS__', () => JSON.stringify(plan.opts || {}));
   const r = await new AF('figma', code)(figma); // figma passed in, so the builder sees the same Plugin API as the runner
   for (const im of (r.images || [])) agg.images.push(im);
+  for (const b of (r.bgImages || [])) agg.images.push({ id: b.id, src: b.url, kind: 'bg', fit: 'cover', w: 0, h: 0 }); // CSS background-image: url(...) pictures are filled like images
   for (const f of (r.missingFonts || [])) agg.missingFonts.add(f);
   for (const a of (r.approximated || [])) agg.approximated.add(a);
   agg.deviations += r.deviationCount || 0;
+  if (r.drift) { const d = agg.drift; d.texts += r.drift.texts; d.off += r.drift.off; d.worst = d.worst.concat(r.drift.worst || []).sort((a, b) => Math.max(Math.abs(b.dx), Math.abs(b.dy)) - Math.max(Math.abs(a.dx), Math.abs(a.dy))).slice(0, 3); }
   for (const [k, v] of Object.entries(r.stats || {})) agg.stats[k] = (agg.stats[k] || 0) + v;
   return r;
 }
@@ -71,18 +73,19 @@ for (; i < plan.jobs.length; i++) {
       continue;
     }
     const root = spec.root; const kids = root.c || [];
+    agg.drift = { texts: 0, off: 0, worst: [] };
     const top = await runBuilder({ node: { ...root, c: [] }, parentId: null, ...common });
     for (const k of kids) {
       if (Date.now() - t0 > (RUN.budgetMs || 30000) * 2) { agg.errors.push({ slug: job.slug, error: 'time budget exceeded in the middle of a frame; rerun this slug with only' }); break; }
       await runBuilder({ node: k, parentId: top.rootId, name: k.n });
     }
-    agg.built.push({ slug: job.slug, id: top.rootId, w: top.root.w, h: top.root.h, mode: 'full', sections: kids.length });
+    agg.built.push({ slug: job.slug, id: top.rootId, w: top.root.w, h: top.root.h, mode: 'full', sections: kids.length, drift: agg.drift.texts ? { texts: agg.drift.texts, off: agg.drift.off, worst: agg.drift.worst } : undefined });
   } catch (e) {
     agg.errors.push({ slug: job.slug, error: String(e && e.message || e).slice(0, 300) });
   }
 }
 return {
   built: agg.built, next: i, done: i >= plan.jobs.length, total: plan.jobs.length, ms: Date.now() - t0,
-  images: Object.values(agg.images.reduce((g, im) => { const k = im.file || im.src || im.id; (g[k] = g[k] || { src: im.src ? im.src.slice(-90) : '', file: im.file || undefined, kind: im.kind, w: Math.round(im.w), h: Math.round(im.h), ids: [] }).ids.push(im.id); return g; }, {})), // grouped by source: one entry per picture, with every placeholder id
+  images: Object.values(agg.images.reduce((g, im) => { const k = im.file || im.src || im.id; (g[k] = g[k] || { src: im.src ? im.src.slice(-90) : '', file: im.file || undefined, kind: im.kind, fit: im.fit || undefined, w: Math.round(im.w), h: Math.round(im.h), ids: [] }).ids.push(im.id); return g; }, {})), // grouped by source: one entry per picture, with every placeholder id
   missingFonts: [...agg.missingFonts], approximated: [...agg.approximated], deviations: agg.deviations, stats: agg.stats, errors: agg.errors,
 };

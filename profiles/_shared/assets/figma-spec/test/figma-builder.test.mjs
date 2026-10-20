@@ -123,7 +123,7 @@ check('buttons hug their content', all.some(n => n.name === 'Button' || n.name =
   check('the overlay was built last (on top), absolute, at its page position', dlg && dlg.name === 'Dialog' && dlg.x === 440 && dlg.y === 200 && r2.stats.overlays === 1, dlg && `${dlg.name} ${dlg.x},${dlg.y}`);
   check('the clone kept the base content (same child count plus the overlay)', clone.children.length === orig.children.length + 1, `${clone.children.length} vs ${orig.children.length}`);
 }
-// ---- fixes found by the Shabab Masr test: transparent grid rows, clipping, input text, media files, gradient layers, wrapped text
+// ---- fixes found by a real export test: transparent grid rows, clipping, input text, media files, gradient layers, wrapped text
 {
   const rows2 = all.filter(n => n.name === 'Row');
   check('grid rows are transparent (a new frame is white by default)', rows2.length && rows2.every(r => Array.isArray(r.fills) && r.fills.length === 0));
@@ -135,17 +135,21 @@ check('buttons hug their content', all.some(n => n.name === 'Button' || n.name =
   const video = { k: 'i', n: 'video', r: [0, 0, 300, 200], kind: 'video', src: '', file: 'assets/home@1440.media0.png' };
   const gradient = { k: 'f', n: 'Glow', r: [0, 0, 300, 100], bgi: 'radial-gradient(circle at 50% 0%, rgba(0, 112, 254, 0.4), rgba(0, 0, 0, 0) 60%), linear-gradient(rgb(11, 27, 61), rgb(20, 50, 110))', L: { d: 'block' } };
   const iconBtn = { k: 'f', n: 'IconBtn', act: 'button', r: [0, 0, 44, 44], bg: 'rgba(255, 255, 255, 0.1)', rad: [12, 12, 12, 12], L: { d: 'grid', gap: [0, 0], cols: '44px', rows: '44px', ai: 'center' }, c: [{ k: 's', n: 'svg', r: [12, 12, 24, 24], svg: '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M4 6h16"/></svg>' }] };
-  const dlg = { k: 'f', n: 'Dialog', r: [100, 100, 200, 200], bg: 'rgb(255, 255, 255)', L: { d: 'block' } };
+  const dlg = { k: 'f', n: 'Dialog', r: [100, 100, 200, 200], bg: 'rgb(255, 255, 255)', L: { d: 'block', pos: 'relative' } };
+  const dlgPlain = { k: 'f', n: 'PlainDialog', r: [100, 100, 200, 200], bg: 'rgb(255, 255, 255)', L: { d: 'block' } };
   const scrim = { k: 'f', n: 'Scrim', r: [0, 0, 400, 500], bg: 'rgba(3, 12, 30, 0.62)', bf: 'blur(6px)', L: { d: 'block', pos: 'absolute' } };
+  const scrim2 = { ...scrim, n: 'Scrim2' };
+  const wrap2 = { k: 'f', n: 'Wrap2', r: [0, 0, 400, 500], L: { d: 'grid', gap: [0, 0], cols: '400px', rows: '500px', ai: 'center', pos: 'fixed' }, c: [scrim2, dlgPlain] };
   const wrap = { k: 'f', n: 'Wrap', r: [0, 0, 400, 500], L: { d: 'grid', gap: [0, 0], cols: '400px', rows: '500px', ai: 'center', pos: 'fixed' }, c: [scrim, dlg] };
   const gradText = { k: 'f', n: 'GradHeading', r: [0, 0, 300, 40], bgi: 'linear-gradient(90deg, rgb(30, 64, 175), rgb(59, 130, 246))', L: { d: 'block' }, c: [{ k: 't', n: 'Title', r: [0, 0, 300, 40], txt: 'Every idea', ff: 'Inter', fs: 32, fw: 700, col: 'rgba(0, 0, 0, 0)', lines: 1 }] };
   const dlg2 = { k: 'f', n: 'CenteredDialog', r: [170, 40, 160, 200], bg: 'rgb(255, 255, 255)', L: { d: 'block' } };
-  const centerWrap = { k: 'f', n: 'CenterWrap', r: [0, 0, 500, 300], L: { d: 'grid', gap: [0, 0], cols: '468px', rows: '268px', ai: 'center', pad: [16, 16, 16, 16], pos: 'fixed' }, c: [dlg2] };
+  const centerWrap = { k: 'f', n: 'CenterWrap', r: [0, 0, 500, 300], L: { d: 'grid', gap: [0, 0], cols: '468px', rows: '268px', ai: 'center', ji: 'center', pad: [16, 16, 16, 16], pos: 'fixed' }, c: [dlg2] };
+  const noJiWrap = { k: 'f', n: 'NoJiWrap', r: [0, 0, 500, 300], L: { d: 'grid', gap: [0, 0], cols: '468px', rows: '268px', ai: 'center', pad: [16, 16, 16, 16], pos: 'fixed' }, c: [{ ...dlg2, n: 'LeftDialog', r: [16, 40, 160, 200] }] };
   const btnA = { k: 'f', n: 'BtnA', act: 'link', r: [0, 0, 263, 72], bg: 'rgb(255, 255, 255)', L: { d: 'flex', dir: 'row', jc: 'center', ai: 'center', gap: [20, 20], pad: [18, 36, 18, 36] }, c: [{ k: 't', n: 'A', r: [36, 24, 190, 24], txt: 'Share an idea', ff: 'Inter', fs: 16, fw: 600, col: 'rgb(0, 0, 0)', lines: 1, nw: 1 }] };
   const btnB = { ...btnA, n: 'BtnB', r: [278, 0, 272, 72] };
   const ctas = { k: 'f', n: 'Ctas', r: [0, 0, 550, 72], L: { d: 'flex', dir: 'row', wrap: 1, jc: 'center', ai: 'center', gap: [15, 15] }, c: [btnA, btnB] };
   const wrapRow = { k: 'f', n: 'Wrapped', r: [0, 0, 300, 160], L: { d: 'flex', dir: 'row', wrap: 1, gap: [8, 8] }, c: [{ ...btnA, n: 'W1', r: [0, 0, 140, 72] }, { ...btnA, n: 'W2', r: [150, 0, 140, 72] }, { ...btnA, n: 'W3', r: [0, 80, 140, 72] }] };
-  const holder = { k: 'f', n: 'Holder', r: [0, 0, 550, 1500], L: { d: 'flex', dir: 'col', gap: [0, 0] }, c: [input, video, gradient, iconBtn, wrap, gradText, centerWrap, ctas, wrapRow] };
+  const holder = { k: 'f', n: 'Holder', r: [0, 0, 550, 1500], L: { d: 'flex', dir: 'col', gap: [0, 0] }, c: [input, video, gradient, iconBtn, wrap, wrap2, gradText, centerWrap, noJiWrap, ctas, wrapRow] };
   const section4 = { node: holder, parentId: null, name: 'Fix checks', x: 0, y: 6000 };
   const code4 = fs.readFileSync(path.join(HERE, '..', 'figma-builder.js'), 'utf8').replace('__SPEC__', JSON.stringify(section4)).replace('__FONTMAP__', JSON.stringify(FONTMAP)).replace('__OPTS__', JSON.stringify({ fixedContainers: true }));
   const run4 = new (Object.getPrototypeOf(async function () {}).constructor)('figma', code4);
@@ -160,7 +164,9 @@ check('buttons hug their content', all.some(n => n.name === 'Button' || n.name =
   const glow = kids4.find(n => n.name === 'Glow');
   const wrapNode = kids4.find(n => n.name === 'Wrap');
   const scrimIdx = wrapNode ? wrapNode.children.findIndex(c => c.name === 'Scrim') : -1;
-  check('a scrim that comes first and covers its parent is painted behind the dialog', scrimIdx === 0, `scrim at index ${scrimIdx} of ${wrapNode && wrapNode.children.map(c => c.name).join(',')}`);
+  check('CSS paint order: a positioned dialog that follows a positioned scrim paints above it (scrim goes behind)', scrimIdx === 0, `scrim at index ${scrimIdx} of ${wrapNode && wrapNode.children.map(c => c.name).join(',')}`);
+  const wrapNode2 = kids4.find(n => n.name === 'Wrap2');
+  check('CSS paint order: a positioned scrim paints above a NON-positioned sibling, even one that follows it', !!wrapNode2 && wrapNode2.children[wrapNode2.children.length - 1].name === 'Scrim2', wrapNode2 && wrapNode2.children.map(c => c.name).join(','));
   const btn = kids4.find(n => n.name === 'Button');
   check('an icon button keeps its 44 x 44 box instead of hugging its icon', !!btn && btn.width === 44 && btn.height === 44 && btn.layoutSizingHorizontal !== 'HUG', btn ? `${btn.width}x${btn.height} ${btn.layoutSizingHorizontal}` : kids4.map(n => n.name).join(','));
   const gh = kids4.find(n => n.name === 'GradHeading');
@@ -168,7 +174,10 @@ check('buttons hug their content', all.some(n => n.name === 'Button' || n.name =
   check('gradient-clipped text paints the gradient on the glyphs, not as a box behind them', !!gh && gh.fills.length === 0 && !!ghText && ghText.fills.some(f => f.type === 'GRADIENT_LINEAR'), gh && JSON.stringify([gh.fills.length, ghText && ghText.fills.map(f => f.type)]));
   const cw2 = kids4.find(n => n.name === 'CenterWrap');
   const crow = cw2 && cw2.children.find(c => c.name === 'Row');
-  check('a lone dialog centred by its grid wrapper stays centred (row is centre-aligned)', !!crow && crow.primaryAxisAlignItems === 'CENTER', crow && String(crow.primaryAxisAlignItems));
+  check('justify-items: center from the grid properties centres the dialog across its column', !!crow && crow.primaryAxisAlignItems === 'CENTER', crow && String(crow.primaryAxisAlignItems));
+  const nj = kids4.find(n => n.name === 'NoJiWrap'); const njrow = nj && nj.children.find(c => c.name === 'Row');
+  check('a grid without justify-items does not centre by guessing from the measured position', !!njrow && njrow.primaryAxisAlignItems === 'MIN', njrow && String(njrow.primaryAxisAlignItems));
+  check('align-items: center keeps the row track height so the item can be centred inside it', !!crow && crow.height === 268, crow && String(crow.height));
   const ctasNode = kids4.find(n => n.name === 'Ctas'), wrappedNode = kids4.find(n => n.name === 'Wrapped');
   check('a row marked wrap whose children fit on one line does not wrap', !!ctasNode && ctasNode.layoutWrap !== 'WRAP', ctasNode && String(ctasNode.layoutWrap));
   check('a row whose children really sit on two lines still wraps', !!wrappedNode && wrappedNode.layoutWrap === 'WRAP', wrappedNode && String(wrappedNode.layoutWrap));

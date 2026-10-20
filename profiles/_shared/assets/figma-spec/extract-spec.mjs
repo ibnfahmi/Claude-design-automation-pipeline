@@ -4,7 +4,7 @@
 //   node extract-spec.mjs --base http://localhost:5173 --frames frames.json --out figma-spec [--tools <dir>] [--channel auto|msedge|chrome]
 //   node extract-spec.mjs --url http://localhost:5173/frames/home --width 1440 --height 900 --name home --out figma-spec
 //
-// frames.json (optional "lang": "ar" opens ?lang=ar, optional "local": {"key": "value"} sets localStorage before the page loads): [{ "slug": "home", "route": "/frames/home", "viewport": { "label": "Desktop 1440", "w": 1440, "h": 900 } }, ...]
+// frames.json (optional "steps": [{"click": "#open"}, ...] to reach a state by interaction, optional "lang": "ar" opens ?lang=ar, optional "local": {"key": "value"} sets localStorage before the page loads): [{ "slug": "home", "route": "/frames/home", "viewport": { "label": "Desktop 1440", "w": 1440, "h": 900 } }, ...]
 // Each frame is opened at ITS OWN viewport width (never a fixed 1440), in capture mode (?capture=1), after
 // fonts, images, scroll-triggered effects and animations have settled and a stability check has passed.
 // Output per frame: <slug>@<w>.json (the spec), <slug>@<w>.png (full-page reference screenshot); plus index.json.
@@ -110,14 +110,38 @@ for (const f of frames) {
   try {
     await page.goto(url + sep + 'capture=1' + (f.lang ? '&lang=' + encodeURIComponent(f.lang) : ''), { waitUntil: 'networkidle', timeout: 60000 });
     entry.stable = await settle(page);
+    // steps bring a page into a state that needs interaction (a dialog, a menu, a filled form). Each step is one key:
+    //   {"click": "<selector or text=...>"}  {"hover": sel}  {"fill": [sel, value]}  {"select": [sel, value]}  {"press": "Escape"}  {"press": [sel, "Enter"]}
+    //   {"wait": 500}  or  {"wait": "<selector>"}  {"scroll": 600}  {"eval": "<javascript run in the page>"}
+    // A step that fails is listed in the entry (`stepErrors`) and the frame carries on, so one bad selector does not stop the export.
+    for (const st of (Array.isArray(f.steps) ? f.steps : [])) {
+      try {
+        if (st.click !== undefined) await page.click(String(st.click), { timeout: 5000 });
+        else if (st.hover !== undefined) await page.hover(String(st.hover), { timeout: 5000 });
+        else if (st.fill !== undefined) await page.fill(String(st.fill[0]), String(st.fill[1] ?? ''), { timeout: 5000 });
+        else if (st.select !== undefined) await page.selectOption(String(st.select[0]), String(st.select[1]), { timeout: 5000 });
+        else if (st.press !== undefined) { if (Array.isArray(st.press)) await page.press(String(st.press[0]), String(st.press[1]), { timeout: 5000 }); else await page.keyboard.press(String(st.press)); }
+        else if (st.wait !== undefined) { if (typeof st.wait === 'number') await page.waitForTimeout(st.wait); else await page.waitForSelector(String(st.wait), { timeout: 8000 }); }
+        else if (st.scroll !== undefined) await page.evaluate((y) => window.scrollTo(0, y), Number(st.scroll));
+        else if (st.eval !== undefined) await page.evaluate(String(st.eval));
+        else throw new Error('unknown step ' + JSON.stringify(st).slice(0, 80));
+      } catch (e) { (entry.stepErrors = entry.stepErrors || []).push(JSON.stringify(st).slice(0, 100) + ': ' + String(e && e.message || e).split('\n')[0].slice(0, 120)); }
+    }
+    if (f.steps && f.steps.length) { await page.waitForTimeout(350); entry.stable = await settle(page); }
     const name = `${f.slug}@${w}`;
     // a playing video would show a different frame in the reference screenshot and in the saved picture of the video: pause it first
     await page.evaluate(() => document.querySelectorAll('video').forEach((v) => { try { v.pause(); } catch (e) {} }));
     await page.screenshot({ path: path.join(outDir, name + '.png'), fullPage: true });
     // video and canvas content cannot be rebuilt as layers: save each one's pixels (everything else hidden) so it can fill its placeholder
     // an <img> whose SVG is too large to inline as vectors (more than 24,000 characters) is saved as a picture too
-    await page.evaluate(() => { document.querySelectorAll('img').forEach((img) => { const s = img.currentSrc || img.src || ''; if (!/\.svg(\?|#|$)/i.test(s)) return; try { const x = new XMLHttpRequest(); x.open('GET', s, false); x.send(); if (x.status >= 200 && x.status < 300 && (x.responseText || '').length > 24000) img.setAttribute('data-np-big', '1'); } catch (e) {} }); });
-    const mediaEls = await page.$$('video, canvas, img[data-np-big]');
+    // Figma's SVG import does not draw some features (dashed strokes such as progress rings, masks, filters, patterns, embedded bitmaps,
+    // foreignObject) and the extractor keeps no vector over 24,000 characters: those SVGs are saved as pictures too
+    await page.evaluate(() => {
+      const BAD = /stroke-dasharray|<mask[\s>]|<filter[\s>]|<foreignObject|<pattern[\s>]|<image[\s>]/i;
+      document.querySelectorAll('svg').forEach((el) => { if (el.parentElement && el.parentElement.closest('svg')) return; const m = el.outerHTML; if (m.length > 24000 || BAD.test(m)) el.setAttribute('data-np-big', '1'); });
+      document.querySelectorAll('img').forEach((img) => { const s = img.currentSrc || img.src || ''; if (!/\.svg(\?|#|$)/i.test(s)) return; try { const x = new XMLHttpRequest(); x.open('GET', s, false); x.send(); const t = x.responseText || ''; if (x.status >= 200 && x.status < 300 && (t.length > 24000 || BAD.test(t))) img.setAttribute('data-np-big', '1'); } catch (e) {} });
+    });
+    const mediaEls = await page.$$('video, canvas, img[data-np-big], svg[data-np-big]');
     if (mediaEls.length) {
       fs.mkdirSync(path.join(outDir, 'assets'), { recursive: true });
       await page.addStyleTag({ content: 'html[data-np-hide] body *{visibility:hidden!important}html[data-np-hide] [data-np-shot]{visibility:visible!important}' });

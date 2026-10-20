@@ -189,10 +189,14 @@
       L.jc = cs.justifyContent; L.ai = cs.alignItems;
     }
     if (L.d === 'flex' || L.d === 'grid') { L.gap = [px(cs.rowGap), px(cs.columnGap)]; }
-    if (L.d === 'grid') { L.cols = cs.gridTemplateColumns; L.rows = cs.gridTemplateRows; L.ai = cs.alignItems; L.jc = cs.justifyContent; }
+    if (L.d === 'grid') {
+      L.cols = cs.gridTemplateColumns; L.rows = cs.gridTemplateRows; L.ai = cs.alignItems; L.jc = cs.justifyContent;
+      // justify-items (place-items) decides where an item sits inside its column; without it a centred dialog or icon loses its centring
+      if (cs.justifyItems && !/^(normal|stretch|legacy)$/.test(cs.justifyItems)) L.ji = cs.justifyItems.replace(/^(legacy|safe|unsafe)\s+/, '');
+    }
     const pad = [cs.paddingTop, cs.paddingRight, cs.paddingBottom, cs.paddingLeft].map(px);
     if (pad.some(Boolean)) L.pad = pad;
-    if (cs.position === 'absolute' || cs.position === 'fixed' || cs.position === 'sticky') L.pos = cs.position;
+    if (cs.position !== 'static') L.pos = cs.position; // absolute, fixed, sticky AND relative: a positioned element paints above non-positioned ones, in page order
     if (cs.zIndex !== 'auto') L.z = +cs.zIndex;
     o.L = L;
   }
@@ -200,6 +204,7 @@
     const f = {};
     if (+cs.flexGrow) f.g = +cs.flexGrow;
     if (cs.alignSelf !== 'auto' && cs.alignSelf !== 'normal') f.as = cs.alignSelf;
+    if (cs.justifySelf && !/^(auto|normal|stretch|legacy)$/.test(cs.justifySelf)) f.js = cs.justifySelf.replace(/^(safe|unsafe)\s+/, ''); // grid item placed in its column by itself
     if (cs.whiteSpace === 'nowrap') f.nw = 1;
     if (Object.keys(f).length) o.F = f;
   }
@@ -220,7 +225,7 @@
 
     if (tag === 'IMG' || tag === 'VIDEO' || tag === 'CANVAS' || tag === 'PICTURE') {
       if (box.w <= 0 || box.h <= 0) return [];
-      if (tag === 'IMG') { const sv = svgFromImg(el, box, cs); if (sv) { const so = { k: 's', n: nameOf(el), r: rel, svg: sv }; visual(cs, so); childFlex(cs, so); layout(cs, so); return [so]; } }
+      if (tag === 'IMG' && !el.getAttribute('data-np-file')) { const sv = svgFromImg(el, box, cs); if (sv) { const so = { k: 's', n: nameOf(el), r: rel, svg: sv }; visual(cs, so); childFlex(cs, so); layout(cs, so); return [so]; } }
       const o = { k: 'i', n: nameOf(el), r: rel, kind: tag.toLowerCase() };
       const mediaFile = el.getAttribute('data-np-file'); if (mediaFile) o.file = mediaFile; // pixels saved by extract-spec.mjs for a video or canvas
       const im = tag === 'PICTURE' ? el.querySelector('img') : el;
@@ -231,6 +236,8 @@
     }
     if (tag === 'svg' || tag === 'SVG') {
       if (box.w <= 0 || box.h <= 0) return [];
+      const rasterFile = el.getAttribute('data-np-file');
+      if (rasterFile) { const ro = { k: 'i', n: nameOf(el), r: rel, kind: 'svg-picture', file: rasterFile }; visual(cs, ro); return [ro]; } // an SVG Figma cannot import: its saved picture
       const clone = el.cloneNode(true);
       clone.setAttribute('width', r1(box.w)); clone.setAttribute('height', r1(box.h));
       let markup = clone.outerHTML.replace(/currentColor/g, cs.color);

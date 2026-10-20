@@ -26,6 +26,7 @@ const OPTS = __OPTS__;
 
 const SCALE = OPTS.scale || [0, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96, 128];
 const stats = { frames: 0, texts: 0, images: 0, svgs: 0, autoLayout: 0, absolute: 0, plainFrames: 0, gridRows: 0, instances: 0 };
+let OX = 0, OY = 0; const TEXTS = []; // spec-absolute origin of the node being built, and every text built with its spec position (the drift check)
 const createdIds = [], images = [], bgImages = [], missingFonts = new Set(), approximated = new Set(), deviations = [];
 const loaded = new Set();
 const varCache = {};
@@ -169,6 +170,11 @@ function sizeText(tx, t, parent, pinfo) {
   else if (inAuto && pinfo.dir === 'HORIZONTAL' && t.F && t.F.g) tx.layoutSizingHorizontal = 'FILL';
 }
 
+// ---------- paint order (CSS stacking) ----------
+// [class, z, page order]: negative z-index -1; non-positioned 0; positioned with z auto or 0 is 1; positive z-index 2
+const stackKey = (c, dom) => { const L = c.L || {}; const positioned = L.pos && L.pos !== 'static'; const hasZ = L.z !== undefined; if (hasZ && L.z < 0) return [-1, L.z, dom]; if (positioned || hasZ) return L.z > 0 ? [2, L.z, dom] : [1, 0, dom]; return [0, 0, dom]; };
+const cmpKey = (a, b) => a[0] - b[0] || a[1] - b[1] || a[2] - b[2];
+
 // ---------- layout inference ----------
 const inFlow = (c) => !(c.L && (c.L.pos === 'absolute' || c.L.pos === 'fixed'));
 const AL = { 'flex-start': 'MIN', start: 'MIN', normal: 'MIN', stretch: 'MIN', 'self-start': 'MIN', center: 'CENTER', 'flex-end': 'MAX', end: 'MAX', 'self-end': 'MAX', baseline: 'MIN' };
@@ -265,7 +271,7 @@ async function build(n, parent, pinfo, where) {
   if (n.k === 't') {
     const tx = await makeText(n, pinfo); parent.appendChild(tx); sizeText(tx, n, parent, pinfo);
     if (!pinfo || !pinfo.auto) { tx.x = n.r[0]; tx.y = n.r[1]; }
-    createdIds.push(tx.id); return tx;
+    createdIds.push(tx.id); TEXTS.push({ tx, x: OX + n.r[0], y: OY + n.r[1] }); return tx;
   }
   if (n.k === 'i') {
     const r = figma.createRectangle(); r.name = 'Image / ' + (n.alt || (n.src || '').split('/').pop().split('?')[0] || n.kind || 'image').slice(0, 40);
@@ -314,18 +320,25 @@ async function build(n, parent, pinfo, where) {
   createdIds.push(f.id);
   // children
   const isGrid = n.L && n.L.d === 'grid' && (n.c || []).some(inFlow);
-  const kidsAbs = (n.c || []).filter(c => !inFlow(c));
-  if (isGrid) { await buildGrid(n, f, where + ' / ' + f.name); }
+  const dom = (c) => (n.c || []).indexOf(c);
+  const kidsAbs = (n.c || []).filter(c => !inFlow(c)).sort((a, b) => cmpKey(stackKey(a, dom(a)), stackKey(b, dom(b))));
+  const flow = []; // the in-flow children's Figma nodes with their paint order (a grid row stands for its items)
+  const px = OX, py = OY; OX += n.r[0]; OY += n.r[1];
+  if (isGrid) { for (const g of await buildGrid(n, f, where + ' / ' + f.name)) flow.push({ node: g.node, key: g.items.map(c => stackKey(c, dom(c))).sort(cmpKey).pop() }); }
   else if (auto) {
     const mainH = lay.mode === 'HORIZONTAL';
     const cinfo = { auto: true, dir: lay.mode, stretch: lay.stretch, contentW: w - (f.paddingLeft + f.paddingRight), contentH: h - (f.paddingTop + f.paddingBottom) };
-    for (const c of lay.order) await build(c, f, cinfo, where + ' / ' + f.name);
+    for (const c of lay.order) { const ch = await build(c, f, cinfo, where + ' / ' + f.name); if (ch) flow.push({ node: ch, key: stackKey(c, dom(c)) }); }
   } else {
-    for (const c of (n.c || []).filter(inFlow)) await build(c, f, { auto: false }, where + ' / ' + f.name);
+    for (const c of (n.c || []).filter(inFlow)) { const ch = await build(c, f, { auto: false }, where + ' / ' + f.name); if (ch) flow.push({ node: ch, key: stackKey(c, dom(c)) }); }
   }
-  for (const c of kidsAbs) { const ch = await build(c, f, { auto: false }, where); placeAbsolute(ch, c, f, w, h); if (ch && c.L && c.L.z < 0) f.insertChild(0, ch);
-    // a scrim or backdrop that covers its parent and comes first in the page is painted behind the dialog that follows it
-    else if (ch && c.r[2] >= 0.95 * w && c.r[3] >= 0.95 * h && (n.c || []).some(s => inFlow(s) && (n.c || []).indexOf(s) > (n.c || []).indexOf(c))) f.insertChild(0, ch); }
+  for (const c of kidsAbs) {
+    const ch = await build(c, f, { auto: false }, where); placeAbsolute(ch, c, f, w, h);
+    // paint order is CSS's: positioned elements paint above non-positioned ones in page order, z-index decides among them, and
+    // negative z-index goes behind. The absolute node was appended last (on top); move it below the first in-flow node that paints above it
+    if (ch) { const above = flow.find(fl => fl.node.parent === f && cmpKey(fl.key, stackKey(c, dom(c))) > 0); if (above) f.insertChild(f.children.indexOf(above.node), ch); }
+  }
+  OX = px; OY = py;
   // the value or placeholder of an input, textarea or select (the spec holds it as n.ph, with the field's typography in n.tp)
   if (n.inp && n.ph && n.tp && !/^(checkbox|radio|range|color|file|hidden|image|reset)$/.test(n.inp)) {
     const pad = (n.L && n.L.pad) || [0, 12, 0, 12], bw = (n.bd && n.bd.w) || [0, 0, 0, 0];
@@ -357,16 +370,21 @@ async function buildGrid(n, f, where) {
   [...kids].sort((a, b) => a.r[1] - b.r[1] || a.r[0] - b.r[0]).forEach(c => { const row = rows.find(r => Math.abs(r.y - c.r[1]) <= tol); if (row) row.items.push(c); else rows.push({ y: c.r[1], items: [c] }); });
   const L = n.L; const colGap = L.gap ? L.gap[1] : 0, rowGap = L.gap ? L.gap[0] : 0;
   f.itemSpacing = snap(rowGap); await bindSpace(f, 'itemSpacing', snap(rowGap));
-  if (L.ai && /center/.test(L.ai)) { f.primaryAxisAlignItems = 'CENTER'; } // a centred single-cell grid (a circle with a number) keeps its child in the middle
   const cw = n.r[2] - (L.pad ? L.pad[1] + L.pad[3] : 0);
-  for (const row of rows) {
+  const trackH = String(L.rows || '').split(/\s+/).map(parseFloat); // the used row track heights (px)
+  const out = [];
+  const ALIGN = (v) => /^center$/.test(v || '') ? 'CENTER' : /^(end|flex-end|right|self-end)$/.test(v || '') ? 'MAX' : 'MIN';
+  for (const [ri, row] of rows.entries()) {
     const rf = figma.createAutoLayout('HORIZONTAL'); rf.name = 'Row'; rf.fills = []; stats.gridRows++; // a new frame is white by default
     const items = row.items.sort((a, b) => a.r[0] - b.r[0]);
     rf.itemSpacing = snap(colGap); await bindSpace(rf, 'itemSpacing', snap(colGap));
-    rf.counterAxisAlignItems = (L.ai && /center/.test(L.ai)) ? 'CENTER' : 'MIN';
-    // the spec has no justify-items, so read it from the measured position: a lone item centred or right-aligned in the row stays so (a dialog centred by its grid wrapper)
-    if (items.length === 1) { const it = items[0], pl = L.pad ? L.pad[3] : 0; const left = it.r[0] - pl, right = cw - left - it.r[2]; if (left > 4 && near(left, right, 2)) rf.primaryAxisAlignItems = 'CENTER'; else if (left > 4 && right > -2 && right < left - 4) rf.primaryAxisAlignItems = 'MAX'; }
+    // where the items sit comes from the grid's own properties: align-items (up and down), justify-items or the item's justify-self (across)
+    rf.counterAxisAlignItems = ALIGN((items.length === 1 && items[0].F && items[0].F.as) || L.ai);
+    rf.primaryAxisAlignItems = ALIGN((items.length === 1 && items[0].F && items[0].F.js) || L.ji);
     f.appendChild(rf); rf.layoutSizingHorizontal = 'FILL'; rf.layoutSizingVertical = 'HUG';
+    // a row track taller than its items keeps its height, so align-items has room to centre or end them inside it
+    const track = trackH[ri]; const tallest = Math.max(...items.map(c => c.r[3]));
+    if (Number.isFinite(track) && track > tallest + 1 && /^(center|end|flex-end|self-end)$/.test(String((items.length === 1 && items[0].F && items[0].F.as) || L.ai || ''))) { rf.resize(Math.max(1, cw), track); rf.layoutSizingHorizontal = 'FILL'; }
     const equal = items.every(c => near(c.r[2], items[0].r[2], 2));
     const rowH = Math.max(...items.map(c => c.r[3]));
     for (const c of items) {
@@ -375,7 +393,9 @@ async function buildGrid(n, f, where) {
       if (ch && ch.type === 'FRAME' && near(c.r[3], rowH, 1.5)) { try { ch.layoutSizingVertical = 'FILL'; } catch (e) {} }
     }
     createdIds.push(rf.id);
+    out.push({ node: rf, items });
   }
+  return out;
 }
 
 // ---------- run ----------
@@ -416,4 +436,14 @@ if (built && sec.name) built.name = sec.name;
 if (built && !sec.parentId && typeof sec.x === 'number') { built.x = sec.x; built.y = sec.y; }
 if (built && sec.asComponent && !sec.parentId) { const c = figma.createComponentFromNode(built); c.name = sec.asComponent.name || built.name; c.setSharedPluginData('pipeline', 'component', root.comp || ''); c.setSharedPluginData('pipeline', 'sig', root.sig || ''); built = c; }
 if (built && !sec.parentId) { if (!sec.overlayOnly) built.clipsContent = true; built.setSharedPluginData('pipeline', 'source', 'spec'); if (sec.cloneOf) built.setSharedPluginData('pipeline', 'clonedFrom', String(sec.cloneOf)); if (sec.hash) built.setSharedPluginData('pipeline', 'hash', String(sec.hash)); }
-return { createdNodeIds: createdIds, rootId: built && built.id, root: built && { name: built.name, w: Math.round(built.width), h: Math.round(built.height) }, stats, images, bgImages, missingFonts: [...missingFonts], approximated: [...approximated], deviations: deviations.slice(0, 60), deviationCount: deviations.length };
+// drift: where each text was built against where the page measured it (a free check of the layout; no screenshot needed)
+let drift = null;
+try {
+  const origin = (sec.parentId ? parent : built);
+  if (origin && origin.absoluteTransform && TEXTS.length) {
+    const ox = origin.absoluteTransform[0][2], oy = origin.absoluteTransform[1][2];
+    const ds = TEXTS.filter(t => t.tx.absoluteTransform).map(t => ({ n: (t.tx.name || '').slice(0, 30), dx: Math.round(t.tx.absoluteTransform[0][2] - ox - t.x), dy: Math.round(t.tx.absoluteTransform[1][2] - oy - t.y) }));
+    drift = { texts: ds.length, off: ds.filter(d => Math.abs(d.dx) > 8 || Math.abs(d.dy) > 8).length, worst: ds.sort((a, b) => Math.max(Math.abs(b.dx), Math.abs(b.dy)) - Math.max(Math.abs(a.dx), Math.abs(a.dy))).slice(0, 3) };
+  }
+} catch (e) {}
+return { drift, createdNodeIds: createdIds, rootId: built && built.id, root: built && { name: built.name, w: Math.round(built.width), h: Math.round(built.height) }, stats, images, bgImages, missingFonts: [...missingFonts], approximated: [...approximated], deviations: deviations.slice(0, 60), deviationCount: deviations.length };
