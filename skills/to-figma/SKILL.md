@@ -48,6 +48,10 @@ Set `stage: "handoff"`. Start `handoff-agent` (`../../agents/handoff-agent.md`) 
 3. **`feature <F-n>`**, one job per feature page (a feature with more than 20 frames is split into two jobs): builds, compares and fixes its frames, lays the page out, adds label cards, notes and the flow strip, and writes `figma-spec/results/<F-n>.json`. Run them in order; do not run two at once unless the user asks for parallel pages (it shortens the time, not the tokens, and the pages must not share new variables).
 4. **`finish`:** the Changelog and Archive pages, the cover thumbnail, the prototype links, the final checks, the merged report and the frame hashes.
 
+**Tell the user how to follow it.** When the first job starts, say in one line that they can ask "how is the export going?" at any time. When they do (and each time a job returns), read the last lines of `figma-spec/progress.log` and report in two or three lines: the current job, how many frames are built and compared, how many pass, and the latest difference numbers. A job that is silent for a long time is normal; the log is how you know it is working.
+
+**Checkpoint after the pilot.** When the `pilot` job returns, show the user what it found: how many of its screens pass, the median difference, what was fixed (from `pilot-fixes.md`) and the cost so far (turns and minutes). Then ask once (header `Figma pilot`): **Continue with the remaining frames (Recommended)** / **Stop here** (the file and the pilot are kept; the export can be resumed later) / **Change the scope** (fewer frames, one language, plain frames) — and only continue on a yes. If the pilot stopped at its budget, say so and recommend continuing only if the failing screens look acceptable.
+
 If a job returns `BLOCKED`, ask the user (you own the conversation), then restart **that job only**. If the Figma call limit is reached, stop cleanly with `figma_progress` saved and say the export can be resumed.
 
 ## 7. Save and return

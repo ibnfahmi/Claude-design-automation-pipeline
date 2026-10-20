@@ -2,6 +2,15 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.12.2] - 2026-10-20
+
+### Changed
+- **The pilot shows its work.** The pilot builds all of its screens first, visibly, with no analysis in between, and only then compares and fixes them. The test export had shown only four to six screens in Figma after an hour and a half, so it looked as if it had drifted from the plan.
+- **The pilot can no longer block the export.** If it has not finished within its budget it stops, saves what it found and returns `PILOT: stopped at the budget`; the feature jobs go on with the builder as it stands, and the pilot screens stay in the file.
+- **A progress log.** Every job appends a line to `figma-spec/progress.log` after each frame it builds or compares. The to-figma skill tells you that you can ask how the export is going, and answers from the log (current job, frames built and compared, how many pass).
+- **A checkpoint after the pilot.** When the pilot returns, you are shown how many screens pass, the median difference, what was fixed and the cost so far, and asked whether to continue with the remaining frames, stop (the export can be resumed) or change the scope.
+- Not yet run on a real project. One idea was tried and dropped: reusing the already-built base screen for overlay states (a modal or a menu over a page). On the Shabab Masr specs none of the 147 state frames qualified, because each state frame is viewport-sized while its base page is full length, and the content behind the overlay is laid out differently, so nothing was shipped for it.
+
 ## [0.12.1] - 2026-10-20
 
 ### Fixed

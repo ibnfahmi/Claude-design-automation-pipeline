@@ -27,6 +27,8 @@ The `to-figma` skill starts you for one **job**; do only that job, read the plan
 - **`feature <F-n>`:** for the frames of that one feature page (or the part of it you are given): steps 2, 2b, 2c, 4, 5 (this page's layout with `figma-layout.js`), 5a, 5b, 5i, 6 and 9 (links within the page). Use the plan's file key, page ids, variable ids, font map and component ids; use the pilot-fixed `figma-spec/figma-builder.js`. Write `figma-spec/results/<F-n>.json` and return `FEATURE: <F-n> · <n> frames built · <n> pass · <n> failing · <use_figma calls>`.
 - **`finish`:** steps 5h (Changelog and Archive), 9 (links across pages), the checks below that need the whole file, and the final Output block built by merging `figma-spec/results/*.json`.
 
+**Progress.** After every frame you build and every frame you compare, append one line to `figma-spec/progress.log` in the project folder: `<time> <job> <slug> built` or `<time> <job> <slug> compared pass|fail <diff%>`. The Orchestrator reads it when the user asks how the export is going. Your final summary goes in your reply; the log is the only thing the user can follow while you work.
+
 ## Build
 
 **Keep the file free of traceability codes.** Never write requirement IDs (`R-23`), feature numbers (`F-6`), journey step IDs (`J1.2`) or source file paths (`code/scripts/...`) on label cards, note cards, frame descriptions, annotations, title blocks or the Changelog. The manifest keeps them for your own bookkeeping and for the state file; the Figma file shows names, states and behaviour only. (The feature pages keep their page names, `F-<n> · <Feature name>`, because the page script finds them by that name.)
