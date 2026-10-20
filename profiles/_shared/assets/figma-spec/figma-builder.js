@@ -51,17 +51,67 @@ const solid = (str, mul = 1) => { const c = parseColor(str); if (!c || c.a * mul
 function splitTop(s) { const out = []; let depth = 0, cur = ''; for (const ch of s) { if (ch === '(') depth++; if (ch === ')') depth--; if (ch === ',' && depth === 0) { out.push(cur.trim()); cur = ''; } else cur += ch; } if (cur.trim()) out.push(cur.trim()); return out; }
 
 function invert(m00, m01, m10, m11, tx, ty) { const det = m00 * m11 - m01 * m10 || 1; const a = m11 / det, b = -m01 / det, c = -m10 / det, d = m00 / det; return [[a, b, -(a * tx + b * ty)], [c, d, -(c * tx + d * ty)]]; }
-function gradientPaint(str, w, h) {
-  // several layers (for example a radial glow over a linear gradient): use the last linear layer, skip radial ones
-  { const layers = splitTop(str); if (layers.length > 1) { const lin = layers.filter(l => /^(repeating-)?linear-gradient/.test(l.trim())); if (!lin.length) { approximated.add('radial gradient skipped'); return null; } str = lin[lin.length - 1]; } else if (/^radial-gradient/.test(str.trim())) { approximated.add('radial gradient skipped'); return null; } }
+// CSS lists the top layer first, Figma's fill array starts with the bottom one; every gradient layer is kept
+function gradientPaints(str, w, h) {
+  const out = [];
+  for (const l of splitTop(str)) {
+    const s = l.trim();
+    if (!/gradient\(/.test(s)) continue;
+    const p = /^radial-gradient/.test(s) ? radialPaint(s, w, h) : /^(repeating-)?linear-gradient/.test(s) ? linearPaint(s, w, h) : (approximated.add('conic gradient skipped'), null);
+    if (p) out.push(p);
+  }
+  return out.reverse();
+}
+function gradientPaint(str, w, h) { const a = gradientPaints(str, w, h); return a.length ? a[a.length - 1] : null; } // text fills take one paint
+function gradientStops(parts, radiusPx) {
+  const stops = []; const raw = parts;
+  raw.forEach((p, k) => { const cm = /^(rgba?\([^)]+\)|#[0-9a-f]{3,8}|transparent)\s*([\d.]+(?:%|px))?/i.exec(p); if (!cm) return; const c = parseColor(cm[1]); if (!c) return; let pos = raw.length > 1 ? k / (raw.length - 1) : 0; if (cm[2]) pos = /px$/.test(cm[2]) ? (radiusPx ? parseFloat(cm[2]) / radiusPx : 0) : parseFloat(cm[2]) / 100; stops.push({ color: { r: c.r, g: c.g, b: c.b, a: c.a }, position: Math.max(0, Math.min(1, pos)) }); });
+  // a fully transparent stop (the keyword transparent is black with no opacity) takes the colour of the nearest visible stop, so the fade does not pass through grey
+  stops.forEach((s, k) => { if (s.color.a === 0) { const o = stops.slice(k + 1).concat(stops.slice(0, k).reverse()).find(x => x.color.a > 0); if (o) s.color = { r: o.color.r, g: o.color.g, b: o.color.b, a: 0 }; } });
+  return stops;
+}
+function radialPaint(str, w, h) {
+  const m = /^radial-gradient\((.*)\)$/.exec(str); if (!m) return null;
+  const parts = splitTop(m[1]);
+  let cfg = '';
+  if (parts.length && !/^(rgba?\(|#|transparent)/i.test(parts[0])) cfg = parts.shift();
+  let cx = w / 2, cy = h / 2, circle = false, size = 'farthest-corner', ex = null;
+  const at = /\bat\s+(.*)$/.exec(cfg);
+  if (at) {
+    const tk = at[1].trim().split(/\s+/);
+    const pos = (v, len) => { if (v === 'left' || v === 'top') return 0; if (v === 'right' || v === 'bottom') return len; if (v === 'center') return len / 2; if (/%$/.test(v)) return parseFloat(v) / 100 * len; if (/px$/.test(v)) return parseFloat(v); return len / 2; };
+    let a = tk[0], b2 = tk[1];
+    if (a === 'top' || a === 'bottom') [a, b2] = [b2 || 'center', a]; // "top left" is the same as "left top"
+    cx = pos(a, w); cy = pos(b2 === undefined ? 'center' : b2, h);
+    if (tk.length === 1 && (tk[0] === 'top' || tk[0] === 'bottom')) { cx = w / 2; cy = pos(tk[0], h); }
+    cfg = cfg.replace(/\bat\s+.*$/, '');
+  }
+  if (/\bcircle\b/.test(cfg)) circle = true;
+  const kw = /(closest-side|farthest-side|closest-corner|farthest-corner)/.exec(cfg); if (kw) size = kw[1];
+  const lens = (cfg.match(/-?[\d.]+(?:px|%)/g) || []);
+  if (lens.length) { if (lens.length === 1) circle = true; ex = lens.map((v, i) => /%$/.test(v) ? parseFloat(v) / 100 * (lens.length === 1 ? Math.max(w, h) : (i === 0 ? w : h)) : parseFloat(v)); }
+  const dl = cx, dr = w - cx, dt = cy, db = h - cy;
+  let rx, ry;
+  if (ex) { rx = ex[0]; ry = circle ? ex[0] : ex[1]; }
+  else if (size === 'closest-side') { if (circle) rx = ry = Math.min(dl, dr, dt, db); else { rx = Math.min(dl, dr); ry = Math.min(dt, db); } }
+  else if (size === 'farthest-side') { if (circle) rx = ry = Math.max(dl, dr, dt, db); else { rx = Math.max(dl, dr); ry = Math.max(dt, db); } }
+  else if (size === 'closest-corner') { if (circle) rx = ry = Math.hypot(Math.min(dl, dr), Math.min(dt, db)); else { rx = Math.min(dl, dr) * Math.SQRT2; ry = Math.min(dt, db) * Math.SQRT2; } }
+  else { if (circle) rx = ry = Math.hypot(Math.max(dl, dr), Math.max(dt, db)); else { rx = Math.max(dl, dr) * Math.SQRT2; ry = Math.max(dt, db) * Math.SQRT2; } }
+  rx = Math.max(1, rx); ry = Math.max(1, ry);
+  const stops = gradientStops(parts, rx);
+  if (stops.length < 2) return stops[0] ? { type: 'SOLID', color: stops[0].color, opacity: stops[0].color.a } : null;
+  // node space (0..1 of the box) to gradient space (the unit circle centred at 0.5, radius 0.5)
+  const gt = [[w / (2 * rx), 0, 0.5 - cx / (2 * rx)], [0, h / (2 * ry), 0.5 - cy / (2 * ry)]];
+  return { type: 'GRADIENT_RADIAL', gradientTransform: gt, gradientStops: stops };
+}
+function linearPaint(str, w, h) {
   const m = /^(repeating-)?linear-gradient\((.*)\)$/.exec(str.trim());
   if (!m) { approximated.add('non-linear gradient'); const c = /rgba?\([^)]+\)/.exec(str); return c ? solid(c[0]) : null; }
   const parts = splitTop(m[2]); let angle = 180, i = 0;
   const first = parts[0];
   if (/^-?[\d.]+deg$/.test(first)) { angle = parseFloat(first); i = 1; }
   else if (/^to /.test(first)) { const d = first.slice(3).trim(); angle = { top: 0, right: 90, bottom: 180, left: 270, 'top right': 45, 'right top': 45, 'bottom right': 135, 'right bottom': 135, 'bottom left': 225, 'left bottom': 225, 'top left': 315, 'left top': 315 }[d] ?? 180; i = 1; }
-  const stops = []; const raw = parts.slice(i);
-  raw.forEach((p, k) => { const cm = /^(rgba?\([^)]+\)|#[0-9a-f]{3,8}|transparent)\s*([\d.]+%)?/i.exec(p); if (!cm) return; const c = parseColor(cm[1]); if (!c) return; stops.push({ color: { r: c.r, g: c.g, b: c.b, a: c.a }, position: cm[2] ? parseFloat(cm[2]) / 100 : (raw.length > 1 ? k / (raw.length - 1) : 0) }); });
+  const stops = gradientStops(parts.slice(i), 0);
   if (stops.length < 2) return stops[0] ? { type: 'SOLID', color: stops[0].color, opacity: stops[0].color.a } : null;
   const th = angle * Math.PI / 180, dx = Math.sin(th), dy = -Math.cos(th);
   const Lc = Math.abs(w * Math.sin(th)) + Math.abs(h * Math.cos(th)) || 1;
@@ -103,7 +153,7 @@ async function applyVisual(node, n, w, h) {
   const fills = [];
   if (n.bg) { let p = solid(n.bg); if (p) { p = await bindFill(node, n.bg, p); fills.push(p); } }
   if (n.bgi) {
-    if (/gradient\(/.test(n.bgi)) { const g = gradientPaint(n.bgi, w, h); if (g) fills.push(g); }
+    if (/gradient\(/.test(n.bgi)) { for (const g of gradientPaints(n.bgi, w, h)) fills.push(g); }
     else { const u = /url\(["']?([^"')]+)["']?\)/.exec(n.bgi); if (u) { bgImages.push({ id: node.id, url: u[1] }); fills.push({ type: 'SOLID', color: { r: 0.8, g: 0.8, b: 0.8 }, opacity: 1 }); } else approximated.add('background-image'); }
   }
   try { node.fills = fills; } catch (e) {}
@@ -164,8 +214,13 @@ function sizeText(tx, t, parent, pinfo) {
   const w = t.r[2], one = (t.lines || 1) <= 1;
   const inAuto = pinfo && pinfo.auto;
   if (t.clamp || t.ell) { tx.textTruncation = 'ENDING'; tx.maxLines = t.clamp || 1; }
-  if (one && (t.nw || !t.ell) && !t.clamp) { tx.textAutoResize = 'WIDTH_AND_HEIGHT'; if (inAuto) tx.layoutSizingHorizontal = 'HUG'; return; }
+  if (one && !t.ell && !t.clamp) { tx.textAutoResize = 'WIDTH_AND_HEIGHT'; if (inAuto) tx.layoutSizingHorizontal = 'HUG'; return; }
   tx.resize(Math.max(1, w + (one ? 0 : 4)), Math.max(1, t.r[3])); tx.textAutoResize = 'HEIGHT'; // 4 px of slack so a wrapped line does not break mid-word
+  if (t.clamp || t.ell) {
+    // clamped (line-clamp) or ellipsised text keeps the height of the lines the page shows: with an automatic height Figma would grow the box to show every line
+    const n = t.clamp || 1, lhpx = t.lh || t.r[3] / Math.max(1, t.lines || 1);
+    tx.textAutoResize = 'NONE'; tx.resize(Math.max(1, w + (one ? 0 : 4)), Math.max(1, t.r[3], lhpx * n)); tx.textTruncation = 'ENDING'; tx.maxLines = n;
+  }
   if (inAuto && pinfo.contentW && near(w, pinfo.contentW, 2) && pinfo.dir === 'VERTICAL') tx.layoutSizingHorizontal = 'FILL';
   else if (inAuto && pinfo.dir === 'HORIZONTAL' && t.F && t.F.g) tx.layoutSizingHorizontal = 'FILL';
 }
@@ -174,6 +229,19 @@ function sizeText(tx, t, parent, pinfo) {
 // [class, z, page order]: negative z-index -1; non-positioned 0; positioned with z auto or 0 is 1; positive z-index 2
 const stackKey = (c, dom) => { const L = c.L || {}; const positioned = L.pos && L.pos !== 'static'; const hasZ = L.z !== undefined; if (hasZ && L.z < 0) return [-1, L.z, dom]; if (positioned || hasZ) return L.z > 0 ? [2, L.z, dom] : [1, 0, dom]; return [0, 0, dom]; };
 const cmpKey = (a, b) => a[0] - b[0] || a[1] - b[1] || a[2] - b[2];
+
+// ---------- uneven gaps ----------
+// Siblings with different gaps (margins) cannot share one auto-layout spacing: a median gap makes every row below drift. The exact gap of each pair
+// is returned when they differ (null when they are even, overlap, or the layout spaces its items by itself)
+function unevenGaps(lay) {
+  if (!lay || lay.mode === 'NONE' || lay.wrap || lay.grid || lay.pj === 'SPACE_BETWEEN' || (lay.order || []).length < 3) return null;
+  const mainH = lay.mode === 'HORIZONTAL', o = lay.order;
+  if (o.some(c => c.F && c.F.ma)) return null;
+  const gs = []; for (let i = 1; i < o.length; i++) { const a = o[i - 1], b = o[i]; gs.push(mainH ? b.r[0] - (a.r[0] + a.r[2]) : b.r[1] - (a.r[1] + a.r[3])); }
+  if (gs.some(g => g < -0.5)) return null;
+  const m = median(gs); if (!gs.some(g => Math.abs(g - m) > 1.5)) return null;
+  return gs.map(g => Math.max(0, Math.round(g * 2) / 2));
+}
 
 // ---------- layout inference ----------
 const inFlow = (c) => !(c.L && (c.L.pos === 'absolute' || c.L.pos === 'fixed'));
@@ -272,7 +340,7 @@ async function build(n, parent, pinfo, where) {
   if (n.k === 't') {
     const tx = await makeText(n, pinfo); parent.appendChild(tx); sizeText(tx, n, parent, pinfo);
     if (!pinfo || !pinfo.auto) { tx.x = n.r[0]; tx.y = n.r[1]; }
-    createdIds.push(tx.id); TEXTS.push({ tx, x: OX + n.r[0], y: OY + n.r[1] }); return tx;
+    createdIds.push(tx.id); TEXTS.push({ tx, x: OX + n.r[0], y: OY + n.r[1], w: n.r[2], h: n.r[3], l: n.lines || 1, lh: n.lh || 0, fs: n.fs || 0 }); return tx;
   }
   if (n.k === 'i') {
     const r = figma.createRectangle(); r.name = 'Image / ' + (n.alt || (n.src || '').split('/').pop().split('?')[0] || n.kind || 'image').slice(0, 40);
@@ -309,7 +377,7 @@ async function build(n, parent, pinfo, where) {
     f.primaryAxisAlignItems = lay.pj || 'MIN'; f.counterAxisAlignItems = lay.ca || 'MIN';
     if (lay.wrap && lay.mode === 'HORIZONTAL') { f.layoutWrap = 'WRAP'; f.counterAxisSpacing = snap(lay.crossGap || 0); }
     if (lay.approx) approximated.add('space-around/evenly');
-    if (lay.varGaps) approximated.add('uneven gaps between siblings (median used)');
+    if (lay.varGaps && !unevenGaps(lay)) approximated.add('uneven gaps between siblings (median used)');
   } else { stats.plainFrames++; if (lay && lay.mode === 'NONE' && (n.c || []).length > 1) approximated.add('overlapping children kept as absolute'); }
   f.resize(w, h);
   // gradient-clipped text (background-clip: text with a transparent colour): the gradient is the colour of the glyphs, not a box behind them
@@ -331,7 +399,13 @@ async function build(n, parent, pinfo, where) {
     const cinfo = { auto: true, dir: lay.mode, stretch: lay.stretch, contentW: w - (f.paddingLeft + f.paddingRight), contentH: h - (f.paddingTop + f.paddingBottom) };
     // an auto margin (margin-left: auto in a row) takes all the free space on that side: a growing empty frame stands for it
     const spacer = () => { const s = figma.createFrame(); s.name = 'spacer'; s.fills = []; s.clipsContent = false; f.appendChild(s); s.resize(1, 1); if (mainH) s.layoutSizingHorizontal = 'FILL'; else s.layoutSizingVertical = 'FILL'; };
+    const gp = unevenGaps(lay); // exact gap of each pair of siblings when they differ: transparent fixed spacers, with the item spacing at 0
+    if (gp) { f.itemSpacing = 0; stats.gapSpacers = (stats.gapSpacers || 0) + gp.filter(g => g >= 0.5).length; }
+    const gapSpacer = (g) => { const s = figma.createFrame(); s.name = 'gap'; s.fills = []; s.clipsContent = false; f.appendChild(s); s.resize(mainH ? g : 1, mainH ? 1 : g); };
+    let gi = 0;
     for (const c of lay.order) {
+      if (gp && gi > 0 && gp[gi - 1] >= 0.5) gapSpacer(gp[gi - 1]);
+      gi++;
       const ma = (!lay.wrap && c.F && c.F.ma) || '';
       if (ma.includes(mainH ? 'l' : 't')) spacer();
       const ch = await build(c, f, cinfo, where + ' / ' + f.name); if (ch) flow.push({ node: ch, key: stackKey(c, dom(c)) });
@@ -460,7 +534,9 @@ try {
   if (origin && origin.absoluteTransform && TEXTS.length) {
     const ox = origin.absoluteTransform[0][2], oy = origin.absoluteTransform[1][2];
     const ds = TEXTS.filter(t => t.tx.absoluteTransform).map(t => ({ n: (t.tx.name || '').slice(0, 30), dx: Math.round(t.tx.absoluteTransform[0][2] - ox - t.x), dy: Math.round(t.tx.absoluteTransform[1][2] - oy - t.y) }));
-    drift = { texts: ds.length, off: ds.filter(d => Math.abs(d.dx) > 8 || Math.abs(d.dy) > 8).length, worst: ds.sort((a, b) => Math.max(Math.abs(b.dx), Math.abs(b.dy)) - Math.max(Math.abs(a.dx), Math.abs(a.dy))).slice(0, 3) };
+    // height: a text whose built height differs from the measured one has wrapped onto another number of lines, or has another line height; these push everything below it
+    const hs = TEXTS.filter(t => t.tx.height !== undefined && Math.abs(t.tx.height - t.h) > 3).map(t => ({ n: (t.tx.name || '').slice(0, 24), sw: Math.round(t.w), bw: Math.round(t.tx.width), sh: Math.round(t.h), bh: Math.round(t.tx.height), l: t.l, lh: t.lh, fs: t.fs }));
+    drift = { heights: { count: hs.length, first: hs.slice(0, 6) }, texts: ds.length, off: ds.filter(d => Math.abs(d.dx) > 8 || Math.abs(d.dy) > 8).length, worst: ds.sort((a, b) => Math.max(Math.abs(b.dx), Math.abs(b.dy)) - Math.max(Math.abs(a.dx), Math.abs(a.dy))).slice(0, 3) };
   }
 } catch (e) {}
 return { drift, createdNodeIds: createdIds, rootId: built && built.id, root: built && { name: built.name, w: Math.round(built.width), h: Math.round(built.height) }, stats, images, bgImages, missingFonts: [...missingFonts], approximated: [...approximated], deviations: deviations.slice(0, 60), deviationCount: deviations.length };

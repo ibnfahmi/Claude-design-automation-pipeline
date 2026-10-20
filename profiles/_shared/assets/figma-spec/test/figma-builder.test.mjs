@@ -151,10 +151,13 @@ check('buttons hug their content', all.some(n => n.name === 'Button' || n.name =
   const wrapRow = { k: 'f', n: 'Wrapped', r: [0, 0, 300, 160], L: { d: 'flex', dir: 'row', wrap: 1, gap: [8, 8] }, c: [{ ...btnA, n: 'W1', r: [0, 0, 140, 72] }, { ...btnA, n: 'W2', r: [150, 0, 140, 72] }, { ...btnA, n: 'W3', r: [0, 80, 140, 72] }] };
   const mk = (n, x, w, F) => ({ k: 'f', n, r: [x, 0, w, 44], bg: 'rgb(200, 200, 200)', L: { d: 'block' }, ...(F ? { F } : {}) });
   // search has margin-left: auto; bell comes second in the page but has order: 1, so it is shown last
+  const gtext = (n, y) => ({ k: 'f', n, r: [0, y, 200, 20], bg: 'rgb(10, 10, 10)', L: { d: 'block' } });
+  const gappy = { k: 'f', n: 'Gappy', r: [0, 0, 200, 90], L: { d: 'block' }, c: [gtext('G1', 0), gtext('G2', 25), gtext('G3', 70)] };
+  const clamped = { k: 'f', n: 'ClampBox', r: [0, 0, 300, 60], L: { d: 'flex', dir: 'col', gap: [0, 0] }, c: [{ k: 't', n: 'ClampText', r: [0, 0, 294, 46], lines: 2, clamp: 2, ff: 'Inter', fs: 14, fw: 400, lh: 24, col: 'rgb(0, 0, 0)', txt: 'A very long description that the page shows on two lines only and cuts off with an ellipsis after that, so the rest never appears on the page at all.' }] };
   const actions = { k: 'f', n: 'Actions', r: [0, 0, 500, 44], L: { d: 'flex', dir: 'row', jc: 'normal', ai: 'center', gap: [10, 10] }, c: [mk('Search', 300, 44, { ma: 'l' }), mk('Bell', 454, 27, { o: 1 }), mk('Btn', 354, 90)] };
   const tile = (n, x) => ({ k: 'f', n, r: [x, 0, 200, 240], L: { d: 'flex', dir: 'row', ai: 'flex-end', gap: [0, 0], pos: 'relative' }, c: [{ k: 'i', n: 'img', r: [0, 0, 200, 240], src: 'a.jpg', fit: 'cover', L: { pos: 'absolute' } }, { k: 'f', n: 'cap', r: [0, 160, 150, 80], L: { d: 'block', pos: 'relative' }, c: [{ k: 't', n: 'Cap', r: [10, 10, 100, 20], txt: 'Caption', ff: 'Inter', fs: 14, fw: 400, col: 'rgb(0, 0, 0)', lines: 1 }] }] });
   const tiles = { k: 'f', n: 'Tiles', r: [0, 0, 416, 240], L: { d: 'grid', gap: [16, 16], cols: '200px 200px', rows: '240px', ai: 'normal', jc: 'normal' }, c: [tile('TileA', 0), tile('TileB', 216)] };
-  const holder = { k: 'f', n: 'Holder', r: [0, 0, 550, 1900], L: { d: 'flex', dir: 'col', gap: [0, 0] }, c: [tiles, actions, input, video, gradient, iconBtn, wrap, wrap2, gradText, centerWrap, noJiWrap, ctas, wrapRow] };
+  const holder = { k: 'f', n: 'Holder', r: [0, 0, 550, 1900], L: { d: 'flex', dir: 'col', gap: [0, 0] }, c: [gappy, clamped, tiles, actions, input, video, gradient, iconBtn, wrap, wrap2, gradText, centerWrap, noJiWrap, ctas, wrapRow] };
   const section4 = { node: holder, parentId: null, name: 'Fix checks', x: 0, y: 6000 };
   const code4 = fs.readFileSync(path.join(HERE, '..', 'figma-builder.js'), 'utf8').replace('__SPEC__', JSON.stringify(section4)).replace('__FONTMAP__', JSON.stringify(FONTMAP)).replace('__OPTS__', JSON.stringify({ fixedContainers: true }));
   const run4 = new (Object.getPrototypeOf(async function () {}).constructor)('figma', code4);
@@ -184,6 +187,11 @@ check('buttons hug their content', all.some(n => n.name === 'Button' || n.name =
   check('a grid without justify-items does not centre by guessing from the measured position', !!njrow && njrow.primaryAxisAlignItems === 'MIN', njrow && String(njrow.primaryAxisAlignItems));
   check('align-items: center keeps the row track height so the item can be centred inside it', !!crow && crow.height === 268, crow && String(crow.height));
   const act = kids4.find(n => n.name === 'Actions');
+  const gp = kids4.find(n => n.name === 'Gappy');
+  const gnames = gp && gp.children.map(c => c.name + (c.name === 'gap' ? Math.round(c.height) : '')).join(',');
+  check('siblings with different gaps keep their exact gaps (fixed spacers, item spacing 0), not one median gap', !!gp && gnames === 'G1,gap5,G2,gap25,G3' && gp.itemSpacing === 0, gnames);
+  const ct = kids4.find(n => n.name === 'ClampText');
+  check('a line-clamped text keeps the height of its clamped lines and truncates, instead of growing to show every line', !!ct && ct.textAutoResize === 'NONE' && ct.textTruncation === 'ENDING' && ct.maxLines === 2 && ct.height >= 46 && ct.height <= 50, ct && [ct.textAutoResize, ct.textTruncation, ct.maxLines, ct.height].join(' '));
   const tA = kids4.find(n => n.name === 'TileA');
   check('a grid tile taller than its in-flow content keeps its height', !!tA && tA.height === 240 && tA.layoutSizingVertical !== 'FILL', tA && tA.height + ' ' + tA.layoutSizingVertical);
   const tB = kids4.find(n => n.name === 'TileB');
@@ -194,7 +202,12 @@ check('buttons hug their content', all.some(n => n.name === 'Button' || n.name =
   const ctasNode = kids4.find(n => n.name === 'Ctas'), wrappedNode = kids4.find(n => n.name === 'Wrapped');
   check('a row marked wrap whose children fit on one line does not wrap', !!ctasNode && ctasNode.layoutWrap !== 'WRAP', ctasNode && String(ctasNode.layoutWrap));
   check('a row whose children really sit on two lines still wraps', !!wrappedNode && wrappedNode.layoutWrap === 'WRAP', wrappedNode && String(wrappedNode.layoutWrap));
-  check('a multi-layer background keeps the linear gradient and skips the radial one', !!glow && glow.fills.some(f => f.type === 'GRADIENT_LINEAR') && r4.approximated.includes('radial gradient skipped') === false, JSON.stringify(glow && glow.fills.map(f => f.type)));
+  check('a multi-layer background keeps every gradient layer, the CSS top layer last in the fill list', !!glow && glow.fills.length === 2 && glow.fills[0].type === 'GRADIENT_LINEAR' && glow.fills[1].type === 'GRADIENT_RADIAL', JSON.stringify(glow && glow.fills.map(f => f.type)));
+  const rad = glow && glow.fills.find(f => f.type === 'GRADIENT_RADIAL');
+  // radial-gradient(circle at 50% 0%, ..., rgba(0,0,0,0) 60%) on a 300 x 100 box: centre (150, 0), farthest-corner radius hypot(150, 100) = 180.3
+  const gtm = rad && rad.gradientTransform, rr = Math.hypot(150, 100);
+  check('a radial gradient is placed from its centre and size: node space to gradient space', !!gtm && Math.abs(gtm[0][0] - 300 / (2 * rr)) < 1e-6 && Math.abs(gtm[0][2] - (0.5 - 150 / (2 * rr))) < 1e-6 && Math.abs(gtm[1][2] - 0.5) < 1e-6, JSON.stringify(gtm));
+  check('the transparent end of a gradient keeps the colour of its neighbour, not black', !!rad && rad.gradientStops[1].color.a === 0 && Math.abs(rad.gradientStops[1].color.b - 254 / 255) < 1e-6, JSON.stringify(rad && rad.gradientStops[1].color));
 }
 // ---- an overlay-only frame holds just the scrim and the dialog
 {

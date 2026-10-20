@@ -54,7 +54,7 @@ async function runBuilder(spec) {
   for (const f of (r.missingFonts || [])) agg.missingFonts.add(f);
   for (const a of (r.approximated || [])) agg.approximated.add(a);
   agg.deviations += r.deviationCount || 0;
-  if (r.drift) { const d = agg.drift; d.texts += r.drift.texts; d.off += r.drift.off; d.worst = d.worst.concat(r.drift.worst || []).sort((a, b) => Math.max(Math.abs(b.dx), Math.abs(b.dy)) - Math.max(Math.abs(a.dx), Math.abs(a.dy))).slice(0, 3); }
+  if (r.drift) { const d = agg.drift; if (r.drift.heights) { d.hcount = (d.hcount || 0) + r.drift.heights.count; d.hfirst = (d.hfirst || []).concat(r.drift.heights.first).slice(0, 6); } d.texts += r.drift.texts; d.off += r.drift.off; d.worst = d.worst.concat(r.drift.worst || []).sort((a, b) => Math.max(Math.abs(b.dx), Math.abs(b.dy)) - Math.max(Math.abs(a.dx), Math.abs(a.dy))).slice(0, 3); }
   for (const [k, v] of Object.entries(r.stats || {})) agg.stats[k] = (agg.stats[k] || 0) + v;
   return r;
 }
@@ -79,7 +79,7 @@ for (; i < plan.jobs.length; i++) {
       if (Date.now() - t0 > (RUN.budgetMs || 30000) * 2) { agg.errors.push({ slug: job.slug, error: 'time budget exceeded in the middle of a frame; rerun this slug with only' }); break; }
       await runBuilder({ node: k, parentId: top.rootId, name: k.n, dom: ki });
     }
-    agg.built.push({ slug: job.slug, id: top.rootId, w: top.root.w, h: top.root.h, mode: 'full', sections: kids.length, drift: agg.drift.texts ? { texts: agg.drift.texts, off: agg.drift.off, worst: agg.drift.worst } : undefined });
+    agg.built.push({ slug: job.slug, id: top.rootId, w: top.root.w, h: top.root.h, mode: 'full', sections: kids.length, drift: agg.drift.texts ? { texts: agg.drift.texts, off: agg.drift.off, worst: agg.drift.worst, tall: agg.drift.hcount, firstTall: agg.drift.hfirst } : undefined });
   } catch (e) {
     agg.errors.push({ slug: job.slug, error: String(e && e.message || e).slice(0, 300) });
   }

@@ -2,6 +2,19 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.14.4] - 2026-10-21
+
+### Fixed (each found by comparing a built screen with its page, in page order)
+- **Siblings with different gaps drifted down the page.** When the gaps between siblings differ (margins), the builder used one median gap, so every row below was off by the difference. Each pair now keeps its exact gap (transparent fixed spacers, item spacing 0). Containers whose gaps are even are unchanged.
+- **Line-clamped and ellipsised text grew to show every line** (card descriptions came out up to 122 px taller than the page). A text with `-webkit-line-clamp` or `text-overflow: ellipsis` now keeps the height of the lines the page shows, with truncation.
+- **Radial gradients were skipped** (a soft glow behind a hero disappeared), and a background with several gradient layers kept only one. Radial gradients are now built from their shape, size keywords and position, every gradient layer is kept (CSS order, top layer last in Figma's list), and a transparent stop takes the colour of its neighbour so the fade does not pass through grey.
+
+### Added
+- **The runner reports where text height differs** (`drift.tall` and `firstTall`: the first texts whose built height differs from the measured one, with their widths, line counts and line heights). A text box measured by the browser is the font's content area, so single lines often differ by a few pixels harmlessly; the list is a starting point for a diagnosis, not a defect list.
+
+### Measured (3 screens re-built after these fixes; the other ten not re-measured yet)
+- Ideas list 10.6% to 5.2%, Submit idea 3.8% to 3.1%, Profile 3.9% to 2.2% (the glow was the worst cell, 54% to 14%). Texts built more than 8 px from where the page measured them: Ideas list 101 to 59 of 136.
+
 ## [0.14.3] - 2026-10-21
 
 ### Fixed (found by exporting 13 fresh screens live; each fix is a cause, not a symptom)
