@@ -2,6 +2,18 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.14.2] - 2026-10-21
+
+### Fixed
+- **Extraction hung or took minutes on some pages.** A lazy image with no source made the extractor's image-decode step stall and then crash the browser (the mobile landing page of the test site never finished). The extractor now decodes only pictures that have a source, with a 4-second limit each. If a frame still crashes the browser, it is retried once without SVG files over 400 KB, and the entry says so (`safeMode`).
+
+### Changed (speed)
+- **Frames are measured in parallel** (`--jobs`, default 4), the media of a source used several times is captured once, and the scroll wait is shorter. Each index entry now lists where its time went (`phases`: load, settle, steps, screenshot, media, extract); `--verbose` prints them as they happen.
+- Measured on the 13-screen test site: all 13 frames extract in **82 seconds** (before: more than 8 minutes, and two frames never finished). The two pages carrying a 1 MB logo SVG still spend about 17 seconds each on its picture.
+
+### Not yet verified
+- Still no live Figma run of the 0.14.1 layout rewrite. Two steps in the test fixture's frame list (`[data-act=share]`, `[data-submit]`) match nothing on the page and are reported as `stepErrors`; the fixture's selectors need fixing.
+
 ## [0.14.1] - 2026-10-21
 
 ### Added
