@@ -75,9 +75,9 @@ for (; i < plan.jobs.length; i++) {
     const root = spec.root; const kids = root.c || [];
     agg.drift = { texts: 0, off: 0, worst: [] };
     const top = await runBuilder({ node: { ...root, c: [] }, parentId: null, ...common });
-    for (const k of kids) {
+    for (const [ki, k] of kids.entries()) {
       if (Date.now() - t0 > (RUN.budgetMs || 30000) * 2) { agg.errors.push({ slug: job.slug, error: 'time budget exceeded in the middle of a frame; rerun this slug with only' }); break; }
-      await runBuilder({ node: k, parentId: top.rootId, name: k.n });
+      await runBuilder({ node: k, parentId: top.rootId, name: k.n, dom: ki });
     }
     agg.built.push({ slug: job.slug, id: top.rootId, w: top.root.w, h: top.root.h, mode: 'full', sections: kids.length, drift: agg.drift.texts ? { texts: agg.drift.texts, off: agg.drift.off, worst: agg.drift.worst } : undefined });
   } catch (e) {
@@ -86,6 +86,6 @@ for (; i < plan.jobs.length; i++) {
 }
 return {
   built: agg.built, next: i, done: i >= plan.jobs.length, total: plan.jobs.length, ms: Date.now() - t0,
-  images: Object.values(agg.images.reduce((g, im) => { const k = im.file || im.src || im.id; (g[k] = g[k] || { src: im.src ? im.src.slice(-90) : '', file: im.file || undefined, kind: im.kind, fit: im.fit || undefined, w: Math.round(im.w), h: Math.round(im.h), ids: [] }).ids.push(im.id); return g; }, {})), // grouped by source: one entry per picture, with every placeholder id
+  images: ((list) => RUN.compact ? list.map((i) => i.ids.join(',') + '|' + (i.file || (i.src || '').split('/').pop()) + '|' + (i.fit || 'fill')) : list)(Object.values(agg.images.reduce((g, im) => { const k = im.file || im.src || im.id; (g[k] = g[k] || { src: im.src ? im.src.slice(-90) : '', file: im.file || undefined, kind: im.kind, fit: im.fit || undefined, w: Math.round(im.w), h: Math.round(im.h), ids: [] }).ids.push(im.id); return g; }, {}))), // grouped by source; with RUN.compact one text line per picture: ids|file-or-source name|fit (about a third of the tokens): one entry per picture, with every placeholder id
   missingFonts: [...agg.missingFonts], approximated: [...agg.approximated], deviations: agg.deviations, stats: agg.stats, errors: agg.errors,
 };

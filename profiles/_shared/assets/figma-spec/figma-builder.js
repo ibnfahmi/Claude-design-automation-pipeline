@@ -186,10 +186,11 @@ function inferLayout(n) {
     const gapMain = dir === 'HORIZONTAL' ? (L.gap ? L.gap[1] : 0) : (L.gap ? L.gap[0] : 0);
     const ord = [...kids].sort((a, b) => dir === 'HORIZONTAL' ? a.r[0] - b.r[0] : a.r[1] - b.r[1]);
     const gaps = []; for (let i = 1; i < ord.length; i++) gaps.push(dir === 'HORIZONTAL' ? ord[i].r[0] - (ord[i - 1].r[0] + ord[i - 1].r[2]) : ord[i].r[1] - (ord[i - 1].r[1] + ord[i - 1].r[3]));
+    const byOrder = [...kids].map((k, i) => [k, i]).sort((a, b) => ((a[0].F && a[0].F.o) || 0) - ((b[0].F && b[0].F.o) || 0) || a[1] - b[1]).map(x => x[0]); // CSS order, then page order
     const spaced = /space-/.test(L.jc || '');
     let gap = spaced ? 0 : (gaps.length && Math.abs(median(gaps) - gapMain) > 1 ? Math.max(0, median(gaps)) : gapMain);
     const pad = L.pad || [0, 0, 0, 0];
-    return { mode: dir, gap, wrap: !!L.wrap && (dir !== 'HORIZONTAL' || new Set(kids.map(k => Math.round(k.r[1] / 4))).size > 1), crossGap: L.gap ? (dir === 'HORIZONTAL' ? L.gap[0] : L.gap[1]) : 0, pad, pj: spaced ? 'SPACE_BETWEEN' : (/center/.test(L.jc || '') ? 'CENTER' : /end/.test(L.jc || '') ? 'MAX' : 'MIN'), ca: AL[L.ai] || 'MIN', stretch: !L.ai || L.ai === 'normal' || L.ai === 'stretch', order: L.rev ? [...kids].reverse() : kids, approx: /around|evenly/.test(L.jc || '') };
+    return { mode: dir, gap, wrap: !!L.wrap && (dir !== 'HORIZONTAL' || new Set(kids.map(k => Math.round(k.r[1] / 4))).size > 1), crossGap: L.gap ? (dir === 'HORIZONTAL' ? L.gap[0] : L.gap[1]) : 0, pad, pj: spaced ? 'SPACE_BETWEEN' : (/center/.test(L.jc || '') ? 'CENTER' : /end/.test(L.jc || '') ? 'MAX' : 'MIN'), ca: AL[L.ai] || 'MIN', stretch: !L.ai || L.ai === 'normal' || L.ai === 'stretch', order: L.rev ? [...byOrder].reverse() : byOrder, approx: /around|evenly/.test(L.jc || '') };
   }
   if (!kids.length) return null;
   // block-like: infer a stack from the children's positions
@@ -328,7 +329,14 @@ async function build(n, parent, pinfo, where) {
   else if (auto) {
     const mainH = lay.mode === 'HORIZONTAL';
     const cinfo = { auto: true, dir: lay.mode, stretch: lay.stretch, contentW: w - (f.paddingLeft + f.paddingRight), contentH: h - (f.paddingTop + f.paddingBottom) };
-    for (const c of lay.order) { const ch = await build(c, f, cinfo, where + ' / ' + f.name); if (ch) flow.push({ node: ch, key: stackKey(c, dom(c)) }); }
+    // an auto margin (margin-left: auto in a row) takes all the free space on that side: a growing empty frame stands for it
+    const spacer = () => { const s = figma.createFrame(); s.name = 'spacer'; s.fills = []; s.clipsContent = false; f.appendChild(s); s.resize(1, 1); if (mainH) s.layoutSizingHorizontal = 'FILL'; else s.layoutSizingVertical = 'FILL'; };
+    for (const c of lay.order) {
+      const ma = (!lay.wrap && c.F && c.F.ma) || '';
+      if (ma.includes(mainH ? 'l' : 't')) spacer();
+      const ch = await build(c, f, cinfo, where + ' / ' + f.name); if (ch) flow.push({ node: ch, key: stackKey(c, dom(c)) });
+      if (ma.includes(mainH ? 'r' : 'b')) spacer();
+    }
   } else {
     for (const c of (n.c || []).filter(inFlow)) { const ch = await build(c, f, { auto: false }, where + ' / ' + f.name); if (ch) flow.push({ node: ch, key: stackKey(c, dom(c)) }); }
   }
@@ -387,10 +395,11 @@ async function buildGrid(n, f, where) {
     if (Number.isFinite(track) && track > tallest + 1 && /^(center|end|flex-end|self-end)$/.test(String((items.length === 1 && items[0].F && items[0].F.as) || L.ai || ''))) { rf.resize(Math.max(1, cw), track); rf.layoutSizingHorizontal = 'FILL'; }
     const equal = items.every(c => near(c.r[2], items[0].r[2], 2));
     const rowH = Math.max(...items.map(c => c.r[3]));
+    let holder = false; // the row hugs its items, so one item at the row's height must stay at that height (a tile with an absolutely placed picture and a short caption would collapse to the caption); the others follow it
     for (const c of items) {
       const ch = await build(c, rf, { auto: true, dir: 'HORIZONTAL', stretch: true, contentW: cw, contentH: rowH }, where);
       if (ch && ch.type === 'FRAME' && equal && items.length > 1) { ch.layoutSizingHorizontal = 'FILL'; }
-      if (ch && ch.type === 'FRAME' && near(c.r[3], rowH, 1.5)) { try { ch.layoutSizingVertical = 'FILL'; } catch (e) {} }
+      if (ch && ch.type === 'FRAME' && near(c.r[3], rowH, 1.5)) { if (!holder) { holder = true; try { const hz = ch.layoutSizingHorizontal; ch.resize(ch.width, Math.max(1, c.r[3])); /* resize makes both directions fixed */ if (hz === 'FILL') ch.layoutSizingHorizontal = 'FILL'; } catch (e) {} } else { try { ch.layoutSizingVertical = 'FILL'; } catch (e) {} } }
     }
     createdIds.push(rf.id);
     out.push({ node: rf, items });
@@ -433,6 +442,14 @@ if (sec.overlayOnly) {
   built = await build(root, parent, pinfo, sec.name || root.n || 'Frame');
 }
 if (built && sec.name) built.name = sec.name;
+// a page is built top-level child by top-level child, in page order; CSS paints a fixed header (z-index) above the content that follows it,
+// so a section goes where CSS paints it among the siblings already built (their keys are kept in plugin data)
+if (built && sec.parentId && typeof sec.dom === 'number') {
+  const mine = stackKey(root, sec.dom); built.setSharedPluginData('pipeline', 'stack', JSON.stringify(mine));
+  const keyOf = (n) => { try { return JSON.parse(n.getSharedPluginData('pipeline', 'stack')); } catch (e) { return null; } };
+  let idx = 0; for (const s of parent.children) { if (s !== built && cmpKey(keyOf(s) || [0, 0, 0], mine) <= 0) idx++; }
+  parent.insertChild(idx, built);
+}
 if (built && !sec.parentId && typeof sec.x === 'number') { built.x = sec.x; built.y = sec.y; }
 if (built && sec.asComponent && !sec.parentId) { const c = figma.createComponentFromNode(built); c.name = sec.asComponent.name || built.name; c.setSharedPluginData('pipeline', 'component', root.comp || ''); c.setSharedPluginData('pipeline', 'sig', root.sig || ''); built = c; }
 if (built && !sec.parentId) { if (!sec.overlayOnly) built.clipsContent = true; built.setSharedPluginData('pipeline', 'source', 'spec'); if (sec.cloneOf) built.setSharedPluginData('pipeline', 'clonedFrom', String(sec.cloneOf)); if (sec.hash) built.setSharedPluginData('pipeline', 'hash', String(sec.hash)); }

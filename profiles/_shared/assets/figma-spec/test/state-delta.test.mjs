@@ -52,5 +52,10 @@ const specs = { 'home-d': { root: base }, 'home-dialog-d': { root: cropped([head
 const plan = planDeltas(frames, (f) => specs[f.slug] || null);
 check('only frames of the same page and width are paired, the base is never a clone', plan.length === 1 && plan[0].slug === 'home-dialog-d' && plan[0].base === 'home-d', JSON.stringify(plan.map((p) => [p.slug, p.base])));
 
+// a page that does not lock its scroll behind a dialog keeps its full height in the state frame: the crop is still the viewport
+const unlocked = { ...cropped([header, hero, dim, modal]), r: [0, 0, 1440, 5900] };
+r = stateDelta(base, unlocked, 900);
+check('a state frame as tall as the page is cropped to the viewport height, not to the page', r.reusable && r.cropHeight === 900, JSON.stringify([r.reusable, r.cropHeight, r.reason]));
+
 if (errors.length) { console.error('\nFAILED:', errors.length); process.exit(1); }
 console.log('\nALL OK');

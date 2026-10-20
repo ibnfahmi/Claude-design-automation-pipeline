@@ -75,9 +75,10 @@ const settle = async (page) => {
   // trigger lazy content and scroll effects, then return to the top
   await page.evaluate(async () => {
     const h = document.documentElement.scrollHeight;
-    for (let y = 0; y < h; y += Math.max(200, innerHeight * 0.75)) { scrollTo(0, y); await new Promise(r => setTimeout(r, 250)); }
-    scrollTo(0, document.documentElement.scrollHeight); await new Promise(r => setTimeout(r, 300));
-    scrollTo(0, 0); await new Promise(r => setTimeout(r, 400));
+    const go = (y) => scrollTo({ top: y, behavior: 'instant' }); // instant: a page with scroll-behavior: smooth would still be moving when it is measured
+    for (let y = 0; y < h; y += Math.max(200, innerHeight * 0.75)) { go(y); await new Promise(r => setTimeout(r, 250)); }
+    go(document.documentElement.scrollHeight); await new Promise(r => setTimeout(r, 300));
+    go(0); await new Promise(r => setTimeout(r, 400));
   });
   await page.evaluate(async () => {
     await document.fonts.ready;
@@ -129,7 +130,7 @@ const work = async (f, idx, safe = false) => {
         else if (st.select !== undefined) await page.selectOption(String(st.select[0]), String(st.select[1]), { timeout: 5000 });
         else if (st.press !== undefined) { if (Array.isArray(st.press)) await page.press(String(st.press[0]), String(st.press[1]), { timeout: 5000 }); else await page.keyboard.press(String(st.press)); }
         else if (st.wait !== undefined) { if (typeof st.wait === 'number') await page.waitForTimeout(st.wait); else await page.waitForSelector(String(st.wait), { timeout: 8000 }); }
-        else if (st.scroll !== undefined) await page.evaluate((y) => window.scrollTo(0, y), Number(st.scroll));
+        else if (st.scroll !== undefined) await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), Number(st.scroll));
         else if (st.eval !== undefined) await page.evaluate(String(st.eval));
         else throw new Error('unknown step ' + JSON.stringify(st).slice(0, 80));
       } catch (e) { (entry.stepErrors = entry.stepErrors || []).push(JSON.stringify(st).slice(0, 100) + ': ' + String(e && e.message || e).split('\n')[0].slice(0, 120)); }
@@ -167,6 +168,10 @@ const work = async (f, idx, safe = false) => {
         } catch (e) { await el.evaluate((x) => { x.removeAttribute('data-np-shot'); document.documentElement.removeAttribute('data-np-hide'); }).catch(() => {}); }
       }
     }
+    // capturing media scrolls the page to each element; measure from the top again (a fixed header is measured where the page is scrolled, and
+    // content that reveals itself while in view hides again when it is scrolled away), and give the reveals time to play
+    await page.evaluate(() => { scrollTo({ top: 0, behavior: 'instant' }); document.documentElement.removeAttribute('data-np-hide'); });
+    await page.waitForTimeout(800);
     mark('media');
     const spec = await page.evaluate(extractor); mark('extract');
     spec.frame = { slug: f.slug, label: f.viewport.label };

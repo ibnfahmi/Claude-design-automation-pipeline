@@ -4,7 +4,7 @@
 // build call is a few hundred characters instead of the 27 KB builder plus a spec.
 //
 //   node pack-payload.mjs pack --dir figma-spec --frames frames.json --pages pages.json [--deltas state-deltas.json] [--fonts fontmap.json] [--opts opts.json] [--out figma-spec/payload]
-//   node pack-payload.mjs fill-plan --dir figma-spec --images images.json [--assets "dirA;dirB"]   then   fill-post --plan figma-spec/payload/fill-plan.json [--group FIT] --urls '[...]'
+//   node pack-payload.mjs fill-plan --dir figma-spec --images images.json|images.txt [--base http://localhost:5173] [--assets "dirA;dirB"]   then   fill-post --plan figma-spec/payload/fill-plan.json [--group FIT] --urls '[...]'
 //   node pack-payload.mjs post --dir figma-spec/payload --urls '["https://mcp.figma.com/mcp/upload/.../submit?...", ...]'
 //
 // pack: writes figma-spec/payload/<name>.svg for the builder (builder.js), the runner (runner.js), the plan (plan.json) and one file per frame
@@ -79,7 +79,10 @@ if (cmd === 'pack') {
   // file name in --assets, a ';'-separated list of folders) and writes fill-plan.json, one entry per placeholder id, in the order the
   // upload_assets call must get its nodeIds. SVG sources are skipped (they are drawn as vectors by the extractor) and so are pictures with no local file.
   const dir = arg('dir', 'figma-spec');
-  const groups = JSON.parse(fs.readFileSync(arg('images'), 'utf8'));
+  const raw = fs.readFileSync(arg('images'), 'utf8');
+  // either the runner's `images` as JSON, or its compact lines (RUN.compact): ids|file-or-source name|fit; a source name is looked up in --assets or downloaded from --base
+  const base = String(arg('base', '')).replace(/\/$/, '');
+  const groups = /^\s*[\[{]/.test(raw) ? JSON.parse(raw) : raw.split(/\r?\n/).filter((l) => l.trim()).map((l) => { const [ids, src, fit] = l.trim().split('|'); const isFile = /^assets\//.test(src); return { ids: ids.split(','), fit, kind: 'img', file: isFile ? src : undefined, src: isFile ? '' : (/^https?:/.test(src) ? src : (base ? base + '/assets/' + src : src)) }; });
   const assetDirs = String(arg('assets', '')).split(';').filter(Boolean).concat([path.join(dir, 'assets')]);
   const plan = []; const missing = [];
   for (const g of groups) {

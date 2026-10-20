@@ -66,7 +66,7 @@ export function stateDelta(baseRoot, stateRoot, height) {
   const baseOv = overlays(baseRoot);
   const known = (n) => baseOv.some((b) => b.k === n.k && b.n === n.n);
   const add = overlays(stateRoot).filter((n) => !known(n));
-  const base = { missing, extra, cropHeight: Math.round(stateRoot.r[3]), baseNodes: bf.length };
+  const base = { missing, extra, cropHeight: Math.round(height ? Math.min(stateRoot.r[3], height) : stateRoot.r[3]), baseNodes: bf.length };
   if (!add.length) return { reusable: false, reason: 'no overlay nodes to add', ...base };
   const nearTol = Math.max(4, Math.round(0.25 * bf.length));
   const tooFar = missing > nearTol || extra > nearTol;

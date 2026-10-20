@@ -2,6 +2,22 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.14.3] - 2026-10-21
+
+### Fixed (found by exporting 13 fresh screens live; each fix is a cause, not a symptom)
+- **The extractor measured after scrolling.** Capturing media scrolled the page; a fixed header was recorded at the scroll position (y 9926) and content that reveals itself while in view was missing. Scrolling is now instant (a site with `scroll-behavior: smooth` was still moving) and the page is back at the top, with time for reveals, before it is measured.
+- **CSS `order` and auto margins were not in the spec.** A header row with `margin-left: auto` on its first item was packed to the left, and an item with `order: 1` kept its page position. The spec now carries both (`F.o`, `F.ma`); the builder orders items by CSS order and stands an empty growing frame for an auto margin.
+- **A fixed header that comes first in the page was built under the content.** Top-level sections were appended in page order; each section is now placed where CSS paints it among its siblings.
+- **The individual `scale`, `rotate` and `translate` properties were ignored** (a mirrored arrow written as `scale: -1 1` came out the wrong way); the effective transform is now composed from them.
+- **A grid row collapsed to its shortest content** when its items were taller than their in-flow content (photo tiles with an absolutely placed picture): one item per row now keeps the row's height.
+- **An overlay-only frame was as tall as the page** when the site does not lock scroll behind its dialog; it is now cropped to the viewport.
+
+### Added
+- `RUN.compact` makes the runner return its picture list as one text line per picture, and `pack-payload.mjs fill-plan` reads that file (with `--base` for pictures to download): about a third of the tokens of the JSON list.
+
+### Measured (13 screens, fresh extraction, one runner call of about 20 seconds per build)
+- Pixel difference is now 3.8% to 12.6% on 12 screens (Impact 25%); the benchmark landing page went from 15.4% to 12.6% and now has its header and hero text. Nothing passes the 2% rule. About 54 Figma calls for four full cycles. The test skill now runs its web server with `cleanUrls: false`.
+
 ## [0.14.2] - 2026-10-21
 
 ### Fixed

@@ -124,6 +124,17 @@
 
   // an <img> whose source is an SVG file (or data URL) cannot be filled into a Figma image placeholder, so read its markup and
   // return it as an inline svg node. Returns '' when the markup can't be read (the image stays a placeholder).
+  // the transform that really applies: the individual properties translate, rotate and scale (a mirrored arrow written as `scale: -1 1`) come
+  // before the transform property in CSS, and getComputedStyle(...).transform does not include them
+  function effMatrix(cs) {
+    let m = new DOMMatrix();
+    const nums = (s) => String(s).split(/\s+/).map(parseFloat);
+    if (cs.translate && cs.translate !== 'none') { const [x, y] = nums(cs.translate); m = m.translate(x || 0, y || 0); }
+    if (cs.rotate && cs.rotate !== 'none') { const r = parseFloat(cs.rotate); if (Number.isFinite(r)) m = m.rotate(r); }
+    if (cs.scale && cs.scale !== 'none') { const [sx, sy] = nums(cs.scale); m = m.scale(sx, Number.isFinite(sy) ? sy : sx); }
+    if (cs.transform && cs.transform !== 'none') m = m.multiply(new DOMMatrix(cs.transform));
+    return m;
+  }
   function svgFromImg(el, box, cs) {
     const src = el.currentSrc || el.src || '';
     let markup = '';
@@ -145,9 +156,9 @@
       return `<svg${a} width="${r1(box.w)}" height="${r1(box.h)}">`;
     });
     // a CSS transform that mirrors the image (a back arrow flipped for the other direction) is applied to the drawing itself
-    const tm = /^matrix\(([^)]+)\)$/.exec((cs && cs.transform) || '');
-    if (tm && vb && vb.length === 4 && vb.every(Number.isFinite)) {
-      const [a, b, c, d] = tm[1].split(',').map(Number);
+    const em = cs ? effMatrix(cs) : null;
+    if (em && vb && vb.length === 4 && vb.every(Number.isFinite)) {
+      const { a, b, c, d } = em;
       if (Math.abs(b) < 1e-6 && Math.abs(c) < 1e-6 && (a < 0 || d < 0)) {
         const [vx, vy, vw, vh] = vb;
         const t = `matrix(${a < 0 ? -1 : 1} 0 0 ${d < 0 ? -1 : 1} ${a < 0 ? 2 * vx + vw : 0} ${d < 0 ? 2 * vy + vh : 0})`;
@@ -176,7 +187,7 @@
     if (cs.filter && cs.filter !== 'none') o.fl = cs.filter;
     if (cs.backdropFilter && cs.backdropFilter !== 'none') o.bf = cs.backdropFilter;
     if (/hidden|clip/.test(cs.overflowX + cs.overflowY)) o.ov = 1;
-    if (cs.transform && cs.transform !== 'none') o.tf = cs.transform;
+    { const m = effMatrix(cs); if (!m.isIdentity) o.tf = m.toString(); }
   }
   function layout(cs, o) {
     const d = cs.display;
@@ -200,8 +211,15 @@
     if (cs.zIndex !== 'auto') L.z = +cs.zIndex;
     o.L = L;
   }
-  function childFlex(cs, o) {
+  function childFlex(cs, o, el) {
     const f = {};
+    // CSS order changes the visual sequence of flex and grid items; an auto margin (margin-left: auto) pushes the item and what follows it to the far side.
+    // The computed value of an auto margin is a number of pixels, so the keyword is read from the style map
+    if (+cs.order) f.o = +cs.order;
+    if (el && el.parentElement && /flex/.test(getComputedStyle(el.parentElement).display) && el.computedStyleMap) {
+      let ma = ''; try { const sm = el.computedStyleMap(); for (const [k, ch] of [['margin-left', 'l'], ['margin-right', 'r'], ['margin-top', 't'], ['margin-bottom', 'b']]) if (String(sm.get(k)) === 'auto') ma += ch; } catch (e) {}
+      if (ma) f.ma = ma;
+    }
     if (+cs.flexGrow) f.g = +cs.flexGrow;
     if (cs.alignSelf !== 'auto' && cs.alignSelf !== 'normal') f.as = cs.alignSelf;
     if (cs.justifySelf && !/^(auto|normal|stretch|legacy)$/.test(cs.justifySelf)) f.js = cs.justifySelf.replace(/^(safe|unsafe)\s+/, ''); // grid item placed in its column by itself
@@ -225,13 +243,13 @@
 
     if (tag === 'IMG' || tag === 'VIDEO' || tag === 'CANVAS' || tag === 'PICTURE') {
       if (box.w <= 0 || box.h <= 0) return [];
-      if (tag === 'IMG' && !el.getAttribute('data-np-file')) { const sv = svgFromImg(el, box, cs); if (sv) { const so = { k: 's', n: nameOf(el), r: rel, svg: sv }; visual(cs, so); childFlex(cs, so); layout(cs, so); return [so]; } }
+      if (tag === 'IMG' && !el.getAttribute('data-np-file')) { const sv = svgFromImg(el, box, cs); if (sv) { const so = { k: 's', n: nameOf(el), r: rel, svg: sv }; visual(cs, so); childFlex(cs, so, el); layout(cs, so); return [so]; } }
       const o = { k: 'i', n: nameOf(el), r: rel, kind: tag.toLowerCase() };
       const mediaFile = el.getAttribute('data-np-file'); if (mediaFile) o.file = mediaFile; // pixels saved by extract-spec.mjs for a video or canvas
       const im = tag === 'PICTURE' ? el.querySelector('img') : el;
       if (tag === 'IMG' || im) { o.src = (im.currentSrc || im.src || '').slice(0, 400); o.alt = (im.alt || '').slice(0, 80); o.nw = im.naturalWidth; o.nh = im.naturalHeight; }
       if (tag === 'VIDEO') o.src = (el.poster || el.currentSrc || '').slice(0, 400);
-      o.fit = cs.objectFit; visual(cs, o); childFlex(cs, o); layout(cs, o);
+      o.fit = cs.objectFit; visual(cs, o); childFlex(cs, o, el); layout(cs, o);
       return [o];
     }
     if (tag === 'svg' || tag === 'SVG') {
@@ -243,7 +261,7 @@
       let markup = clone.outerHTML.replace(/currentColor/g, cs.color);
       const o = { k: 's', n: nameOf(el), r: rel };
       if (markup.length <= 24000) o.svg = markup; else o.kind = 'svg-too-large';
-      visual(cs, o); childFlex(cs, o); layout(cs, o);
+      visual(cs, o); childFlex(cs, o, el); layout(cs, o);
       return [o];
     }
 
@@ -258,7 +276,7 @@
       let tp = typo(cs);
       if (!val && el.placeholder) { try { const pc = getComputedStyle(el, '::placeholder').color; if (pc) tp = { ...tp, col: pc }; } catch (e) {} } // the placeholder has its own colour
       o.tp = tp; }
-    visual(cs, o); layout(cs, o); childFlex(cs, o);
+    visual(cs, o); layout(cs, o); childFlex(cs, o, el);
 
     // inline formatting context -> one rich text node
     if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT' && isInlineFlow(el)) {

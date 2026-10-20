@@ -149,7 +149,12 @@ check('buttons hug their content', all.some(n => n.name === 'Button' || n.name =
   const btnB = { ...btnA, n: 'BtnB', r: [278, 0, 272, 72] };
   const ctas = { k: 'f', n: 'Ctas', r: [0, 0, 550, 72], L: { d: 'flex', dir: 'row', wrap: 1, jc: 'center', ai: 'center', gap: [15, 15] }, c: [btnA, btnB] };
   const wrapRow = { k: 'f', n: 'Wrapped', r: [0, 0, 300, 160], L: { d: 'flex', dir: 'row', wrap: 1, gap: [8, 8] }, c: [{ ...btnA, n: 'W1', r: [0, 0, 140, 72] }, { ...btnA, n: 'W2', r: [150, 0, 140, 72] }, { ...btnA, n: 'W3', r: [0, 80, 140, 72] }] };
-  const holder = { k: 'f', n: 'Holder', r: [0, 0, 550, 1500], L: { d: 'flex', dir: 'col', gap: [0, 0] }, c: [input, video, gradient, iconBtn, wrap, wrap2, gradText, centerWrap, noJiWrap, ctas, wrapRow] };
+  const mk = (n, x, w, F) => ({ k: 'f', n, r: [x, 0, w, 44], bg: 'rgb(200, 200, 200)', L: { d: 'block' }, ...(F ? { F } : {}) });
+  // search has margin-left: auto; bell comes second in the page but has order: 1, so it is shown last
+  const actions = { k: 'f', n: 'Actions', r: [0, 0, 500, 44], L: { d: 'flex', dir: 'row', jc: 'normal', ai: 'center', gap: [10, 10] }, c: [mk('Search', 300, 44, { ma: 'l' }), mk('Bell', 454, 27, { o: 1 }), mk('Btn', 354, 90)] };
+  const tile = (n, x) => ({ k: 'f', n, r: [x, 0, 200, 240], L: { d: 'flex', dir: 'row', ai: 'flex-end', gap: [0, 0], pos: 'relative' }, c: [{ k: 'i', n: 'img', r: [0, 0, 200, 240], src: 'a.jpg', fit: 'cover', L: { pos: 'absolute' } }, { k: 'f', n: 'cap', r: [0, 160, 150, 80], L: { d: 'block', pos: 'relative' }, c: [{ k: 't', n: 'Cap', r: [10, 10, 100, 20], txt: 'Caption', ff: 'Inter', fs: 14, fw: 400, col: 'rgb(0, 0, 0)', lines: 1 }] }] });
+  const tiles = { k: 'f', n: 'Tiles', r: [0, 0, 416, 240], L: { d: 'grid', gap: [16, 16], cols: '200px 200px', rows: '240px', ai: 'normal', jc: 'normal' }, c: [tile('TileA', 0), tile('TileB', 216)] };
+  const holder = { k: 'f', n: 'Holder', r: [0, 0, 550, 1900], L: { d: 'flex', dir: 'col', gap: [0, 0] }, c: [tiles, actions, input, video, gradient, iconBtn, wrap, wrap2, gradText, centerWrap, noJiWrap, ctas, wrapRow] };
   const section4 = { node: holder, parentId: null, name: 'Fix checks', x: 0, y: 6000 };
   const code4 = fs.readFileSync(path.join(HERE, '..', 'figma-builder.js'), 'utf8').replace('__SPEC__', JSON.stringify(section4)).replace('__FONTMAP__', JSON.stringify(FONTMAP)).replace('__OPTS__', JSON.stringify({ fixedContainers: true }));
   const run4 = new (Object.getPrototypeOf(async function () {}).constructor)('figma', code4);
@@ -178,6 +183,14 @@ check('buttons hug their content', all.some(n => n.name === 'Button' || n.name =
   const nj = kids4.find(n => n.name === 'NoJiWrap'); const njrow = nj && nj.children.find(c => c.name === 'Row');
   check('a grid without justify-items does not centre by guessing from the measured position', !!njrow && njrow.primaryAxisAlignItems === 'MIN', njrow && String(njrow.primaryAxisAlignItems));
   check('align-items: center keeps the row track height so the item can be centred inside it', !!crow && crow.height === 268, crow && String(crow.height));
+  const act = kids4.find(n => n.name === 'Actions');
+  const tA = kids4.find(n => n.name === 'TileA');
+  check('a grid tile taller than its in-flow content keeps its height', !!tA && tA.height === 240 && tA.layoutSizingVertical !== 'FILL', tA && tA.height + ' ' + tA.layoutSizingVertical);
+  const tB = kids4.find(n => n.name === 'TileB');
+  check('the other tiles of the row follow the first one', !!tB && tB.layoutSizingVertical === 'FILL', tB && String(tB.layoutSizingVertical));
+  check('CSS order decides the visual sequence of flex items', !!act && act.children.map(c => c.name).join(',') === 'spacer,Search,Btn,Bell', act && act.children.map(c => c.name).join(','));
+  const sp = act && act.children.find(c => c.name === 'spacer');
+  check('an auto margin becomes a growing spacer that pushes the item and what follows it to the far side', !!sp && sp.layoutSizingHorizontal === 'FILL', sp && String(sp.layoutSizingHorizontal));
   const ctasNode = kids4.find(n => n.name === 'Ctas'), wrappedNode = kids4.find(n => n.name === 'Wrapped');
   check('a row marked wrap whose children fit on one line does not wrap', !!ctasNode && ctasNode.layoutWrap !== 'WRAP', ctasNode && String(ctasNode.layoutWrap));
   check('a row whose children really sit on two lines still wraps', !!wrappedNode && wrappedNode.layoutWrap === 'WRAP', wrappedNode && String(wrappedNode.layoutWrap));
@@ -198,5 +211,17 @@ check('buttons hug their content', all.some(n => n.name === 'Button' || n.name =
   check('an overlay-only frame is named and tagged', ov.name === 'Sign in / Dialog @ Desktop 1440' && ov.getSharedPluginData('pipeline', 'hash') === 'h777' && r3.stats.overlayOnly === 1);
 }
 console.log('\nstats', JSON.stringify(result.stats), '\napproximated', JSON.stringify(result.approximated), '\ndeviations', result.deviationCount);
+// ---- sections are placed where CSS paints them: a fixed header that comes first in the page ends up above the content that follows
+{
+  const AFn = Object.getPrototypeOf(async function () {}).constructor;
+  const mkRun = (spec) => new AFn('figma', fs.readFileSync(path.join(HERE, '..', 'figma-builder.js'), 'utf8').replace('__SPEC__', JSON.stringify(spec)).replace('__FONTMAP__', JSON.stringify(FONTMAP)).replace('__OPTS__', JSON.stringify({ fixedContainers: true })));
+  const rt = await mkRun({ node: { k: 'f', n: 'Page', r: [0, 0, 400, 300], c: [] }, parentId: null, name: 'PaintOrder', x: 0, y: 9000 })(figma);
+  await mkRun({ node: { k: 'f', n: 'hdr', r: [0, 0, 400, 40], bg: 'rgb(0, 0, 0)', L: { d: 'block', pos: 'fixed', z: 50 } }, parentId: rt.rootId, name: 'hdr', dom: 0 })(figma);
+  await mkRun({ node: { k: 'f', n: 'main', r: [0, 0, 400, 300], bg: 'rgb(255, 255, 255)', L: { d: 'block' } }, parentId: rt.rootId, name: 'main', dom: 1 })(figma);
+  await mkRun({ node: { k: 'f', n: 'foot', r: [0, 300, 400, 40], bg: 'rgb(9, 9, 9)', L: { d: 'block' } }, parentId: rt.rootId, name: 'foot', dom: 2 })(figma);
+  const pg = await figma.getNodeByIdAsync(rt.rootId);
+  check('a fixed header built first in page order is placed above the content that follows it', pg.children.map((c) => c.name).join(',') === 'main,foot,hdr', pg.children.map((c) => c.name).join(','));
+}
+
 if (errors.length) { console.error('\nFAILED:', errors.length); process.exit(1); }
 console.log('\nALL OK');
