@@ -2,6 +2,15 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.14.8] - 2026-11-04
+
+### Added
+- **`LICENSE` (Apache-2.0)** at the plugin root and `license` in `plugin.json`, so people who install the plugin know what they may do with it.
+- **Plugin icon** at `.claude-plugin/icon.png` (1024 px square PNG) and `icon` in `plugin.json`.
+
+### Not yet verified
+- The submission validator has not been re-run on this version.
+
 ## [0.14.7] - 2026-11-04
 
 ### Changed
