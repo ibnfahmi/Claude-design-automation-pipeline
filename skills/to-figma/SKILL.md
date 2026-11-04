@@ -1,6 +1,6 @@
 ---
 name: to-figma
-description: Export a running app or a design-pipeline project to a Figma file, on demand or as the pipeline's last step. Asks what to export, in which language, whether to build a component library first and where to put the file, installs and checks the three helper packages, shows an estimate of the cost, then builds the whole file from measured specs in one session, with a pixel-diff check of every screen. Use when the user runs /design-pipeline:to-figma, asks to export, push or send the design to Figma (now or later, separately from the pipeline), or when the start skill reaches its Figma stage.
+description: Export a running app or a design-pipeline project to a Figma file.
 ---
 
 # To Figma: export the approved app to a Figma file

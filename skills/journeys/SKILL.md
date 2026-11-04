@@ -1,6 +1,6 @@
 ---
 name: journeys
-description: Manually create user journeys (user flows) for a product, on demand, outside the full design pipeline. Takes a brief, a BRD, an existing spec or an existing code project in the current folder, covers every platform and the journeys that cross platforms, and saves user-journeys.md for review. Use when the user runs /design-pipeline:journeys, or asks to create, redo or extend user journeys or user flows without running the whole pipeline.
+description: Manually create user journeys (user flows) for a product.
 ---
 
 # Design journeys: user journeys on demand

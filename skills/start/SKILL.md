@@ -1,6 +1,6 @@
 ---
 name: start
-description: Run the design pipeline, code first — take a raw design brief (or an existing code project or Figma file) through platform scope, a structured spec with numbered requirements, user journeys (user flows) for review, a style direction with a live preview, and a working code project, with optional user journeys, a usability audit and a coverage check against the brief (each a per-project choice), and an optional Figma export. Use when the user runs /design-pipeline:start (optionally with --skip-journeys), asks to start a new design from a brief, or wants to resume a run in the current folder.
+description: Run the design pipeline.
 ---
 
 # Design pipeline — Orchestrator

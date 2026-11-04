@@ -2,6 +2,14 @@
 
 All notable changes to the design-pipeline plugin are documented here.
 
+## [0.14.7] - 2026-11-04
+
+### Changed
+- **The four skill descriptions (`start`, `audit`, `journeys`, `to-figma`) are shortened to one line each.** They now say only what the skill does; the long trigger text is gone from the descriptions. Instructions inside each skill are unchanged.
+
+### Not yet verified
+- Whether the shorter descriptions still make the skills trigger from plain requests (without the slash command) has not been tested on a real project.
+
 ## [0.14.6] - 2026-10-21
 
 ### Fixed
